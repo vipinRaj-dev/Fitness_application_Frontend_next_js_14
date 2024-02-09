@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import {useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,9 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { baseUrl } from "@/Details/PortDetails";
-import { useState } from "react";
-
+import { baseUrl } from "@/Utils/PortDetails";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import Spinner from "../loadingui/Spinner";
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z
@@ -34,15 +34,27 @@ const SignInForm = () => {
     defaultValues: {
       email: "",
       password: "",
-    },
+    }, 
   });
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  let myCookie = Cookies.get("jwttoken");
 
   const router = useRouter();
 
+  useEffect(() => {
+    if(myCookie){
+      router.push('/')
+    }
+    setLoading(false)
+  },[])
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
     axios
       .post(`${baseUrl}/auth/login`, data, { withCredentials: true })
       .then(function (response) {
@@ -96,6 +108,9 @@ const SignInForm = () => {
           Don't have an account?
           <Link className="hover:underline" href="/sign-up">
             Sign Up
+          </Link>
+          <Link className="hover:underline" href="/forgotpassword">
+          forgotPassword
           </Link>
         </p>
       </form>

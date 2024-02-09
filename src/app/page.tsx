@@ -1,14 +1,5 @@
-import { buttonVariants } from "@/components/ui/button"
-
-
-import Dashboard from "@/components/landingpage/Dashboard"
-
-
-import Link from "next/link";
+import Dashboard from "@/components/landingpage/Dashboard";
 
 export default function Home() {
-  return (
-    <Dashboard />
-
-  );
+  return <Dashboard />;
 }

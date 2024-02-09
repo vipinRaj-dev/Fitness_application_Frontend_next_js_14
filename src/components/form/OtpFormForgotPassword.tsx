@@ -4,29 +4,42 @@ import { baseUrl } from "@/Utils/PortDetails";
 import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Spinner from "../loadingui/Spinner";
 
-const OtpForm = () => {
+const OtpFormForgotPassword = () => {
   const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     // Here you would typically send a request to your backend to verify the OTP
     axios
-      .post(`${baseUrl}/auth/registerUser`, { otp })
+      .post(`${baseUrl}/auth/verifyOtp`, { otp })
       .then((res) => {
-        if (res.status === 201) {
+        setLoading(true);
+        console.log(res);
+        if (res.status === 200) {
+          setLoading(false);
           console.log("User created");
+          alert("password reset successful");
           router.replace("/sign-in");
+        } else if (res.status === 404) {
+          alert("user not found");
         } else {
+          setLoading(false);
           console.log("User not created from the otp page");
           throw new Error("User not created");
         }
       })
       .catch((err) => {
         console.log(err);
-        alert('otp is not valid')
       });
   };
 
@@ -55,4 +68,4 @@ const OtpForm = () => {
   );
 };
 
-export default OtpForm;
+export default OtpFormForgotPassword;

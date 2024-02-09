@@ -1,6 +1,5 @@
 "use client";
 
-import { userStore } from "@/store/user";
 import { baseUrl } from "@/Utils/PortDetails";
 import axios from "axios";
 import Link from "next/link";
@@ -49,7 +48,7 @@ const SignUpForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
+      name: "", 
       email: "",
       password: "",
       confirmPassword: "",
@@ -57,7 +56,6 @@ const SignUpForm = () => {
   });
 
   let myCookie = Cookies.get("jwttoken");
-  const { user, setUser } = userStore();
 
   useEffect(() => {
     if (myCookie) {
@@ -74,18 +72,18 @@ const SignUpForm = () => {
     console.log(data);
     
     setLoading(true);
-    setUser(data);
     try {
       const response = await axios.post(`${baseUrl}/auth/sendOtp`, data);
       if (response.status === 200) {
         console.log("User created");
         setError("");
-        router.push("/otp-verification");
+        router.replace("/otp-verification");
         setLoading(false);
       }
     } catch (error: Error | any) {
       if (error.response && error.response.status === 409) {
-        setError("User already exists");
+        setLoading(false)
+        setError("Email already exists");
       } else {
         console.error(error);
       }

@@ -5,5 +5,5 @@ const page = () => {
     <OtpForm />
   )
 }
-
+ 
 export default page

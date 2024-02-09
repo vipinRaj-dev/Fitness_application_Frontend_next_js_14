@@ -1,15 +1,49 @@
 "use client";
 
-import Link from "next/link";
+import { baseUrl } from "@/Utils/PortDetails";
+import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Spinner from "../loadingui/Spinner";
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  const router = useRouter();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(email);
+    setLoading(true);
     // Here you would typically send a request to your backend to initiate the password reset process
+    try {
+      axios
+        .post(`${baseUrl}/auth/forgot-password`, {
+          email: email,
+          password: password,
+        })
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+
+          return router.replace("/otp-verification-forgotpassword");
+        })
+        .catch((err) => {
+          setLoading(false);
+
+          alert("user not found");
+          console.error(err);
+        });
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      alert("forgot password some problem");
+    }
   };
 
   return (
@@ -25,9 +59,16 @@ const ForgotPasswordForm = () => {
             required
           />
         </label>
-        <Link href="/otp">
-          <button type="submit">Verify</button>
-        </Link>
+        <label>
+          New password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
+        <button type="submit">Verify</button>
       </form>
     </div>
   );

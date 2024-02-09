@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import { userStore } from "@/store/user";
 
 const OtpForm = () => {
   const [otp, setOtp] = useState("");
+
+  const { user } = userStore();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -12,7 +15,10 @@ const OtpForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100"> 
+    {user&&<h1 className="mb-6 text-3xl font-bold text-gray-700"> {user.name}</h1>}
+    {user&&<h1 className="mb-6 text-3xl font-bold text-gray-700"> {user.email}</h1>}
+    {user&&<h1 className="mb-6 text-3xl font-bold text-gray-700"> {user.password}</h1>}
       <h1 className="mb-6 text-3xl font-bold text-gray-700">Enter OTP</h1>
       <form onSubmit={handleSubmit} className="w-64">
         <label className="block mb-4">

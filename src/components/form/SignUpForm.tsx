@@ -1,10 +1,11 @@
 "use client";
 
+import { userStore } from "@/store/user";
 import { baseUrl } from "@/Utils/PortDetails";
 import axios from "axios";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ const FormSchema = z
 
 const SignUpForm = () => {
   const router = useRouter();
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -50,12 +51,13 @@ const SignUpForm = () => {
     defaultValues: {
       name: "",
       email: "",
-      password: "", 
+      password: "",
       confirmPassword: "",
     },
   });
 
   let myCookie = Cookies.get("jwttoken");
+  const { user, setUser } = userStore();
 
   useEffect(() => {
     if (myCookie) {
@@ -70,12 +72,14 @@ const SignUpForm = () => {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log(data);
+    
     setLoading(true);
+    setUser(data);
     try {
       const response = await axios.post(`${baseUrl}/auth/sendOtp`, data);
       if (response.status === 200) {
         console.log("User created");
-        setError('');
+        setError("");
         router.push("/otp-verification");
         setLoading(false);
       }
@@ -160,6 +164,7 @@ const SignUpForm = () => {
             Sign in
           </Link>
         </p>
+       
       </form>
     </Form>
   );

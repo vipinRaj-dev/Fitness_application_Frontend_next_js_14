@@ -7,9 +7,9 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import Spinner from "../loadingui/Spinner";
 import { baseUrl } from "@/Utils/PortDetails";
-import Userhomepage from "../homepages/Userhomepage";
-import Adminhomepage from "../homepages/Adminhomepage";
-import Trainerhomepage from "../homepages/Trainerhomepage";
+import Userhomepage from "../layouts/UserLayout";
+import Adminhomepage from "../layouts/AdminLayout";
+import Trainerhomepage from "../layouts/TrainerLayout";
 import { useRouter } from "next/navigation";
 const Dashboard = () => {
   let myCookie = Cookies.get("jwttoken");

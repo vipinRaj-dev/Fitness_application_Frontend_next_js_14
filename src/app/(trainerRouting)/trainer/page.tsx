@@ -1,8 +1,8 @@
-import Trainerhomepage from '@/components/homepages/Trainerhomepage'
+import TrainerHomePage from "@/components/homepages/TrainerHomePage"
 
 const Trainerpage = () => {
   return (
-    <div><Trainerhomepage/></div>
+    <div><TrainerHomePage/></div>
   )
 }
 

@@ -1,4 +1,5 @@
-import RoleAuthenticationCheckAdmin from "@/components/rolecheck/RoleAuthenticationCheckAdmin";
+import TrainerLayout from "@/components/layouts/TrainerLayout";
+import RoleAuthenticationCheckTrainer from "@/components/rolecheck/RoleAuthenticationCheckTrainer";
 
 export const metadata = {
   title: "Next.js",
@@ -12,8 +13,8 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <RoleAuthenticationCheckAdmin/>
-      <h1> This is the custome layouts for all the admin routes</h1>
+      <RoleAuthenticationCheckTrainer />
+      <TrainerLayout/>
       {children}
     </>
   );

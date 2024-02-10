@@ -5,22 +5,20 @@ import { Button } from "../ui/button";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-
-const Adminhomepage = () => {
+const UserLayout = () => {
   const router = useRouter();
-  
   const logout = () => {
     Cookies.remove("jwttoken");
-    console.log("logout");  
+    console.log("logout");
     router.push("/");
     window.location.reload();
   };
   return (
     <div>
-      Admin homepage  components
+      User Layout components
       <Button onClick={logout}>Logout</Button>
     </div>
   );
 };
 
-export default Adminhomepage;
+export default UserLayout;

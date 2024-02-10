@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-const Trainerhomepage = () => {
+const TrainerLayout = () => {
   const router = useRouter();
   const logout = () => {
     Cookies.remove("jwttoken");
@@ -15,10 +15,10 @@ const Trainerhomepage = () => {
   };
   return (
     <div>
-      Trainer homepage  components
+      Trainer Layout  components
       <Button onClick={logout}>Logout</Button>
     </div>
   );
 };
 
-export default Trainerhomepage;
+export default TrainerLayout;

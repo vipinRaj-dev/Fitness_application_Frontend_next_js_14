@@ -1,8 +1,8 @@
-import Adminhomepage from "@/components/homepages/Adminhomepage"
+import AdminHomePage from "@/components/homepages/AdminHomePage"
 
 const Adminpage = () => {
   return (
-    <div><Adminhomepage/></div>
+    <div><AdminHomePage/></div>
   )
 }
 

@@ -1,5 +1,5 @@
 import Spinner from '@/components/loadingui/Spinner'
-import React from 'react'
+
 
 const loading = () => {
   return (

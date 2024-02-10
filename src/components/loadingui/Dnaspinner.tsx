@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react'
 import { DNA } from 'react-loader-spinner'    
 const Dnaspinner = () => {
   return (

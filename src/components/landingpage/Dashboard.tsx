@@ -10,13 +10,15 @@ import { baseUrl } from "@/Utils/PortDetails";
 import Userhomepage from "../homepages/Userhomepage";
 import Adminhomepage from "../homepages/Adminhomepage";
 import Trainerhomepage from "../homepages/Trainerhomepage";
-
+import { useRouter } from "next/navigation";
 const Dashboard = () => {
   let myCookie = Cookies.get("jwttoken");
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+
+  const router = useRouter();
   useEffect(() => {
     if (myCookie) {
       axios
@@ -48,15 +50,21 @@ const Dashboard = () => {
 
   if (error) {
     return <div>An error occurred: {error}</div>;
-  }
 
+  }
+  
+  console.log(role);
+  
   switch (role) {
     case "admin":
-      return <Adminhomepage />;
+      router.push("/admin");
+      break;
     case "user":
-      return <Userhomepage />;
+      router.push("/user");
+      break;
     case "trainer":
-      return <Trainerhomepage />;
+      router.push("/trainer");
+      break;
     default:
       return (
         <div className="bg-red-200">

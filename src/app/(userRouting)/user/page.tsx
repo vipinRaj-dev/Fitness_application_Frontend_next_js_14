@@ -1,8 +1,9 @@
+import Userhomepage from '@/components/homepages/Userhomepage'
 import React from 'react'
 
 const Userpage = () => {
   return (
-    <div>Userpage</div>
+    <div><Userhomepage/></div>
   )
 }
 

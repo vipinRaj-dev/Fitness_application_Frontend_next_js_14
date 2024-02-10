@@ -5,8 +5,10 @@ import { Button } from "../ui/button";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
+
 const Adminhomepage = () => {
   const router = useRouter();
+  
   const logout = () => {
     Cookies.remove("jwttoken");
     console.log("logout");  

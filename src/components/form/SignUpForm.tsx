@@ -29,11 +29,11 @@ const FormSchema = z
     password: z
       .string()
       .min(1, "Password is required")
-      .min(8, "Password must have than 8 characters"),
+      .min(4, "Password must have than 8 characters"),
     confirmPassword: z
       .string()
       .min(1, "Confirm password is required")
-      .min(8, "Password must have than 8 characters"),
+      .min(4, "Password must have than 8 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -69,26 +69,28 @@ const SignUpForm = () => {
   }
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+    // console.log(data);
     
     setLoading(true);
-    try {
-      const response = await axios.post(`${baseUrl}/auth/sendOtp`, data);
+    axios.post(`${baseUrl}/auth/sendOtp`, data)
+    .then(response => {
       if (response.status === 200) {
         console.log("User created");
         setError("");
         router.replace("/otp-verification");
         setLoading(false);
       }
-    } catch (error: Error | any) {
+    })
+    .catch((error: Error | any) => {
       if (error.response && error.response.status === 409) {
-        setLoading(false)
+        setLoading(false);
         setError("Email already exists");
       } else {
         console.error(error);
       }
-    }
-  };
+    });
+  }
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2">

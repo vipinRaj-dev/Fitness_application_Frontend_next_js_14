@@ -26,7 +26,7 @@ const OtpForm = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert('otp is not valid')
+        alert('otp is not valid or time expired')
       });
   };
 

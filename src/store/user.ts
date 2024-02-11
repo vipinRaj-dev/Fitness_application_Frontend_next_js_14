@@ -9,7 +9,7 @@ type User = {
 
 type UserStore = {
     user: User;
-    setUser: (user: User) => void;
+    setUser: (user: User) => void; 
 };
 
 export const userStore = create<UserStore>((set) => ({

@@ -6,4 +6,4 @@ const Adminpage = () => {
   )
 }
 
-export default Adminpage    
+export default Adminpage     

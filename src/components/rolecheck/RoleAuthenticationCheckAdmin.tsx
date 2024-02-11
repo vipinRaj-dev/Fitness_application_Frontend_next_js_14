@@ -4,10 +4,10 @@ import { baseUrl } from "@/Utils/PortDetails";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import Spinner from "../loadingui/Spinner";
+// import Spinner from "../loadingui/Spinner";
 
 const RoleAuthenticationCheckAdmin = () => {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const myCookie = Cookies.get("jwttoken");
@@ -23,7 +23,7 @@ const RoleAuthenticationCheckAdmin = () => {
         if (res.data.role !== "admin") {
           window.location.href = "/";
         } else {
-          setLoading(false);
+          // setLoading(false);
         }
       })
       .catch((error) => {
@@ -34,13 +34,13 @@ const RoleAuthenticationCheckAdmin = () => {
     }
   }, []);
 
-  if (loading) {
-    return (
-      <div>
-        <Spinner />
-      </div>
-    ); 
-  }
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <Spinner />
+  //     </div>
+  //   ); 
+  // }
   return <div>roleAuthenticationCheckAdmin component</div>;
 };
 

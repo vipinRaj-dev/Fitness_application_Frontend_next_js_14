@@ -3,7 +3,8 @@
 import { DNA } from 'react-loader-spinner'    
 const Dnaspinner = () => {
   return (
-    <DNA
+    <div className='h-screen flex justify-center items-center'>
+      <DNA
     visible={true}
     height="80"
     width="80"
@@ -11,6 +12,7 @@ const Dnaspinner = () => {
     wrapperStyle={{}}
     wrapperClass="dna-wrapper"
     />
+    </div>
   )
 }
 

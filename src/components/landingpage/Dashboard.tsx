@@ -5,14 +5,14 @@ import { buttonVariants } from "../ui/button";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from "axios";
-import Spinner from "../loadingui/Spinner";
+// import Spinner from "../loadingui/Spinner";
 import { baseUrl } from "@/Utils/PortDetails";
 
 import { useRouter } from "next/navigation";
 const Dashboard = () => {
   let myCookie = Cookies.get("jwttoken");
   const [role, setRole] = useState("");
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -26,14 +26,14 @@ const Dashboard = () => {
         })
         .then((res) => {
           setRole(res.data.role);
-          setLoading(false);
+          // setLoading(false);
         })
         .catch(function (error) {
           setError(error);
-          setLoading(false);
+          // setLoading(false);
         });
     } else {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [myCookie]);
 
@@ -54,13 +54,13 @@ const Dashboard = () => {
     }
   }, [role]);
 
-  if (loading) {
-    return (
-      <div>
-        <Spinner />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <Spinner />
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return <div>An error occurred: {error}</div>;

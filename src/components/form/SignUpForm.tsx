@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Spinner from "../loadingui/Spinner";
+// import Spinner from "../loadingui/Spinner";
 
 const FormSchema = z
   .object({
@@ -43,7 +43,7 @@ const FormSchema = z
 const SignUpForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -61,29 +61,29 @@ const SignUpForm = () => {
     if (myCookie) {
       router.push("/");
     }
-    setLoading(false);
+    // setLoading(false);
   }, [myCookie]);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  // if (loading) {
+  //   return <Spinner />;
+  // }
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     // console.log(data);
     
-    setLoading(true);
+    // setLoading(true);
     axios.post(`${baseUrl}/auth/sendOtp`, data)
     .then(response => {
       if (response.status === 200) {
         console.log("User created");
         setError("");
         router.replace("/otp-verification");
-        setLoading(false);
+        // setLoading(false);
       }
     })
     .catch((error: Error | any) => {
       if (error.response && error.response.status === 409) {
-        setLoading(false);
+        // setLoading(false);
         setError("Email already exists");
       } else {
         console.error(error);

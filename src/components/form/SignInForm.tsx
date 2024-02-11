@@ -19,7 +19,7 @@ import axios from "axios";
 import { baseUrl } from "@/Utils/PortDetails";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import Spinner from "../loadingui/Spinner";
+// import Spinner from "../loadingui/Spinner";
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z
@@ -38,7 +38,7 @@ const SignInForm = () => {
   });
 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   let myCookie = Cookies.get("jwttoken");
 
   const router = useRouter();
@@ -47,12 +47,12 @@ const SignInForm = () => {
     if(myCookie){
       router.push('/')
     }
-    setLoading(false)
+    // setLoading(false)
   },[])
 
-  if (loading) {
-    return <Spinner />;
-  }
+  // if (loading) {
+  //   return <Spinner />;
+  // }
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     axios

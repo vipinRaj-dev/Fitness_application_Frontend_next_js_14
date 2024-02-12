@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 
 const UserLayout = () => {
   const router = useRouter();
-  const logout = () => {
+  const logout = () => { 
     Cookies.remove("jwttoken");
     console.log("logout");
-    router.push("/");
-    window.location.reload();
+    router.replace("/sign-in");
+    // window.location.reload();
   };
   return (
     <div>

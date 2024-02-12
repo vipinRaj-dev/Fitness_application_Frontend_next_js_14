@@ -47,28 +47,38 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-    <div>
-      <h1>Forgot Password</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="mb-6 text-3xl font-bold text-gray-400">Forgot Password</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="w-1/3 bg-slate-300 p-6 rounded-xl shadow-md"
+      >
+        <label className="block mb-4">
+          <span className="text-gray-700">Email:</span>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="mt-1 block p-2 w-full rounded-md text-black shadow-sm border-none outline-none"
           />
         </label>
-        <label>
-          New password:
+        <label className="block mb-4">
+          <span className="text-gray-700">New password:</span>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="mt-1 p-2 block w-full rounded-md text-black shadow-sm border-none outline-none"
           />
         </label>
-        <button type="submit">Verify</button>
+        <button
+          type="submit"
+          className="w-full px-3 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-500"
+        >
+          Verify
+        </button>
       </form>
     </div>
   );

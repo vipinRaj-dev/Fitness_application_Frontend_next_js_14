@@ -1,9 +1,10 @@
-
 "use client";
 
 import axiosInstance from "@/axios/creatingInstance";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import swal from "sweetalert";
 
 interface User {
   _id: string;
@@ -15,6 +16,8 @@ interface User {
 
 const UpdateUser = ({ userId }: { userId: string }) => {
   const [userDetails, setUserDetails] = useState({} as User);
+
+  const router = useRouter();
 
   useEffect(() => {
     const getUserDetails = async () => {
@@ -35,27 +38,48 @@ const UpdateUser = ({ userId }: { userId: string }) => {
     });
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => { 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await axiosInstance
       .put(`/admin/user/${userId}`, userDetails)
       .then((res) => {
         console.log(res);
         if (res.data) {
-          alert(res.data.message);
+          swal({
+            title: "success!",
+            text: "User updated successfully!",
+            icon: "success",
+            className: "bg-green-100",
+          }).then(() => {
+            router.back();
+          });
         } else {
-          alert("User not updated");
+          swal({
+            title: "warning!",
+            text: "User not updated!",
+            icon: "warning",
+            className: "bg-yellow-100",
+          }).then(() => {
+            router.back();
+          });
         }
       })
       .catch((err) => {
-        alert(err.response.data.message);
+       swal({
+            title: "error!",
+            text: err.response.data.message,
+            icon: "error",
+            className: "bg-red-100",
+          }).then(() => {
+            router.back();
+          });
       });
-  }
+  };
 
   return (
     <div>
       UpdateUser component
-      <form onSubmit={handleSubmit} >
+      <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username</label>
         <input
           value={userDetails.name}

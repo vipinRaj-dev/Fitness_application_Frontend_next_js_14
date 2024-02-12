@@ -4,7 +4,7 @@ import { baseUrl } from "@/Utils/PortDetails";
 import axios from "axios";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
@@ -92,81 +92,82 @@ const SignUpForm = () => {
   }
   
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2">
-        {error && <p className="text-red-500 text-center text-2xl">{error}</p>}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="John Jacob" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail</FormLabel>
-              <FormControl>
-                <Input placeholder="example@gmail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter Confirm password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="w-full mt-7" type="submit">
-          Sign Up
-        </Button>
-        <p className="text-center mt-4">
-          Don't have an account?
-          <Link className="hover:underline" href="/sign-in">
-            Sign in
-          </Link>
-        </p>
-       
-      </form>
-    </Form>
+    <Form {...form} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+  <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+    {error && <p className="text-red-500 text-center text-2xl">{error}</p>}
+    <FormField
+      control={form.control}
+      name="name"
+      render={({ field }) => (
+        <FormItem className="mb-4">
+          <FormLabel className="block text-gray-700 text-sm font-bold mb-2">Username</FormLabel>
+          <FormControl>
+            <Input placeholder="John Jacob" {...field} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name="email"
+      render={({ field }) => (
+        <FormItem className="mb-4">
+          <FormLabel className="block text-gray-700 text-sm font-bold mb-2">E-mail</FormLabel>
+          <FormControl>
+            <Input placeholder="example@gmail.com" {...field} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name="password"
+      render={({ field }) => (
+        <FormItem className="mb-4">
+          <FormLabel className="block text-gray-700 text-sm font-bold mb-2">Password</FormLabel>
+          <FormControl>
+            <Input
+              type="password"
+              placeholder="Enter password"
+              {...field}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name="confirmPassword"
+      render={({ field }) => (
+        <FormItem className="mb-4">
+          <FormLabel className="block text-gray-700 text-sm font-bold mb-2">Confirm password</FormLabel>
+          <FormControl>
+            <Input
+              type="password"
+              placeholder="Enter Confirm password"
+              {...field}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <Button className="bg-slate-200 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-7" type="submit">
+      Sign Up
+    </Button>
+    <p className="text-center mt-4">
+      Don't have an account?
+      <Link className="hover:underline ms-2 text-blue-500" href="/sign-in">
+        Sign in
+      </Link>
+    </p>
+  </form>
+</Form>
   );
 };
 

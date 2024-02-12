@@ -21,7 +21,7 @@ const RoleAuthenticationCheckTrainer= () => {
       })
       .then((res) => { 
         if (res.data.role !== "trainer") {
-          window.location.href = "/";
+          window.location.href = "/NotAuthorized";
         } else {
           setLoading(false);
         }

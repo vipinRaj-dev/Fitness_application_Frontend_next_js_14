@@ -12,8 +12,8 @@ const AdminLayout = () => {
   const logout = () => {
     Cookies.remove("jwttoken");
     console.log("logout");  
-    router.push("/");
-    window.location.reload();
+    router.replace("/sign-in");
+    // window.location.reload();
   };
   return (
     <div>

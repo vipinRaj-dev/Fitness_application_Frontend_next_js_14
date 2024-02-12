@@ -21,7 +21,7 @@ const RoleAuthenticationCheckAdmin = () => {
       })
       .then((res) => {
         if (res.data.role !== "admin") {
-          window.location.href = "/";
+          window.location.href = "/NotAuthorized";
         } else {
           // setLoading(false);
         }

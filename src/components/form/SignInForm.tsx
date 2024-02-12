@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Form,
   FormControl,
@@ -34,7 +35,7 @@ const SignInForm = () => {
     defaultValues: {
       email: "",
       password: "",
-    }, 
+    },
   });
 
   const [error, setError] = useState(null);
@@ -44,11 +45,11 @@ const SignInForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if(myCookie){
-      router.push('/')
+    if (myCookie) {
+      router.push("/");
     }
     // setLoading(false)
-  },[])
+  }, []);
 
   // if (loading) {
   //   return <Spinner />;
@@ -68,53 +69,61 @@ const SignInForm = () => {
       });
   };
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2">
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="example@gmail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="w-full mt-7" type="submit">
-          SignIn
-        </Button>
-        <p className="text-center mt-4">
-          Don't have an account?
-          <Link className="hover:underline" href="/sign-up">
-            Sign Up
-          </Link>
-          <Link className="hover:underline" href="/forgotpassword">
-          forgotPassword
-          </Link>
-        </p>
-      </form>
-    </Form>
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+          {error && <p className="text-red-500 text-center">{error}</p>}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="example@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    {...field}
+                  />
+                </FormControl>
+                <div className="flex justify-end items-center">
+            <Link
+              className="hover:underline text-center"
+              href="/forgotpassword"
+            >
+              ForgotPassword
+            </Link>
+          </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button className="w-full mt-2 " type="submit">
+            SignIn
+          </Button>
+          <p className="text-center mt-4 block">
+            Don't have an account?
+            <Link className="hover:underline mx-2" href="/sign-up">
+              Sign Up
+            </Link>
+          </p>
+         
+        </form>
+      </Form>
+    </div>
   );
 };
 

@@ -1,22 +1,21 @@
 "use client";
-
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { buttonVariants } from "../ui/button";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from "axios";
-// import Spinner from "../loadingui/Spinner";
 import { baseUrl } from "@/Utils/PortDetails";
-
 import { useRouter } from "next/navigation";
-const Dashboard = () => {
-  let myCookie = Cookies.get("jwttoken");
-  const [role, setRole] = useState("");
-  // const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
+const Dashboard = () => {
+  const [role, setRole] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  
   const router = useRouter();
+
   useEffect(() => {
+    let myCookie = Cookies.get("jwttoken");
     if (myCookie) {
       axios
         .get(`${baseUrl}/auth/role`, {
@@ -26,41 +25,36 @@ const Dashboard = () => {
         })
         .then((res) => {
           setRole(res.data.role);
-          // setLoading(false);
+          setLoading(false);
         })
         .catch(function (error) {
           setError(error);
-          // setLoading(false);
+          setLoading(false);
         });
     } else {
-      // setLoading(false);
+      setLoading(false);
     }
-  }, [myCookie]);
+  }, []);
 
-
-  console.log(role);
-  
   useEffect(() => {
-    switch (role) {
-      case "admin":
-        router.push("/admin");
-        break;
-      case "user":
-        router.push("/user");
-        break;
-      case "trainer":
-        router.push("/trainer");
-        break;
+    if (!loading) {
+      switch (role) {
+        case "admin":
+          router.push("/admin");
+          break;
+        case "user":
+          router.push("/user");
+          break;
+        case "trainer":
+          router.push("/trainer");
+          break;
+      }
     }
-  }, [role]);
+  }, [role, loading]);
 
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <Spinner />
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return <div>Loading... from Dashboard</div>; // Replace this with your loading component or any placeholder content
+  }
 
   if (error) {
     return <div>An error occurred: {error}</div>;

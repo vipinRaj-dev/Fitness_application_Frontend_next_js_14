@@ -1,7 +1,6 @@
 "use client";
 import axiosInstance from "@/axios/creatingInstance";
 import Dnaspinner from "@/components/loadingui/Dnaspinner";
-import Spinner from "@/components/loadingui/Spinner";
 import React, { useEffect, useState } from "react";
 import swal from "sweetalert";
 
@@ -14,7 +13,6 @@ type FormState = {
   height: number;
   profileImage: File | string;
 };
-
 
 const UserProfile = () => {
   const [form, setForm] = useState<FormState>({
@@ -91,29 +89,35 @@ const UserProfile = () => {
       .then((res) => {
         console.log(res.data);
         setLoading(false);
-        if(res.status === 200){
+        if (res.status === 200) {
           swal({
             title: "seccess!",
             text: "Updated succesfully",
             icon: "success",
-          }).then(() => { 
-           window.location.reload();
-          })
-        }else{
-          swal("Profile Not Updated", "Your profile has not been updated", "error");
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          swal({
+            title: "Profile Not Updated",
+            text: "Your profile has not been updated",
+            icon: "error",
+          });
         }
       })
-      .catch((err) => {
+      .catch((err: Error | any) => {
         setLoading(false);
-        console.log(err);
+        console.log(err.response.data);
+        swal({
+          title: "warning!",
+          text: err.response.data.msg,
+          icon: "warning",
+        });
       });
   };
 
-
-  if(loading){
-    return (
-      <Dnaspinner />
-    );
+  if (loading) {
+    return <Dnaspinner />;
   }
   return (
     <form
@@ -122,18 +126,18 @@ const UserProfile = () => {
     >
       <div className="flex flex-col bg-slate-900 p-20 rounded-xl shadow-2xl w-full md:w-full lg:w-9/12 space-y-6">
         <div className="flex justify-center ">
-        {form.profileImage && (
-          <img
-          className="rounded-3xl border-2 border-slate-500"
-            src={
-              typeof form.profileImage === "string"
-                ? form.profileImage
-                : "https://cdn-icons-png.flaticon.com/512/219/219970.png"
-            }
-            width={300}
-            alt=""
-          />
-        )}
+          {form.profileImage && (
+            <img
+              className="rounded-3xl border-2 border-slate-500"
+              src={
+                typeof form.profileImage === "string"
+                  ? form.profileImage
+                  : "https://cdn-icons-png.flaticon.com/512/219/219970.png"
+              }
+              width={300}
+              alt=""
+            />
+          )}
         </div>
 
         {/* <Image src='http://res.cloudinary.com/dxxbvjmz5/image/upload/v1707805602/user-Images/x74bkkb3btxdeexaeyol.png' alt="demoImage" width={100} height={100}></Image> */}

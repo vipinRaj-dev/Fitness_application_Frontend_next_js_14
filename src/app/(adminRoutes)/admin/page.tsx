@@ -2,8 +2,12 @@ import AdminHomePage from "@/components/homepages/AdminHomePage"
 
 const Adminpage = () => {
   return (
-    <div><AdminHomePage/></div>
+    <div>
+      {/* <AdminHomePage/> */}
+    here the admin home page components like cards and graphs
+    
+    </div>
   )
 }
 
-export default Adminpage     
+export default Adminpage      

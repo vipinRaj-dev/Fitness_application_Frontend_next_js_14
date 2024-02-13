@@ -1,5 +1,6 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
 import RoleAuthenticationCheckAdmin from "@/components/rolecheck/RoleAuthenticationCheckAdmin";
+import HomePageLogout from "@/components/usersidecomponents/HomePageLogout";
 
 export const metadata = {
   title: "Next.js",
@@ -10,12 +11,14 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) { 
   return (
     <> 
-      <RoleAuthenticationCheckAdmin/>
+    <RoleAuthenticationCheckAdmin/>
       <AdminLayout/>
+      <HomePageLogout/>
       {children}
+      <div>Footer</div>
     </>
   );
 }

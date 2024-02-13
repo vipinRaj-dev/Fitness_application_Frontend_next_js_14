@@ -33,14 +33,32 @@ const UserProfile = ({ userId }: { userId: string }) => {
   }, [userId]);
 
   return (
-    <div>
-      this is the userProfile components user id: {userId}
-      <h1>User Profile</h1>
-      <h3>Name : {userData.name}</h3>
-      <h3>Email : {userData.email}</h3>
-      <h3>Role : {userData.role}</h3>
-      <h3>Plan Selected : {userData.planSelected}</h3>
-      
+    <div className="flex ">
+      <div className="flex flex-col">
+        <div className="bg-white p-6 rounded shadow-md max-w-lg my-2 ">
+          
+          <h1 className="text-2xl mb-4">User Profile</h1>
+          <div className="space-y-2">
+            <h3 className="text-lg font-medium text-gray-700">
+              Name : <span className="font-normal">{userData.name}</span>
+            </h3>
+            <h3 className="text-lg font-medium text-gray-700">
+              Email : <span className="font-normal">{userData.email}</span>
+            </h3>
+            <h3 className="text-lg font-medium text-gray-700">
+              Role : <span className="font-normal">{userData.role}</span>
+            </h3>
+            <h3 className="text-lg font-medium text-gray-700">
+              Plan Selected :
+              <span className="font-normal">{userData.planSelected}</span>
+            </h3>
+          </div>
+        </div>
+        <div className=" bg-slate-300 max-w-lg h-80 ">calender</div>
+      </div>
+      <div className="bg-slate-300 rounded-md m-2 w-full">
+        user Details
+      </div>
     </div>
   );
 };

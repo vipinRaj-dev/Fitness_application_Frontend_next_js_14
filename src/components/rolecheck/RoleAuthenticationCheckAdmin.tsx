@@ -41,7 +41,7 @@ const RoleAuthenticationCheckAdmin = () => {
       </div>
     ); 
   }
-  return <div>roleAuthenticationCheckAdmin component</div>;
+  return <></>
 };
 
 export default RoleAuthenticationCheckAdmin;

@@ -11,7 +11,6 @@ interface User {
   email: string;
   name: string;
   role: string;
-  planSelected: string;
 }
 
 const UpdateUser = ({ userId }: { userId: string }) => {
@@ -77,36 +76,37 @@ const UpdateUser = ({ userId }: { userId: string }) => {
   };
 
   return (
+<div className="bg-white  p-6 rounded-2xl shadow-md max-w-lg mx-auto mt-10">
+  <h2 className="text-2xl text-black mb-4">Update User</h2>
+  <form onSubmit={handleSubmit} className="space-y-4">
     <div>
-      UpdateUser component
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input
-          value={userDetails.name}
-          type="text"
-          id="username"
-          name="name"
-          onChange={handleChange}
-        />
-        <label htmlFor="email">Email</label>
-        <input
-          value={userDetails.email}
-          type="email"
-          id="email"
-          name="email"
-          onChange={handleChange}
-        />
-        <label htmlFor="planSelected">Plan Selected</label>
-        <input
-          value={userDetails.planSelected}
-          type="text"
-          id="planSelected"
-          name="planSelected"
-          onChange={handleChange}
-        />
-        <Button type="submit">Update User</Button>
-      </form>
+      <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+      <input
+        value={userDetails.name}
+        type="text"
+        id="username"
+        name="name"
+        onChange={handleChange}
+        className="mt-1 block w-full rounded-md text-black border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+      />
     </div>
+    <div>
+      <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+      <input
+        value={userDetails.email}
+        type="email"
+        id="email"
+        name="email"
+        onChange={handleChange}
+        className="mt-1 block w-full rounded-md text-black border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+      />
+    </div>
+    <div>
+     
+    </div>
+    <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Update User</Button>
+  </form>
+</div>
   );
 };
 

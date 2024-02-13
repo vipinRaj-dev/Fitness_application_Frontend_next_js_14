@@ -5,20 +5,19 @@ import { Button } from "../ui/button";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-const UserLayout = () => {
+const HomePageLogout = () => {
   const router = useRouter();
-  const logout = () => { 
+  const logout = () => {
     Cookies.remove("jwttoken");
     console.log("logout");
     router.replace("/sign-in");
     // window.location.reload();
   };
   return (
-    <div>
-      User Layout components
-      <Button onClick={logout}>Logout</Button>
-    </div>
+    <Button className="mx-4" onClick={logout}>
+      Logout
+    </Button>
   );
 };
 
-export default UserLayout;
+export default HomePageLogout;

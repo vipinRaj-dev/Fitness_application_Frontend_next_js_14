@@ -3,7 +3,7 @@
 import { baseUrl } from "@/Utils/PortDetails";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 import Spinner from "../loadingui/Spinner";
 
 const RoleAuthenticationCheckUser = () => {
@@ -40,7 +40,7 @@ const RoleAuthenticationCheckUser = () => {
       </div>
     );
   }
-  return <div>roleAuthenticationCheckAdmin component</div>;
+  return <></>
 };
 
 export default RoleAuthenticationCheckUser;

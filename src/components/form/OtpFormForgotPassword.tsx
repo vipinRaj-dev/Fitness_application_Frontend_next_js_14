@@ -5,13 +5,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "../loadingui/Spinner";
+import swal from "sweetalert";
 
 const OtpFormForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-
 
   if (loading) {
     return <Spinner />;
@@ -28,10 +28,18 @@ const OtpFormForgotPassword = () => {
         if (res.status === 200) {
           setLoading(false);
           console.log("User created");
-          alert("password reset successful");
+          swal({
+            title: "Success",
+            text: "password reset successfully",
+            icon: "success",
+          });
           router.replace("/sign-in");
         } else if (res.status === 404) {
-          alert("user not found");
+          swal({
+            title: "Error",
+            text: "User not found",
+            icon: "error",
+          });
         } else {
           setLoading(false);
           console.log("User not created from the otp page");
@@ -40,12 +48,19 @@ const OtpFormForgotPassword = () => {
       })
       .catch((err) => {
         console.log(err);
+        swal({
+          title: "Error",
+          text: "Invalid otp or expired otp",
+          icon: "error",
+        });
+        console.error("here is the error");
       });
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="mb-6 text-3xl font-bold text-gray-700">Enter OTP</h1>
+      <h1 className="mb-6 text-xl  text-gray-700">Otp has send to the email</h1>
       <form onSubmit={handleSubmit} className="w-64">
         <label className="block mb-4">
           <span className="text-gray-700">OTP:</span>
@@ -54,12 +69,12 @@ const OtpFormForgotPassword = () => {
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            className="mt-1 p-2 block w-full rounded-md  text-black text-center outline-none"
           />
         </label>
         <button
           type="submit"
-          className="w-full px-3 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-500"
+          className="w-full px-3 py-2 text-white bg-indigo-500 rounded-2xl hover:bg-indigo-700"
         >
           Submit
         </button>

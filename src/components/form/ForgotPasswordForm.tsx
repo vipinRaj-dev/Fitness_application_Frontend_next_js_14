@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "../loadingui/Spinner";
+import swal from "sweetalert";
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
@@ -35,14 +36,21 @@ const ForgotPasswordForm = () => {
         })
         .catch((err) => {
           setLoading(false);
-
-          alert("user not found");
+          swal({
+            title: "Error",
+            text: "User not found",
+            icon: "error",
+          });
           console.error(err);
         });
     } catch (error) {
       console.error(error);
       setLoading(false);
-      alert("forgot password some problem");
+      swal({
+        title: "Error",
+        text: "password reset failed",
+        icon: "error",
+      });
     }
   };
 

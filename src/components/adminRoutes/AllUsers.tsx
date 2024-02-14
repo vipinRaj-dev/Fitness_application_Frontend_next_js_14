@@ -60,17 +60,25 @@ const AllUsers = () => {
               icon: "success",
             });
           } else {
-            alert("User not updated");
+            swal({  
+              title: "User Not Updated",
+              text: res.data.message,
+              icon: "error",
+            });
           }
         })
         .catch((err) => {
-          alert(err.response.data.message);
+          swal({
+            title: "Error",
+            text: err.response.data.message,
+            icon: "error",
+          });
         });
     }
   };
 
   return (
-    <div className="w-full bg-slate-500 p-6">
+    <div className="w-full  p-6">
   <h1 className="text-4xl mb-4 text-white">Users</h1>
   <div className="overflow-x-auto max-w-screen">
     <table className="w-full text-md  shadow-md rounded mb-4">
@@ -87,7 +95,7 @@ const AllUsers = () => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-             <tr className="border-b hover:bg-orange-100" key={user._id}>
+             <tr className="border-b hover:bg-slate-900 " key={user._id}>
              <td className="p-3 px-5 overflow-auto">{index + 1}</td>
              <td className="p-3 px-5 overflow-auto">{user.name}</td>
              <td className="p-3 px-5 overflow-auto">{user.email}</td>
@@ -106,8 +114,8 @@ const AllUsers = () => {
                     }}
                     className={`font-bold py-2 px-4 rounded ${
                       user.userBlocked
-                        ? "bg-red-500 hover:bg-red-700"
-                        : "bg-green-500 hover:bg-green-700"
+                        ? "bg-green-500 hover:bg-green-700"
+                        : "bg-red-500 hover:bg-red-700"
                     }`}
                   >
                     {user.userBlocked ? "Unblock" : "Block"}

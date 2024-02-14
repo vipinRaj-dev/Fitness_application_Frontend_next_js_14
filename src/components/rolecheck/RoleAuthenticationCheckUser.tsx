@@ -5,10 +5,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Spinner from "../loadingui/Spinner";
-
+import swal from "sweetalert";
+import { useRouter } from "next/navigation";
 const RoleAuthenticationCheckUser = () => {
   const [loading, setLoading] = useState(true);
-
+  const router = useRouter();
   useEffect(() => {
     const myCookie = Cookies.get("jwttoken");
 
@@ -21,12 +22,23 @@ const RoleAuthenticationCheckUser = () => {
         })
         .then((res) => {
           if (res.data.role !== "user") {
-            window.location.href = "/NotAuthorized";
+            router.replace("/NotAuthorized");
           } else {
             setLoading(false);
           }
         })
         .catch((error) => {
+          if (error.response.status === 401) {
+            console.log("user is blocked");
+            swal({
+              title: "Error!",
+              text: "User blocked contact admin",
+              icon: "error",
+            }).then(() => {
+              Cookies.remove("jwttoken");
+              router.replace("/");
+            });
+          }
           console.log("error inside the roleAuthenticationCheckuser", error);
         });
     } else {
@@ -40,7 +52,7 @@ const RoleAuthenticationCheckUser = () => {
       </div>
     );
   }
-  return <></>
+  return <></>;
 };
 
 export default RoleAuthenticationCheckUser;

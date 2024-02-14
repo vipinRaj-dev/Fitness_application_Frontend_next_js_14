@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -62,10 +62,10 @@ const Dashboard = () => {
 
   if (role === "") {
     return (
-      <div className="bg-red-200">
+      <div>
         <h1 className="text-red-600 text-4xl text-center ">Landing page</h1>
         <Link href="/sign-in" className={buttonVariants({ variant: "ghost" })}>
-          Sign in
+          <Button>Sign in</Button>
         </Link>
         <Link href="/sign-up" className={buttonVariants({ variant: "ghost" })}>
           Sign up

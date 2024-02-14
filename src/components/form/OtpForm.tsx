@@ -27,7 +27,11 @@ const OtpForm = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert("otp is not valid or time expired");
+        swal({
+          title: "Error",
+          text: "Invalid otp or expired otp",
+          icon: "error",
+        });
       });
   };
 
@@ -42,9 +46,9 @@ const OtpForm = () => {
         title: "warning!",
         text: "Otp time expired",
         icon: "warning",
-      }).then(() => { 
+      }).then(() => {
         router.replace("/sign-up");
-      })
+      });
     }
   }, [timer]);
 
@@ -71,7 +75,9 @@ const OtpForm = () => {
         >
           Submit
         </button>
-        <p className="text-black text-center">{timer === 0 ? "Resend OTP" : `${timer} seconds remaining`}</p>
+        <p className="text-black text-center">
+          {timer === 0 ? "Resend OTP" : `${timer} seconds remaining`}
+        </p>
       </form>
     </div>
   );

@@ -25,7 +25,6 @@ const CreateUser = () => {
       .then((res) => {
         console.log(res);
         if(res.data){
-          alert(res.data.message)
           swal({
             title: "User Created",
             text: res.data.message,
@@ -42,25 +41,30 @@ const CreateUser = () => {
         }
       })
       .catch((err) => {
-        alert(err.response.data.message);
+        swal({
+          title: "Error",
+          text: err.response.data.message,
+          icon: "error",
+        });
       });
   };
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto mt-10">
+      <h1 className="text-center p-3 text-xl mb-10 text-black"> Create user</h1>
     <form onSubmit={handleCreateUserSubmit} className="space-y-4">
       <div>
         <label htmlFor="username" className="block text-sm font-medium  text-gray-700">Username</label>
-        <input type="text" id="username" name="username" className=" text-slate-600 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+        <input type="text" id="username" name="username" className=" text-slate-600 mt-1 block w-full rounded-md outline-none p-3 border-2" />
       </div>
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-        <input type="email" id="email" name="email" className="text-slate-600 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+        <input type="email" id="email" name="email" className="text-slate-600 mt-1 block w-full rounded-md outline-none p-3 border-2" />
       </div>
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" id="password" name="password" className="text-slate-600 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+        <input type="password" id="password" name="password" className="text-slate-600 mt-1 block w-full rounded-md outline-none p-3 border-2" />
       </div>
-      <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Create User</Button>
+      <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-7 px-4 rounded w-full">Create User</Button>
     </form>
   </div>
   );

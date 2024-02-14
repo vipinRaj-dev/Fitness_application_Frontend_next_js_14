@@ -3,7 +3,6 @@ import axiosInstance from "@/axios/creatingInstance";
 import Dnaspinner from "@/components/loadingui/Dnaspinner";
 import React, { useEffect, useState } from "react";
 import swal from "sweetalert";
-
 type FormState = {
   _id: string;
   name: string;
@@ -78,7 +77,7 @@ const UserProfile = () => {
     //   formData.append(key, typeof value === 'number' ? value.toString() : value);
     // });
 
-    // console.log(formData);
+    console.log(formData);
 
     await axiosInstance
       .put("/user/profileUpdate", formData, {
@@ -95,6 +94,7 @@ const UserProfile = () => {
             text: "Updated succesfully",
             icon: "success",
           }).then(() => {
+            
             window.location.reload();
           });
         } else {
@@ -159,7 +159,7 @@ const UserProfile = () => {
             type="text"
             onChange={handleInputChange}
             placeholder="Name"
-            className="rounded px-3 py-2 w-full  text-black text-black"
+            className="rounded px-3 py-2 w-ful text-black"
           />
         </label>
         <label>

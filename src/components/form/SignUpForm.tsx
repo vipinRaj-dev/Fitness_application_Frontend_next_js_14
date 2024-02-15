@@ -92,7 +92,7 @@ const SignUpForm = () => {
   }
   
   return (
-    <Form {...form} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <Form {...form}>
   <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
     {error && <p className="text-red-500 text-center text-2xl">{error}</p>}
     <FormField

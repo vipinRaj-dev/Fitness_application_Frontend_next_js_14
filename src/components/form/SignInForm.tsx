@@ -69,7 +69,7 @@ const SignInForm = () => {
       });
   };
   return (
-    <div>
+    <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           {error && <p className="text-red-500 text-center">{error}</p>}

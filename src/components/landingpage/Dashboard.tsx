@@ -110,7 +110,7 @@ const Dashboard = () => {
                   <h1 className="text-4xl md:text-7xl font-sans font-medium leading-normal mb-3">
                     Helps for your <br /> ideal body fitness
                   </h1>
-                  <p className="hidden md:font-normal">
+                  <p className="md:font-normal">
                     Motivate users with benefits and positive reinforcement,
                     <br /> and offer modifications and progress tracking.
                   </p>
@@ -120,7 +120,7 @@ const Dashboard = () => {
             <div className="w-full md:w-1/2 flex flex-col md:flex-row">
               <div className="flex flex-col justify-end relative">
                 <div className="rotate-[270deg] absolute top-48 left-16">
-                  <h1 className=" hidden md:text-8xl opacity-30 tracking-wider font-extrabold text-slate-600">
+                  <h1 className=" md:text-8xl opacity-30 tracking-wider font-extrabold text-slate-600">
                     Fitness
                   </h1>
                 </div>

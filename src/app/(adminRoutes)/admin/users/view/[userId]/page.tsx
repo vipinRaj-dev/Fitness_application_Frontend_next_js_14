@@ -8,7 +8,7 @@ const page = ({
   };
 }) => {
   const userId = params.userId;
-  console.log("this is the user id from the parmas ", userId);
+  // console.log("this is the user id from the parmas ", userId);
 
   return (
     <div>

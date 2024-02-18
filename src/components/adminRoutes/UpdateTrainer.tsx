@@ -6,15 +6,15 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 
-interface User {
+interface trainer {
   _id: string;
   email: string;
   name: string;
   role: string;
 }
 
-const UpdateUser = ({ userId }: { userId: string }) => {
-  const [userDetails, setUserDetails] = useState<User>({
+const UpdateTrainer = ({ trainerId }: { trainerId: string }) => {
+  const [trainerDetails, setTrainerDetails] = useState<trainer>({
     _id: "",
     email: "",
     name: "",
@@ -24,20 +24,20 @@ const UpdateUser = ({ userId }: { userId: string }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const getUserDetails = async () => {
+    const gettrainerDetails = async () => {
       try {
-        const response = await axiosInstance.get(`/admin/user/${userId}`);
-        setUserDetails(response.data.user);
+        const response = await axiosInstance.get(`/admin/trainer/${trainerId}`);
+        setTrainerDetails(response.data.trainer);
       } catch (error) {
         console.log("error fetching user details", error);
       }
     };
-    getUserDetails();
-  }, [userId]);
+    gettrainerDetails();
+  }, [trainerId]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserDetails({
-      ...userDetails,
+    setTrainerDetails({
+      ...trainerDetails,
       [event.target.name]: event.target.value,
     });
   };
@@ -45,13 +45,13 @@ const UpdateUser = ({ userId }: { userId: string }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await axiosInstance
-      .put(`/admin/user/${userId}`, userDetails)
+      .put(`/admin/trainer/${trainerId}`, trainerDetails)
       .then((res) => {
         console.log(res);
         if (res.data) {
           swal({
             title: "success!",
-            text: "User updated successfully!",
+            text: "Trainer updated successfully!",
             icon: "success",
             className: "bg-green-100",
           }).then(() => {
@@ -60,7 +60,7 @@ const UpdateUser = ({ userId }: { userId: string }) => {
         } else {
           swal({
             title: "warning!",
-            text: "User not updated!",
+            text: "Trainer not updated!",
             icon: "warning",
             className: "bg-yellow-100",
           }).then(() => {
@@ -82,7 +82,7 @@ const UpdateUser = ({ userId }: { userId: string }) => {
 
   return (
     <div className="bg-white  p-6 rounded-2xl shadow-md max-w-lg mx-auto mt-10">
-      <h2 className="text-2xl text-black mb-4">Update User</h2>
+      <h2 className="text-2xl text-black mb-4">Update Trainer</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
@@ -92,7 +92,7 @@ const UpdateUser = ({ userId }: { userId: string }) => {
             Username
           </label>
           <input
-            value={userDetails.name}
+            value={trainerDetails.name}
             type="text"
             id="username"
             name="name"
@@ -108,7 +108,7 @@ const UpdateUser = ({ userId }: { userId: string }) => {
             Email
           </label>
           <input
-            value={userDetails.email}
+            value={trainerDetails.email}
             type="email"
             id="email"
             name="email"
@@ -121,11 +121,11 @@ const UpdateUser = ({ userId }: { userId: string }) => {
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
         >
-          Update User
+          Update Trainer
         </Button>
       </form>
     </div>
   );
 };
 
-export default UpdateUser;
+export default UpdateTrainer;

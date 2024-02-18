@@ -28,7 +28,7 @@ const UserProfile = () => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get("user/profile");
-        console.log(res.data.user);
+        // console.log(res.data.user);
 
         setForm((prevState) => ({
           ...prevState,
@@ -64,7 +64,7 @@ const UserProfile = () => {
     setLoading(true);
     console.log(" form send");
 
-    // console.log(form);
+    console.log(form);
 
     const formData = new FormData();
     Object.keys(form).forEach((key) => {

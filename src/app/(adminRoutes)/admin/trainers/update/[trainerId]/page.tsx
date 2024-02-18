@@ -5,16 +5,16 @@ const page = ({
   params,
 }: {
   params: {
-    userId: string;
+    trainerId: string;
   };
 }) => {
-  const userId = params.userId;
-  // console.log("this is the trainer id from the parmas ", userId);
+  const trainerId = params.trainerId;
+  // console.log("this is the trainer id from the parmas ", trainerId);
 
   return (
     <div> 
       view trainer update page
-      <UpdateUser userId ={userId}/>
+      <UpdateTrainer trainerId ={trainerId}/>
     </div>
   );
 };

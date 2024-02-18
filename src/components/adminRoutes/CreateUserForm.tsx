@@ -3,9 +3,15 @@
 import axiosInstance from "@/axios/creatingInstance";
 import { Button } from "../ui/button";
 import swal from "sweetalert";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 const CreateUser = () => {
   const router = useRouter();
+
+  let pageUrl = usePathname()
+
+  console.log("pathname" , pageUrl)
+
+  let url = pageUrl === "/admin/users/create" ? "/admin/createUser" : "/admin/createTrainer"
   const handleCreateUserSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -21,7 +27,7 @@ const CreateUser = () => {
       password,
     };
     await axiosInstance
-      .post("/admin/createUser", userData)
+      .post(url, userData)
       .then((res) => {
         console.log(res);
         if(res.data){

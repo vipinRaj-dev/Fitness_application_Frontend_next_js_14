@@ -1,6 +1,43 @@
+"use client";
+
+import { baseUrl } from "@/Utils/PortDetails";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import Cookies from "js-cookie";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Userpage = () => {
+  const makePayment = async () => {
+    // console.log("payment done");
+
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
+    );
+
+    const body = {
+      amount: 1000,
+      plan: "premium",
+    };
+    const headers = {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${Cookies.get("jwttoken")}`,
+    };
+
+    const response = await fetch(`${baseUrl}/user/create-checkout-session`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    const session = await response.json();
+    if (stripe) {
+      const result: any = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+      if (result.error) {
+        console.log(result.error.message);
+      }
+    }
+  };
   return (
     <div>
       <div className="flex justify-end p-3">
@@ -163,12 +200,12 @@ const Userpage = () => {
                   <span className="">Priority Support</span>
                 </li>
               </ul>
-              <a
-                href="#"
+              <Button
+                onClick={makePayment}
                 className="block px-8 py-3 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base"
               >
-                Get Started for Free
-              </a>
+                Buy Now
+              </Button>
             </div>
           </div>
         </div>

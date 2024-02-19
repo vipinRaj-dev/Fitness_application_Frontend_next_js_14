@@ -5,6 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import Cookies from "js-cookie";
 import { loadStripe } from "@stripe/stripe-js";
+import AreaChartPlot from "@/components/recharts/AreaChartPlot";
+import PieChartPlot from "@/components/recharts/PieChartPlot";
+import BarChartPlot from "@/components/recharts/BarChartPlot";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import Image from "next/image";
+import FoodCard from "@/components/usercomponents/FoodCard";
 
 const Userpage = () => {
   const makePayment = async () => {
@@ -15,7 +23,7 @@ const Userpage = () => {
     );
 
     const body = {
-      amount: 1000,
+      amount: 2500,
       plan: "premium",
     };
     const headers = {
@@ -38,18 +46,121 @@ const Userpage = () => {
       }
     }
   };
+
   return (
-    <div>
+    <div className="">
       <div className="flex justify-end p-3">
         <h1 className="mx-2">Workouting</h1>
         <Switch className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500" />
       </div>
-      <div className="bg-slate-400 w-full ">
-        <div className="h-96 mt-8">Details for chart implementation</div>
+
+      <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
+        <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl">
+          <h1 className="font-semibold text-center">Attandance</h1>
+          <div className="h-full w-full pb-10">
+            <AreaChartPlot />
+          </div>
+        </div>
+
+        <div className="w-full md:w-3/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl p-2">
+          <h1 className="font-semibold text-center">Attandance</h1>
+          <PieChartPlot />
+        </div>
+
+        <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl p-2">
+          <h1 className="font-semibold text-center">Attandance</h1>
+          <BarChartPlot />
+        </div>
       </div>
-      <div>for check bmi and other details</div>
-      <div>for water bottle detils</div>
-      <div>Diet plan</div>
+
+      <div className="bg-blue-300 w-full h-screen p-1 mt-10 md:mt-36">
+        <div className="h-3/6 bg-slate-500 gap-5 md:flex md:justify-evenly">
+          <div className="flex justify-center">
+            <div className="w-3/4">
+              <img src="/images/bmi.png" alt="bmi" />
+            </div>
+          </div>
+
+          <div className="p-2 mt-3 flex md:flex-col md:items-center md:justify-center md:space-y-9 ">
+            <div className="text-sm font-semibold md:font-bold md:text-4xl">
+              The hard days are the best <br /> because that's when <br />
+              champions are made
+            </div>
+
+            <div className="flex items-center p-2">
+              <Button className="md:px-10 md:font-semibold ">CHECK BMI</Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="h-3/6 bg-black md:flex md:justify-evenly md:items-center">
+          <div className="mt-3 hidden md:block">
+            <h1 className="text-xl font-semibold px-5 md:text-5xl md:font-bold md:tracking-wide md:leading-normal">
+              The <br /> body achieves <br /> what the mind believes
+            </h1>
+          </div>
+
+          <div className="md:mt-24">
+            <div>
+              <img src="/images/gymbottle.svg" alt="bottle" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="flex justify-between py-8">
+          <div>
+            <h1 className="text-4xl font-semibold">Diet</h1>
+          </div>
+          <div>
+            <Button>Add Food</Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <div className="md:flex md:justify-around">
+          <div>
+            <h1 className="text-2xl">Morning</h1>
+            <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+            </div>
+          </div>
+          <div>
+            <h1 className="text-2xl">Noon</h1>
+            <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              
+            </div>
+          </div>
+          <div>
+            <h1 className="text-2xl">Evening</h1>
+            <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div>dumbel image</div>
       <div>excersice plan</div>
       <div>

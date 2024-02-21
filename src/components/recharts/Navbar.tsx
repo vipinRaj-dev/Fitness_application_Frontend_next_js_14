@@ -1,4 +1,4 @@
-import HomePageLogout from "../usersidecomponents/HomePageLogout"
+import HomePageLogout from "../logoutComponent/HomePageLogout"
 
 const Navbar = () => {
   return (

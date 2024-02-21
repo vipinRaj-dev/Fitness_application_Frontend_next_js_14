@@ -66,7 +66,7 @@ const UserProfile = () => {
 
     console.log(form);
 
-    const formData = new FormData();
+    const formData = new FormData(); 
     Object.keys(form).forEach((key) => {
       formData.append(key, form[key]);
     });
@@ -86,17 +86,18 @@ const UserProfile = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setLoading(false);
         if (res.status === 200) {
+          setForm((prevState) => ({
+            ...prevState,
+            profileImage : res.data.imageData.url,
+          }));
           swal({
             title: "seccess!",
             text: "Updated succesfully",
             icon: "success",
-          }).then(() => {
-            
-            window.location.reload();
-          });
+          })
         } else {
           swal({
             title: "Profile Not Updated",

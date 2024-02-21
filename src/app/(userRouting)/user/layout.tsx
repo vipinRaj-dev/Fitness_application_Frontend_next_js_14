@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import HomePageLogout from "@/components/usersidecomponents/HomePageLogout";
+import HomePageLogout from "@/components/logoutComponent/HomePageLogout";
 import {
   Sheet,
   SheetClose,

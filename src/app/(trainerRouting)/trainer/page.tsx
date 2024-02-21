@@ -1,9 +1,12 @@
-import TrainerHomePage from "@/components/homepages/TrainerHomePage"
+import TrainerHomePage from "@/components/homepages/TrainerHomePage";
 
 const Trainerpage = () => {
   return (
-    <div><TrainerHomePage/></div>
-  )
-}
+    <div>
+      {/* this is trainer page from page.tsx  */}
+      <TrainerHomePage />
+    </div>
+  );
+};
 
-export default Trainerpage
+export default Trainerpage;

@@ -36,11 +36,12 @@ const RoleAuthenticationCheckTrainer= () => {
   if (loading) {
     return (
       <div>
+        Role Auth
         <Spinner />
       </div>
-    ); // Or your custom loading component
+    ); 
   }
-  return <div>roleAuthenticationCheckAdmin component</div>;
+  return <></>;
 };
 
 export default RoleAuthenticationCheckTrainer;

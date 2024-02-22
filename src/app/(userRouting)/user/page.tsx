@@ -13,8 +13,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Image from "next/image";
 import FoodCard from "@/components/usercomponents/FoodCard";
+import Link from "next/link";
+import { useEffect } from "react";
+import axiosInstance from "@/axios/creatingInstance";
 
 const Userpage = () => {
+ 
+
   const makePayment = async () => {
     // console.log("payment done");
 
@@ -73,8 +78,8 @@ const Userpage = () => {
         </div>
       </div>
 
-      <div className="bg-blue-300 w-full h-screen p-1 mt-10 md:mt-36">
-        <div className="h-3/6 bg-slate-500 gap-5 md:flex md:justify-evenly">
+      <div className=" w-full h-screen p-1 mt-10 md:mt-36">
+        <div className="h-3/6  gap-5 md:flex md:justify-evenly">
           <div className="flex justify-center">
             <div className="w-3/4">
               <img src="/images/bmi.png" alt="bmi" />
@@ -93,7 +98,7 @@ const Userpage = () => {
           </div>
         </div>
 
-        <div className="h-3/6 bg-black md:flex md:justify-evenly md:items-center">
+        <div className="h-3/6  md:flex md:justify-evenly md:items-center">
           <div className="mt-3 hidden md:block">
             <h1 className="text-xl font-semibold px-5 md:text-5xl md:font-bold md:tracking-wide md:leading-normal">
               The <br /> body achieves <br /> what the mind believes
@@ -124,38 +129,36 @@ const Userpage = () => {
           <div>
             <h1 className="text-2xl">Morning</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Noon</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Evening</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-             
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
+              <FoodCard />
             </div>
           </div>
         </div>
@@ -311,12 +314,11 @@ const Userpage = () => {
                   <span className="">Priority Support</span>
                 </li>
               </ul>
-              <Button
-                onClick={makePayment}
-                className="block px-8 py-3 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base"
-              >
-                Buy Now
-              </Button>
+              <Link href="/user/trainer">
+                <Button className="block px-8 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base">
+                  Show trainers
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

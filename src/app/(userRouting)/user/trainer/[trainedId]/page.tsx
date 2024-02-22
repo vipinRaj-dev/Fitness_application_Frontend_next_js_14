@@ -34,8 +34,7 @@ const page = ({
     trainedId: string;
   };
 }) => {
-
-  const makePayment = async () => {
+  const makePayment = async (amount: { amount: number }) => {
     // console.log("payment done");
 
     const stripe = await loadStripe(
@@ -43,9 +42,9 @@ const page = ({
     );
 
     const body = {
-      amount: 2500,
-      plan: "premium",
-      trainerId: params.trainedId,
+      amount: amount.amount,
+      plan: "Trainer purchase",
+      trainerId: params.trainedId,  
     };
     const headers = {
       "Content-Type": "application/json",
@@ -68,7 +67,6 @@ const page = ({
     }
   };
 
-
   const [trainer, setTrainer] = useState<Trainer>({} as Trainer);
   useEffect(() => {
     axiosInstance
@@ -83,38 +81,37 @@ const page = ({
   }, []);
   return (
     <div>
-    single trainer page from the user side
-        <h1>name : {trainer.name}</h1>
-        <h1>email : {trainer.email}</h1>
-        <h1>experience : {trainer.experience}</h1>
-        <h1>specializedIn : {trainer.specializedIn}</h1>
-        <h1>description : {trainer.description}</h1>
-        <h1>price : {trainer.price}</h1>
-        <h1>profilePicture : {trainer.profilePicture}</h1>
-        {trainer.transformationClients?.map((client) => {
-          return (
-            <div key={client._id}>
-              <h1>client name : {client.name}</h1>
-              <h1>client content : {client.content}</h1>
-              <h1>client photoUrl : {client.photoUrl}</h1>
-              <h1>client publicId : {client.publicId}</h1>
-            </div>
-          );
-        }
-        )}
-        {trainer.certifications?.map((certification) => {
-          return (
-            <div key={certification._id}>
-              <h1>certification name : {certification.name}</h1>
-              <h1>certification content : {certification.content}</h1>
-              <h1>certification photoUrl : {certification.photoUrl}</h1>
-              <h1>certification publicId : {certification.publicId}</h1>
-            </div>
-          );
-        }
-        )}
-
-      <Button onClick={makePayment}>Book Trainer</Button>
+      single trainer page from the user side
+      <h1>name : {trainer.name}</h1>
+      <h1>email : {trainer.email}</h1>
+      <h1>experience : {trainer.experience}</h1>
+      <h1>specializedIn : {trainer.specializedIn}</h1>
+      <h1>description : {trainer.description}</h1>
+      <h1>price : {trainer.price}</h1>
+      <h1>profilePicture : {trainer.profilePicture}</h1>
+      {trainer.transformationClients?.map((client) => {
+        return (
+          <div key={client._id}>
+            <h1>client name : {client.name}</h1>
+            <h1>client content : {client.content}</h1>
+            <h1>client photoUrl : {client.photoUrl}</h1>
+            <h1>client publicId : {client.publicId}</h1>
+          </div>
+        );
+      })}
+      {trainer.certifications?.map((certification) => {
+        return (
+          <div key={certification._id}>
+            <h1>certification name : {certification.name}</h1>
+            <h1>certification content : {certification.content}</h1>
+            <h1>certification photoUrl : {certification.photoUrl}</h1>
+            <h1>certification publicId : {certification.publicId}</h1>
+          </div>
+        );
+      })}
+      <Button onClick={() => makePayment({ amount: trainer.price })}>
+        Buy Trainer
+      </Button>
     </div>
   );
 };

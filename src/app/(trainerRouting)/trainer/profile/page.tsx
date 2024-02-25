@@ -111,7 +111,7 @@ const TrainerProfile = () => {
             title: "seccess!",
             text: "Updated succesfully",
             icon: "success",
-          })
+          });
         } else {
           swal({
             title: "Profile Not Updated",

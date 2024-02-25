@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { loadStripe } from "@stripe/stripe-js";
 import { baseUrl } from "@/Utils/PortDetails";
+
+import { useRouter } from "next/navigation";
+
 type ClientsAndCertificate = {
   _id: string;
   name: String;
@@ -34,6 +37,8 @@ const page = ({
     trainedId: string;
   };
 }) => {
+const router = useRouter();
+
   const makePayment = async (amount: { amount: number }) => {
     // console.log("payment done");
 
@@ -44,7 +49,7 @@ const page = ({
     const body = {
       amount: amount.amount,
       plan: "Trainer purchase",
-      trainerId: params.trainedId,  
+      trainerId: params.trainedId,
     };
     const headers = {
       "Content-Type": "application/json",
@@ -77,6 +82,10 @@ const page = ({
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 402) {
+          router.replace("/user/subscription");
+        }
+
       });
   }, []);
   return (

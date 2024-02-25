@@ -127,7 +127,7 @@ export default function RootLayout({
                 </Sheet>
               </div>
               <Avatar className="hidden lg:block">
-                <Link href="/user/profile">
+                <Link href="/trainer/profile">
                   <AvatarImage src="https://github.com/shadcn.png" />
                 </Link>
                 <AvatarFallback>CN</AvatarFallback>

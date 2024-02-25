@@ -6,7 +6,7 @@ import swal from "sweetalert";
 import { usePathname, useRouter } from "next/navigation";
 const CreateUser = () => {
   const router = useRouter();
-
+ 
   let pageUrl = usePathname()
 
   console.log("pathname" , pageUrl)

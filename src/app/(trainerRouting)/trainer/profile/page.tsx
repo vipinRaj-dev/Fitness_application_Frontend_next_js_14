@@ -4,14 +4,6 @@ import Dnaspinner from "@/components/loadingui/Dnaspinner";
 import React, { useEffect, useState } from "react";
 import swal from "sweetalert";
 type FormState = {
-  // _id: string;
-  // name: string;
-  // email: string;
-  // mobileNumber: number;
-  // weight: number;
-  // height: number;
-  // profilePicture: File | string;
-
   description: string;
   email: string;
   experience: number;
@@ -40,15 +32,15 @@ const TrainerProfile = () => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get("trainer/profile");
-        //console.log('form the profile page')
-        //console.log(res.data.trainer);
+        // console.log('form the profile page')
+        console.log(res.data.trainer);
 
         setForm((prevState) => ({
           ...prevState,
           ...res.data.trainer,
         }));
       } catch (error) {
-        //console.log(error);
+        console.log(error);
       }
     };
     fetchUser();
@@ -84,14 +76,6 @@ const TrainerProfile = () => {
       formData.append(key, form[key]);
     });
 
-    // const formData = new FormData();
-    // Object.keys(form).forEach((key) => {
-    //   const value = form[key as keyof FormState];
-    //   formData.append(key, typeof value === 'number' ? value.toString() : value);
-    // });
-
-    //console.log(formData);
-
     await axiosInstance
       .put("/trainer/profileUpdate", formData, {
         headers: {
@@ -99,14 +83,16 @@ const TrainerProfile = () => {
         },
       })
       .then((res) => {
-        //console.log(res.data);
+        // console.log(res.data);
         setLoading(false);
         if (res.status === 200) {
-          console.log(res.data);
-          setForm((prevState) => ({
-            ...prevState,
-            profilePicture: res.data.data.url,
-          }));
+          // console.log(res.data);
+          if (res.data?.data?.url) {
+            setForm((prevState) => ({
+              ...prevState,
+              profilePicture: res.data.data.url,
+            }));
+          }
           swal({
             title: "seccess!",
             text: "Updated succesfully",
@@ -122,10 +108,10 @@ const TrainerProfile = () => {
       })
       .catch((err: Error | any) => {
         setLoading(false);
-        //console.log(err.response.data);
+        // console.log(err);
         swal({
           title: "warning!",
-          text: err.response.data.msg,
+          text: "Your profile has not been updated",
           icon: "warning",
         });
       });
@@ -218,6 +204,17 @@ const TrainerProfile = () => {
             type="string"
             onChange={handleInputChange}
             placeholder="specializedIn"
+            className="rounded px-3 py-2 w-full  text-black"
+          />
+        </label>
+        <label>
+          Description
+          <input
+            value={form.description}
+            name="description"
+            type="string"
+            onChange={handleInputChange}
+            placeholder="description"
             className="rounded px-3 py-2 w-full  text-black"
           />
         </label>

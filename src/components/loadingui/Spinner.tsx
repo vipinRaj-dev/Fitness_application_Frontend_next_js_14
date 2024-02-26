@@ -2,7 +2,7 @@
 import { Bars } from "react-loader-spinner";
 const Spinner = () => {
   return (
-    <div  className='h-screen flex justify-center items-center' >
+    <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
       <Bars
         height="80"
         width="80"
@@ -10,7 +10,6 @@ const Spinner = () => {
         ariaLabel="bars-loading"
         visible={true}
       />
-
     </div>
   );
 };

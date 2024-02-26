@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Badge } from "@/components/ui/badge";
 
 import {
   Dialog,
@@ -20,6 +21,8 @@ import { Textarea } from "@/components/ui/textarea";
 import swal from "sweetalert";
 
 interface Trainer {
+  transformationClientsCount: number;
+  certificationsCount: number;
   description: string;
   email: string;
   experience: number;
@@ -31,6 +34,21 @@ interface Trainer {
   publicId: string;
   specializedIn: string;
   _id: string;
+  certifications: {
+    _id: string;
+    name: string;
+    content: string;
+    photoUrl: string;
+    publicId: string;
+  }[];
+
+  transformationClients: {
+    _id: string;
+    name: string;
+    content: string;
+    photoUrl: string;
+    publicId: string;
+  }[];
 }
 
 const TrainerHomePage = () => {
@@ -40,28 +58,36 @@ const TrainerHomePage = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [render, setRender] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch data from the server
-    const fetchTrainerData = () => {
-      axiosInstance
+    const fetchTrainerData = async () => {
+      await axiosInstance
         .get("trainer/profile")
         .then((res) => {
-          console.log("res.data.trainer", res.data.trainer);
-          setTrainerData(res.data.trainer);
+          console.log("res.data", res.data);
+          setTrainerData((prevState) => ({
+            ...prevState,
+            ...res.data.trainer,
+            transformationClientsCount: res.data.transformationClientsCount,
+            certificationsCount: res.data.certificationsCount,
+            certifications: res.data.trainer.certifications,
+            transformationClients: res.data.trainer.transformationClients,
+          }));
         })
         .catch((error) => {
           console.log(error);
         });
     };
     fetchTrainerData();
-  }, []);
+  }, [render]);
 
   const handleCertficateSubmit = async (e: React.FormEvent, field: string) => {
     e.preventDefault();
     console.log("FIELD", field);
     const formData = new FormData();
-    console.log("formData", image, name, description, field);
+    // console.log("formData", image, name, description, field);
     if (image) {
       formData.append("image", image);
     }
@@ -79,177 +105,248 @@ const TrainerHomePage = () => {
           formData
         );
         console.log("response", response);
+        setRender(!render);
         setLoading(false);
         swal({
           title: "Success",
           text: `${field} added successfully`,
           icon: "success",
-        })
+        });
       } catch (error) {
         console.log("error", error);
       }
     }
   };
+
+  const handleDelete = async (
+    e: React.FormEvent,
+    {
+      deleteId,
+      field,
+      publicId,
+    }: {
+      deleteId: string;
+      field: string;
+      publicId: string;
+    }
+  ) => {
+    console.log("delete clicked", deleteId, field);
+    e.preventDefault();
+
+    axiosInstance
+      .delete("trainer/deleteCertificateOrClient", {
+        data: {
+          deleteId,
+          field,
+          publicId,
+        },
+      })
+      .then((res) => {
+        console.log("res", res.data);
+        if (res.status === 200) {
+          setRender(!render);
+          swal({
+            title: "Success",
+            text: `${res.data.msg} successfully`,
+            icon: "success",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
   return (
     <div>
-      {/* <h1>Trainer Id: {trainerData?._id}</h1>
-      <h1>Description: {trainerData?.description}</h1>
-      <h1>Email: {trainerData?.email}</h1>
-      <h1>Experience: {trainerData?.experience}</h1>
-      <h1>Is Blocked: {trainerData?.isBlocked.toString()}</h1>
-      <h1>Mobile Number: {trainerData?.mobileNumber}</h1>
-      <h1>Name: {trainerData?.name}</h1>
-      <h1>Price: {trainerData?.price}</h1>
-      <h1>Profile Picture: {trainerData?.profilePicture}</h1>
-      <h1>Public Id: {trainerData?.publicId}</h1>
-      <h1>Specialized In: {trainerData?.specializedIn}</h1> */}
-
-      <div className="bg-blue-400 min-h-screen w-full relative ">
-        <div className="md:flex md:justify-center">
-          <div className="p-3 md:w-10/12">
-            <img
+      <div className=" pb-72 md:pb-96">
+        <div className="w-full relative ">
+          <div className="md:flex md:justify-center">
+            <div className="p-3 md:w-10/12 flex justify-center">
+              {/* <img
               className="md:w-full"
               src="/images/trainercover.png"
               alt="cover"
-            />
+            /> */}
+
+              {trainerData?.profilePicture && (
+                <img
+                  className="bg-cover bg-center rounded-3xl h-96 md:h-full "
+                  src={trainerData.profilePicture}
+                  alt="cover"
+                />
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className="flex justify-center absolute w-11/12 top-60 left-5 md:top-3/4 md:left-20">
-          <div className="md:w-9/12">
-            <div className="bg-[#081E31] p-3 rounded-3xl w-full">
-              <div className="flex justify-center">
-                <div>
-                  <h1 className="text-2xl font-semibold md:text-4xl md:p-5 md:tracking-wide">
-                    JOHN ABRAHAM
-                  </h1>
-                  <p className="text-center font-light text-sm md:text-xl">
-                    FITNESS TRAINER
-                  </p>
+          <div className="flex justify-center absolute w-11/12 top-60 left-5 md:top-3/4 md:left-20">
+            <div className="md:w-9/12">
+              <div className="bg-[#081E31] p-3 rounded-3xl w-full">
+                <div className="flex justify-center">
+                  <div>
+                    <h1 className="text-2xl font-semibold md:text-4xl md:p-5 md:tracking-wide">
+                      {trainerData?.name && trainerData.name}
+                    </h1>
+                    <p className="text-center font-light text-sm md:text-xl">
+                      {trainerData?.specializedIn && trainerData.specializedIn}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex mt-8 gap-2 md:gap-24 justify-center">
-                <div className="bg-slate-200 p-3 rounded-3xl md:p-10">
-                  <h1 className="text-black text-center p-2 text-4xl md:text-7xl">
-                    5
-                  </h1>
-                  <h3 className="text-black text-sm p-1 md:text-2xl">
-                    EXPERIENCE
-                  </h3>
+                <div className="flex mt-8 gap-2 md:gap-24 justify-center">
+                  <div className="bg-slate-200 p-3 rounded-3xl md:p-10">
+                    <h1 className="text-black text-center p-2 text-4xl md:text-7xl">
+                      {trainerData?.experience && trainerData.experience}
+                    </h1>
+                    <h3 className="text-black text-sm p-1 md:text-2xl">
+                      EXPERIENCE
+                    </h3>
+                  </div>
+                  <div className="bg-slate-200 p-3 rounded-3xl px-6 md:p-10 md:px-16">
+                    <h1 className="text-black text-center p-2 text-4xl md:text-7xl">
+                      {trainerData?.transformationClientsCount &&
+                        trainerData.transformationClientsCount}
+                    </h1>
+                    <h3 className="text-black text-sm p-1 md:text-2xl">
+                      CLIENTS
+                    </h3>
+                  </div>
+                  <div className="bg-slate-200 p-3 rounded-3xl md:p-10">
+                    <h1 className="text-black text-center p-2 text-4xl md:text-7xl">
+                      {trainerData?.certificationsCount &&
+                        trainerData.certificationsCount}
+                    </h1>
+                    <h3 className="text-black text-sm p-1 md:text-2xl">
+                      CERTIFICATE
+                    </h3>
+                  </div>
                 </div>
-                <div className="bg-slate-200 p-3 rounded-3xl px-6 md:p-10 md:px-16">
-                  <h1 className="text-black text-center p-2 text-4xl md:text-7xl">
-                    20
-                  </h1>
-                  <h3 className="text-black text-sm p-1 md:text-2xl">
-                    CLIENTS
-                  </h3>
-                </div>
-                <div className="bg-slate-200 p-3 rounded-3xl md:p-10">
-                  <h1 className="text-black text-center p-2 text-4xl md:text-7xl">
-                    10
-                  </h1>
-                  <h3 className="text-black text-sm p-1 md:text-2xl">
-                    CERTIFICATE
-                  </h3>
-                </div>
-              </div>
 
-              <div className="text-sm font-light p-4 tracking-normal leading-relaxed text-slate-200 mt-8 md:text-xl md:px-52">
-                <p className="">
-                  Hello! I'm Maya - your friendly virtual trainer here to help
-                  you smash your health and fitness goals using the FitGo app.
-                  Nice to meet you! <br />
-                </p>
-                <div className="mt-2 md:mt-8">
-                  As your personal guide, I will be customizing workout plans
-                  and providing tailored guidance specifically for your needs.
-                  My specialty is creating science-based fitness programs that
-                  are both effective AND enjoyable. I'm here to help you get the
+                <div className="text-sm font-light p-4 tracking-normal leading-relaxed text-slate-200 mt-8 md:text-xl md:px-52">
+                  <div className="mt-2 md:mt-8">
+                    {trainerData?.description && trainerData.description}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
       {/* add Certificate */}
-
-      <div className="h-screen bg-black mt-96">
-        <Dialog>
-          <DialogTrigger>
-            <Button>Add certificates</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="p-5 text-center">
-                Add certificates
-              </DialogTitle>
-              <DialogDescription className="p-2 text-center">
-                Add the image and the details about the certification that you
-                had
-              </DialogDescription>
-              <p className="text-center text-red-600 text-xl">
-                {error ? error : ""}
-              </p>
-              <div className="grid gap-4 py-6">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Picture
-                  </Label>
-                  <Input
-                    id="image"
-                    type="file"
-                    className="col-span-3"
-                    onChange={(e) =>
-                      setImage(e.target.files ? e.target.files[0] : null)
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    value={name}
-                    className="col-span-3"
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="username" className="text-right">
-                    Description
-                  </Label>
-                  <Textarea
-                    placeholder="Type your message here."
-                    id="description"
-                    className="col-span-3"
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
-              </div>
-              {loading ? (
-                <Button disabled>
-                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </Button>
-              ) : (
-                <Button
-                  onClick={(e) => handleCertficateSubmit(e, "certificate")}
-                >
-                  Submit
-                </Button>
-              )}
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      </div>
-
       <div>
+        <div className="mt-10 md:mr-8 flex justify-end">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button> Add Certificate</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="p-5 text-center">
+                  Add certificates
+                </DialogTitle>
+                <DialogDescription className="p-2 text-center">
+                  Add the image and the details about the certification that you
+                  had
+                </DialogDescription>
+                <p className="text-center text-red-600 text-xl">
+                  {error ? error : ""}
+                </p>
+                <div className="grid gap-4 py-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Picture
+                    </Label>
+                    <Input
+                      id="image"
+                      type="file"
+                      className="col-span-3"
+                      onChange={(e) =>
+                        setImage(e.target.files ? e.target.files[0] : null)
+                      }
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      value={name}
+                      className="col-span-3"
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="username" className="text-right">
+                      Description
+                    </Label>
+                    <Textarea
+                      placeholder="Type your message here."
+                      id="description"
+                      className="col-span-3"
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                  </div>
+                </div>
+                {loading ? (
+                  <Button disabled>
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={(e) => handleCertficateSubmit(e, "certificate")}
+                  >
+                    Submit
+                  </Button>
+                )}
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="m-5 md:m-10">
+          <div className="flex gap-3 overflow-y-hidden md:gap-9  pb-3  scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-slate-950">
+            {trainerData?.certifications &&
+              trainerData.certifications.map((certificate) => (
+                <div
+                  key={certificate._id}
+                  className="flex-shrink-0 bg-slate-900 rounded-2xl w-52 h-96 md:w-96"
+                >
+                  <img
+                    src={certificate.photoUrl}
+                    alt="certificate"
+                    className="w-full h-64 rounded-3xl object-cover mx-auto p-1 md:p-3"
+                  />
+                  <div className="flex justify-between m-1 px-2 md:px-5">
+                    <h1 className="text-white text-start md:text-2xl font-semibold">
+                      {certificate.name}
+                    </h1>
+                    <Badge
+                      onClick={(e) =>
+                        handleDelete(e, {
+                          deleteId: certificate._id,
+                          field: "certificate",
+                          publicId: certificate.publicId,
+                        })
+                      }
+                      variant="destructive"
+                    >
+                      Delete
+                    </Badge>
+                  </div>
+                  <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
+                    <p className="text-white md:text-base font-light text-start text-sm mt-2">
+                      {certificate.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </div>
+      <div className="mt-10 md:mr-8 flex  justify-end">
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button>Add Clients</Button>
           </DialogTrigger>
           <DialogContent>
@@ -314,6 +411,46 @@ const TrainerHomePage = () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+      </div>
+
+      <div className="m-5 md:m-10">
+        <div className="flex gap-3 overflow-y-hidden md:gap-9  pb-3  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+          {trainerData?.transformationClients &&
+            trainerData.transformationClients.map((client) => (
+              <div
+                key={client._id}
+                className="flex-shrink-0 bg-slate-900 rounded-2xl w-52 h-96 md:w-96"
+              >
+                <img
+                  src={client.photoUrl}
+                  alt="client"
+                  className="w-full h-64 rounded-3xl object-cover mx-auto p-1 md:p-3"
+                />
+                <div className="flex justify-between m-1 px-2 md:px-5">
+                  <h1 className="text-white text-start md:text-2xl font-semibold">
+                    {client.name}
+                  </h1>
+                  <Badge
+                      onClick={(e) =>
+                        handleDelete(e, {
+                          deleteId: client._id,
+                          field: "client",
+                          publicId: client.publicId,
+                        })
+                      }
+                      variant="destructive"
+                    >
+                      Delete
+                    </Badge>
+                </div>
+                <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
+                  <p className="text-white md:text-base font-light text-start text-sm mt-2">
+                    {client.content}
+                  </p>
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

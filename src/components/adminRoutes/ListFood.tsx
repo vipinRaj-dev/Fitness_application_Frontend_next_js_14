@@ -44,7 +44,7 @@ const ListFood = () => {
       </Link>
       <div>
         {foodList.map((food: any, index) => (
-          <div>
+          <div key={food._id}>
             {/* <img src={food.photoUrl} alt={food.name} /> */}
             <h2>{index + 1}</h2>
             <h2>{food.foodname}</h2>

@@ -4,6 +4,8 @@ import Dnaspinner from "@/components/loadingui/Dnaspinner";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
+import Link from "next/link";
+import { Badge } from "../ui/badge";
 type FormState = {
   _id: string;
   name: string;
@@ -12,6 +14,14 @@ type FormState = {
   weight: number;
   height: number;
   profileImage: File | string;
+  BloodPressure: number;
+  Diabetes: number;
+  cholesterol: number;
+  HeartDisease: boolean;
+  KidneyDisease: boolean;
+  LiverDisease: boolean;
+  Thyroid: boolean;
+  Others: boolean;
 };
 
 const UserProfile = () => {
@@ -24,6 +34,14 @@ const UserProfile = () => {
     weight: 0,
     height: 0,
     profileImage: "",
+    BloodPressure: 0,
+    Diabetes: 0,
+    cholesterol: 0,
+    HeartDisease: false,
+    KidneyDisease: false,
+    LiverDisease: false,
+    Thyroid: false,
+    Others: false,
   });
 
   useEffect(() => {
@@ -35,7 +53,10 @@ const UserProfile = () => {
             setForm((prevState) => ({
               ...prevState,
               ...res.data.user,
+              ...res.data.user.healthIssues,
             }))
+          // console.log(res.data.user)
+
           )
           .catch((err) => {
             console.log("error inside the api call");
@@ -56,19 +77,25 @@ const UserProfile = () => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [openInput, setOpenInput] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (name === "image") {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setForm(prevState => ({
+        ...prevState,
+        [name]: checked,
+      }));
+    } else if (name === "image") {
       setForm((prevState) => ({
         ...prevState,
         [name]: e.target.files ? e.target.files[0] : prevState.profileImage,
       }));
     } else {
-      setForm({
-        ...form,
-        [name]: value,
-      });
+      setForm(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
     }
   };
 
@@ -90,7 +117,8 @@ const UserProfile = () => {
     //   formData.append(key, typeof value === 'number' ? value.toString() : value);
     // });
 
-    console.log(formData);
+    // console.log(formData);
+    // console.log(form);
 
     await axiosInstance
       .put("/user/profileUpdate", formData, {
@@ -130,6 +158,9 @@ const UserProfile = () => {
       });
   };
 
+  const openHealthIssues = () => {
+    setOpenInput(true);
+  };
   if (loading) {
     return <Dnaspinner />;
   }
@@ -220,6 +251,101 @@ const UserProfile = () => {
             className="rounded px-3 py-2 w-full  text-black"
           />
         </label>
+
+        <label>
+          Do you have any health issues?{" "}
+          <Badge onClick={openHealthIssues} variant="secondary">
+            Click to Add
+          </Badge>
+        </label>
+
+        {openInput && (
+          <>
+            <label>
+              Blood Pressure
+              <input
+                value={form.BloodPressure}
+                name="BloodPressure"
+                type="number"
+                onChange={handleInputChange}
+                placeholder="Blood Pressure"
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              Diabetes
+              <input
+                value={form.Diabetes}
+                name="Diabetes"
+                type="number"
+                onChange={handleInputChange}
+                placeholder="Diabetes"
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              cholesterol
+              <input
+                value={form.cholesterol}
+                name="cholesterol"
+                type="number"
+                onChange={handleInputChange}
+                placeholder="cholesterol"
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              Heart Disease
+              <input
+                checked={form.HeartDisease}
+                name="HeartDisease"
+                type="checkbox"
+                onChange={handleInputChange}
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              Kidney Disease
+              <input
+                checked={form.KidneyDisease}
+                name="KidneyDisease"
+                type="checkbox"
+                onChange={handleInputChange}
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              Liver Disease
+              <input
+                checked={form.LiverDisease}
+                name="LiverDisease"
+                type="checkbox"
+                onChange={handleInputChange}
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              Thyroid
+              <input
+                checked={form.Thyroid}
+                name="Thyroid"
+                type="checkbox"
+                onChange={handleInputChange}
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+            <label>
+              Others
+              <input
+                checked={form.Others}
+                name="Others"
+                type="checkbox"
+                onChange={handleInputChange}
+                className="rounded px-3 py-2 w-full  text-black"
+              />
+            </label>
+          </>
+        )}
 
         <button
           type="submit"

@@ -1,6 +1,8 @@
 "use client";
 
 import axiosInstance from "@/axios/creatingInstance";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -80,7 +82,7 @@ const page = () => {
                   <td className="px-4 py-3 overflow-auto">
                     {user.userBlocked ? "Yes" : "No"}
                   </td>
-                  <td className="px-4 py-3 overflow-auto">View</td>
+                  <td className="px-4 py-3 overflow-auto"><Link href={`/trainer/client/${user._id}`}>View</Link></td>
                 </tr>
               );
             })}

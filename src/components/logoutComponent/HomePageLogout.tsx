@@ -11,7 +11,7 @@ const HomePageLogout = () => {
     Cookies.remove("jwttoken");
     console.log("logout");
     router.replace("/sign-in");
-    // window.location.reload(); 
+    window.location.reload(); 
   };
   return (
     <Button className="mx-4" onClick={logout}>

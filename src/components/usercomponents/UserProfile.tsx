@@ -21,7 +21,6 @@ type FormState = {
   KidneyDisease: boolean;
   LiverDisease: boolean;
   Thyroid: boolean;
-  Others: boolean;
 };
 
 const UserProfile = () => {
@@ -41,7 +40,6 @@ const UserProfile = () => {
     KidneyDisease: false,
     LiverDisease: false,
     Thyroid: false,
-    Others: false,
   });
 
   useEffect(() => {
@@ -334,16 +332,7 @@ const UserProfile = () => {
                 className="rounded px-3 py-2 w-full  text-black"
               />
             </label>
-            <label>
-              Others
-              <input
-                checked={form.Others}
-                name="Others"
-                type="checkbox"
-                onChange={handleInputChange}
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
+           
           </>
         )}
 

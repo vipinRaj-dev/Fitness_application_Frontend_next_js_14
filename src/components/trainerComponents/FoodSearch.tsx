@@ -33,13 +33,13 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
     axiosInstance
       .get(`/trainer/allFood/${clientId}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setFoodList(res.data.allFood);
         setAddedFoodId((prev) => [...prev, ...res.data.listOfFood]);
-        console.log(res.data.listOfFood);
+        // console.log(res.data.listOfFood);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        // console.log(err.response.data);
       });
   }, [clientId]);
 
@@ -47,13 +47,13 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
     axiosInstance
       .post(`/trainer/addFood/${clientId}`, { foodId })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.status === 200) {
           setAddedFoodId((prev) => [...prev, res.data.foodId]);
         }
       })
       .catch((err) => {
-        console.log(err.response.data);
+        // console.log(err.response.data);
       });
   };
 
@@ -61,13 +61,13 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
     axiosInstance
       .delete(`/trainer/deleteFood/${clientId}/${foodId}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.status === 200) {
           setAddedFoodId((prev) => prev.filter((id) => id !== foodId));
         }
       })
       .catch((err) => {
-        console.log(err.response.data);
+        // console.log(err.response.data);
       });
   }
   return (

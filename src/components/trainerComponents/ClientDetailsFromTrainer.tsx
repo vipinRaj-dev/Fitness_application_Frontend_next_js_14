@@ -1,10 +1,23 @@
 "use client";
 
 import axiosInstance from "@/axios/creatingInstance";
-import { CornerRightDown } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { late, string } from "zod";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 type User = {
   admissionNumber: number;
@@ -33,19 +46,65 @@ type User = {
 
 const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const [clientDetails, setClientDetails] = useState<User | null>(null);
+  const [latestFoodByTrainer, setLatestFoodByTrainer] = useState<any[]>([]);
+  const [done, setDone] = useState(false);
+
+  const [state, setState] = useState({
+    timePeriod: "morning",
+    quantity: 0,
+    time: "10:00",
+  });
+
   useEffect(() => {
-    console.log(client_Id);
+    // console.log(client_Id);
 
     axiosInstance
       .get(`/trainer/client/${client_Id}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data.latestFoodByTrainer);
         setClientDetails(res.data);
+        setLatestFoodByTrainer(res.data.latestFoodByTrainer);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        // console.log(err.response.data);
       });
-  }, [client_Id]);
+  }, [client_Id, done]);
+  // console.log(clientDetails);
+  console.log(latestFoodByTrainer);
+
+  const handleChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.name;
+    if (!name) {
+      return;
+    }
+
+    setState({
+      ...state,
+      [name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = async (foodId: string) => {
+    console.log(foodId, client_Id);
+    try {
+      axiosInstance
+        .put(`/trainer/addTimeDetails/${client_Id}/${foodId}`, state)
+        .then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            setDone(!done);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       {/* ClientDetailsFromTrainer {client_Id} */}
@@ -115,7 +174,118 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         </div>
       </div>
       <div className="h-screen bg-slate-500">
-        <Link href={`/trainer/addDiet/${client_Id}`}><Button>Add Food</Button></Link>
+        <div>
+          <Link href={`/trainer/addDiet/${client_Id}`}>
+            <Button>Add Food</Button>
+          </Link>
+        </div>
+        <div>
+          {latestFoodByTrainer.map((food: any, index) => {
+            return (
+              <div key={food._id}>
+                <h1>{index + 1}</h1>
+
+                <h1>{food.foodId.foodname}</h1>
+                <h1>{food.foodId.description}</h1>
+                <div>
+                  <h3>Ingredients</h3>
+                  {food.foodId.ingredients.map((ingredient: string) => {
+                    return (
+                      <div>
+                        <p key={ingredient}>{ingredient}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div>
+                  <h3>Nutrition</h3>
+                  {Object.entries(food.foodId.nutrition).map(([key, value]) => {
+                    if (key !== "_id" && value && value !== 0) {
+                      return (
+                        <div>
+                          <p key={key}>
+                            {key}: {value.toString()}
+                          </p>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+                <div>
+                  {
+                    <div>
+                      <p>Quantity</p>
+                      <p>{food.quantity}</p>
+                      <p>Time</p>
+                      <p>{food.time}</p>
+                      <p>Time Period</p>
+                      <p>{food.timePeriod}</p>
+                    </div>
+                  }
+                </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Edit Profile</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Edit</DialogTitle>
+                      <DialogDescription>Add Time details</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="time" className="text-right">
+                          Name
+                        </Label>
+                        <select
+                          className="text-black"
+                          name="timePeriod"
+                          value={state.timePeriod}
+                          onChange={handleChange}
+                        >
+                          <option value="morning">morning</option>
+                          <option value="afternoon">afternoon</option>
+                          <option value="evening">evening</option>
+                        </select>
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="username" className="text-right">
+                          Quantity
+                        </Label>
+                        <Input
+                          type="number"
+                          name="quantity"
+                          value={state.quantity}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="username" className="text-right">
+                          Time
+                        </Label>
+                        <input
+                          type="time"
+                          name="time"
+                          onChange={handleChange}
+                          value={state.time}
+                          className="w-full placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button onClick={() => handleSubmit(food._id)}>
+                          Save changes
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

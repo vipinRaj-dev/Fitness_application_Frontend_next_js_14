@@ -1,5 +1,6 @@
 "use client";
 
+import axiosInstance from "@/axios/creatingInstance";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
@@ -36,6 +37,35 @@ interface Diet {
 }
 
 type LatestDiet = Diet;
+
+interface HandleSubmitParams {
+  foodId: string;
+  time: string;
+  timePeriod: string;
+  quantity: number;
+}
+
+const handleSubmit = async ({
+  foodId,
+  time,
+  timePeriod,
+  quantity,
+}: HandleSubmitParams) => {
+  axiosInstance
+    .put("/user/addFoodLog", {
+      foodId,
+      time,
+      timePeriod,
+      quantity,
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 const FoodCard = ({ details }: { details: LatestDiet }) => {
   console.log("details", details);
   return (
@@ -57,28 +87,49 @@ const FoodCard = ({ details }: { details: LatestDiet }) => {
         <div className="flex justify-around">
           <div>
             <div>
-              <Badge variant="secondary">Carb : {details.foodId.nutrition.carbs}</Badge>
+              <Badge variant="secondary">
+                Carb : {details.foodId.nutrition.carbs}
+              </Badge>
             </div>
             <div>
-              <Badge variant="secondary">Protien : {details.foodId.nutrition.protein}</Badge>
+              <Badge variant="secondary">
+                Protien : {details.foodId.nutrition.protein}
+              </Badge>
             </div>
           </div>
           <div>
             <div>
-              <Badge variant="secondary"> Calorie : {details.foodId.nutrition.calories}</Badge>
+              <Badge variant="secondary">
+                {" "}
+                Calorie : {details.foodId.nutrition.calories}
+              </Badge>
             </div>
             <div>
-              <Badge variant="secondary">Fat : {details.foodId.nutrition.fat}</Badge>
+              <Badge variant="secondary">
+                Fat : {details.foodId.nutrition.fat}
+              </Badge>
             </div>
           </div>
         </div>
 
         <div className="flex justify-around items-center gap-2 space-y-5">
           <div className="p-2">
-            <Badge variant="outline">Qty : {details.foodId.quantity}</Badge>
+            <Badge variant="outline">Qty : {details.quantity}</Badge>
           </div>
           <div>
-            <Button size={"sm"}>Yum !!</Button>
+            <Button
+              onClick={() => {
+                handleSubmit({
+                  foodId: details.foodId._id,
+                  time: details.time,
+                  timePeriod: details.timePeriod,
+                  quantity: details.quantity,
+                });
+              }}
+              size={"sm"}
+            >
+              Yum !!
+            </Button>
           </div>
         </div>
       </div>

@@ -14,11 +14,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import FoodCard from "@/components/usercomponents/FoodCard";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 
+
+
 const Userpage = () => {
- 
+  const [latestDiet, setLatestDiet] = useState([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      axiosInstance
+        .get("/user/homePage")
+        .then((res) => {
+          console.log(res.data);
+          setLatestDiet(res.data.latestDiet);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    fetchUser();
+  }, []);
 
   const makePayment = async () => {
     // console.log("payment done");
@@ -59,7 +76,7 @@ const Userpage = () => {
         <Switch className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500" />
       </div>
 
-      <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
+      {/* <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
         <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl">
           <h1 className="font-semibold text-center">Attandance</h1>
           <div className="h-full w-full pb-10">
@@ -76,7 +93,7 @@ const Userpage = () => {
           <h1 className="font-semibold text-center">Attandance</h1>
           <BarChartPlot />
         </div>
-      </div>
+      </div> */}
 
       <div className=" w-full h-screen p-1 mt-10 md:mt-36">
         <div className="h-3/6  gap-5 md:flex md:justify-evenly">
@@ -123,46 +140,94 @@ const Userpage = () => {
           </div>
         </div>
       </div>
-
+      
       <div className="flex flex-col gap-3">
         <div className="md:flex md:justify-around">
           <div>
             <h1 className="text-2xl">Morning</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
+           {latestDiet && latestDiet.map((food: any, index) => {
+            if(food.timePeriod === "morning")
+              return <FoodCard key={food._id} details={food} />
+           })
+           }
+              
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Noon</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
+            {latestDiet && latestDiet.map((food: any, index) => {
+            if(food.timePeriod === "afternoon")
+              return <FoodCard key={food._id} details={food} />
+           })
+           }
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Evening</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
-              <FoodCard />
+            {latestDiet && latestDiet.map((food: any, index) => {
+            if(food.timePeriod === "evening")
+              return <FoodCard key={food._id} details={food} />
+           })
+           }
             </div>
           </div>
         </div>
-      </div>
+      </div> 
+
+      <h1>plan details</h1>
+      {/* <div>
+        {latestDiet.map((food: any, index) => {
+          return (
+            <div key={food._id}>
+              <h1>{index + 1}</h1>
+
+              <h1>{food.foodId.foodname}</h1>
+              <h1>{food.foodId.description}</h1>
+              <h3>Ingredients</h3>
+              {food.foodId.ingredients.map(
+                (ingredient: string, index: number) => {
+                  return (
+                    <div key={index}>
+                      <p>{ingredient}</p>
+                    </div>
+                  );
+                }
+              )}
+
+              <h3>Nutrition</h3>
+              {Object.entries(food.foodId.nutrition).map(
+                ([key, value], index) => {
+                  if (key !== "_id" && value && value !== 0) {
+                    return (
+                      <div key={index}>
+                        <p>
+                          {key}: {value.toString()}
+                        </p>
+                      </div>
+                    );
+                  }
+                }
+              )}
+              <div>
+                {
+                  <div>
+                    <p>Quantity</p>
+                    <p>{food.quantity}</p>
+                    <p>Time</p>
+                    <p>{food.time}</p>
+                    <p>Time Period</p>
+                    <p>{food.timePeriod}</p>
+                  </div>
+                }
+              </div>
+             
+            </div>
+          );
+        })}
+      </div> */}
 
       <div>dumbel image</div>
       <div>excersice plan</div>

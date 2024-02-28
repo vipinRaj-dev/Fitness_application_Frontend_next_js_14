@@ -92,13 +92,33 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       axiosInstance
         .put(`/trainer/addTimeDetails/${client_Id}/${foodId}`, state)
         .then((res) => {
-          console.log(res.data);
           if (res.status === 200) {
+            console.log(res.data);
             setDone(!done);
           }
         })
         .catch((err) => {
           console.log(err.response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRemove = (foodId: string) => {
+    console.log(foodId, client_Id);
+    try {
+      axiosInstance
+        .delete(`/trainer/deleteFood/${client_Id}/${foodId}`)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            setDone(!done);
+            // setLatestFoodByTrainer(latestFoodByTrainer.filter(food => food._id !== foodId));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
         });
     } catch (error) {
       console.log(error);
@@ -187,31 +207,31 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
 
                 <h1>{food.foodId.foodname}</h1>
                 <h1>{food.foodId.description}</h1>
-                <div>
-                  <h3>Ingredients</h3>
-                  {food.foodId.ingredients.map((ingredient: string) => {
+                <h3>Ingredients</h3>
+                {food.foodId.ingredients.map(
+                  (ingredient: string, index: number) => {
                     return (
-                      <div>
-                        <p key={ingredient}>{ingredient}</p>
+                      <div key={index}>
+                        <p>{ingredient}</p>
                       </div>
                     );
-                  })}
-                </div>
+                  }
+                )}
 
-                <div>
-                  <h3>Nutrition</h3>
-                  {Object.entries(food.foodId.nutrition).map(([key, value]) => {
+                <h3>Nutrition</h3>
+                {Object.entries(food.foodId.nutrition).map(
+                  ([key, value], index) => {
                     if (key !== "_id" && value && value !== 0) {
                       return (
-                        <div>
-                          <p key={key}>
+                        <div key={index}>
+                          <p>
                             {key}: {value.toString()}
                           </p>
                         </div>
                       );
                     }
-                  })}
-                </div>
+                  }
+                )}
                 <div>
                   {
                     <div>
@@ -282,6 +302,9 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
+                <Button onClick={() => handleRemove(food.foodId._id)}>
+                  Remove
+                </Button>
               </div>
             );
           })}

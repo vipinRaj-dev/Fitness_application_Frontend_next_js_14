@@ -13,7 +13,7 @@ const ListFood = () => {
     axiosInstance
       .get("/admin/food")
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data); 
         setFoodList(res.data);
       })
       .catch((err) => {

@@ -61,13 +61,13 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
     axiosInstance
       .delete(`/trainer/deleteFood/${clientId}/${foodId}`)
       .then((res) => {
-        // console.log(res.data);
         if (res.status === 200) {
+          console.log(res.data);
           setAddedFoodId((prev) => prev.filter((id) => id !== foodId));
         }
       })
       .catch((err) => {
-        // console.log(err.response.data);
+        console.log(err.response.data);
       });
   }
   return (

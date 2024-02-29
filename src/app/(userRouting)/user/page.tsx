@@ -160,7 +160,13 @@ const Userpage = () => {
               {latestDiet &&
                 latestDiet.map((food: any, index) => {
                   if (food.timePeriod === "morning")
-                    return <FoodCard key={food._id} details={food}  addedFood = {addedFood}/>;
+                    return (
+                      <FoodCard
+                        key={food._id}
+                        details={food}
+                        addedFood={addedFood}
+                      />
+                    );
                 })}
             </div>
           </div>
@@ -170,7 +176,13 @@ const Userpage = () => {
               {latestDiet &&
                 latestDiet.map((food: any, index) => {
                   if (food.timePeriod === "afternoon")
-                    return <FoodCard key={food._id} details={food} addedFood = {addedFood} />;
+                    return (
+                      <FoodCard
+                        key={food._id}
+                        details={food}
+                        addedFood={addedFood}
+                      />
+                    );
                 })}
             </div>
           </div>
@@ -180,7 +192,13 @@ const Userpage = () => {
               {latestDiet &&
                 latestDiet.map((food: any, index) => {
                   if (food.timePeriod === "evening")
-                    return <FoodCard key={food._id} details={food} addedFood = {addedFood} />;
+                    return (
+                      <FoodCard
+                        key={food._id}
+                        details={food}
+                        addedFood={addedFood}
+                      />
+                    );
                 })}
             </div>
           </div>
@@ -188,56 +206,6 @@ const Userpage = () => {
       </div>
 
       <h1>plan details</h1>
-      {/* <div>
-        {latestDiet.map((food: any, index) => {
-          return (
-            <div key={food._id}>
-              <h1>{index + 1}</h1>
-
-              <h1>{food.foodId.foodname}</h1>
-              <h1>{food.foodId.description}</h1>
-              <h3>Ingredients</h3>
-              {food.foodId.ingredients.map(
-                (ingredient: string, index: number) => {
-                  return (
-                    <div key={index}>
-                      <p>{ingredient}</p>
-                    </div>
-                  );
-                }
-              )}
-
-              <h3>Nutrition</h3>
-              {Object.entries(food.foodId.nutrition).map(
-                ([key, value], index) => {
-                  if (key !== "_id" && value && value !== 0) {
-                    return (
-                      <div key={index}>
-                        <p>
-                          {key}: {value.toString()}
-                        </p>
-                      </div>
-                    );
-                  }
-                }
-              )}
-              <div>
-                {
-                  <div>
-                    <p>Quantity</p>
-                    <p>{food.quantity}</p>
-                    <p>Time</p>
-                    <p>{food.time}</p>
-                    <p>Time Period</p>
-                    <p>{food.timePeriod}</p>
-                  </div>
-                }
-              </div>
-             
-            </div>
-          );
-        })}
-      </div> */}
 
       <div>dumbel image</div>
       <div>excersice plan</div>

@@ -17,26 +17,39 @@ type User = {
 
 const page = () => {
   const [allUsers, setAllUsers] = useState([]); // all users data
-  useEffect(() => {
-    const getallusers = async () => {
-      try {
-        await axiosInstance
-          .get("/trainer/allClients")
-          .then((res) => {
-            console.log(res.data);
-            setAllUsers(res.data);
-          })
-          .catch((err) => {
-            console.log(err.response.data);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getallusers();
 
-    console.log("all users page");
-  }, []);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(2);
+  const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await axiosInstance
+        .get("/trainer/allClients", {
+          params: {
+            page,
+            search,
+            limit,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          setAllUsers(response.data.allClients);
+          setLimit(response.data.limit);
+          if (search !== "") {
+            setPage(1);
+          }
+          setTotalPages(
+            Math.ceil(response.data.totalClients / response.data.limit)
+          );
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    };
+    fetchData();
+  }, [page, search]);
 
   return (
     <div>
@@ -44,7 +57,16 @@ const page = () => {
         <h1>All Users</h1>
       </div>
 
-      <div>search bar</div>
+      <form className="flex items-center justify-end p-2">
+        <h1> Search</h1>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search here"
+          className=" text-black rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent mx-2"
+        />
+      </form>
 
       <div className=" p-2 md:p-10">
         <table className="table-fixed w-full text-left text-sm md:text-base">
@@ -82,25 +104,43 @@ const page = () => {
                   <td className="px-4 py-3 overflow-auto">
                     {user.userBlocked ? "Yes" : "No"}
                   </td>
-                  <td className="px-4 py-3 overflow-auto"><Link href={`/trainer/client/${user._id}`}>View</Link></td>
+                  <td className="px-4 py-3 overflow-auto">
+                    <Link href={`/trainer/client/${user._id}`}>View</Link>
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </div>
+        <div className="flex justify-end">
+          <Button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+          >
+            Prev
+          </Button>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              key={index}
+              onClick={() => setPage(index + 1)}
+              className={`bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 ${
+                page === index + 1 ? "bg-blue-500" : ""
+              }`}
+            >
+              {index + 1}
+            </Button>
+          ))}
 
-      {/* <div>
-        <div>
-          <div>profile picture</div>
-          <div>
-            <div>Name</div>
-            <div>Plan</div>
-          </div>
-          <div>adminsion number</div>
+          <Button
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+            className="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+          >
+            Next
+          </Button>
         </div>
-        <div>profile view</div>
-      </div> */}
+      </div>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
-
+ 
 const OtpForm = () => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60);
@@ -13,7 +13,6 @@ const OtpForm = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    // Here you would typically send a request to your backend to verify the OTP
     axios
       .post(`${baseUrl}/auth/registerUser`, { otp })
       .then((res) => {

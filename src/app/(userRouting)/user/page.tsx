@@ -17,11 +17,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 
-
-
 const Userpage = () => {
   const [latestDiet, setLatestDiet] = useState([]);
-
+  const [addedFood, setAddedFood] = useState<string[]>([]);
   useEffect(() => {
     const fetchUser = async () => {
       axiosInstance
@@ -35,6 +33,19 @@ const Userpage = () => {
         });
     };
     fetchUser();
+    const fetchFoodLog = async () => {
+      axiosInstance
+        .get("/user/getFoodLog")
+        .then((res) => {
+          console.log(res.data.arrayOfFoods);
+          setAddedFood(res.data.arrayOfFoods);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    fetchFoodLog();
   }, []);
 
   const makePayment = async () => {
@@ -140,42 +151,41 @@ const Userpage = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-3">
         <div className="md:flex md:justify-around">
           <div>
             <h1 className="text-2xl">Morning</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-           {latestDiet && latestDiet.map((food: any, index) => {
-            if(food.timePeriod === "morning")
-              return <FoodCard key={food._id} details={food} />
-           })
-           }
-              
+              {latestDiet &&
+                latestDiet.map((food: any, index) => {
+                  if (food.timePeriod === "morning")
+                    return <FoodCard key={food._id} details={food}  addedFood = {addedFood}/>;
+                })}
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Noon</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-            {latestDiet && latestDiet.map((food: any, index) => {
-            if(food.timePeriod === "afternoon")
-              return <FoodCard key={food._id} details={food} />
-           })
-           }
+              {latestDiet &&
+                latestDiet.map((food: any, index) => {
+                  if (food.timePeriod === "afternoon")
+                    return <FoodCard key={food._id} details={food} addedFood = {addedFood} />;
+                })}
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Evening</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-            {latestDiet && latestDiet.map((food: any, index) => {
-            if(food.timePeriod === "evening")
-              return <FoodCard key={food._id} details={food} />
-           })
-           }
+              {latestDiet &&
+                latestDiet.map((food: any, index) => {
+                  if (food.timePeriod === "evening")
+                    return <FoodCard key={food._id} details={food} addedFood = {addedFood} />;
+                })}
             </div>
           </div>
         </div>
-      </div> 
+      </div>
 
       <h1>plan details</h1>
       {/* <div>

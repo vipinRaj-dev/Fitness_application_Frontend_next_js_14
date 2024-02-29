@@ -3,6 +3,8 @@
 import axiosInstance from "@/axios/creatingInstance";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import swal from "sweetalert";
+import { useEffect, useState } from "react";
 
 interface Nutrition {
   calories: number;
@@ -43,31 +45,114 @@ interface HandleSubmitParams {
   time: string;
   timePeriod: string;
   quantity: number;
+  status?: boolean;
 }
 
-const handleSubmit = async ({
-  foodId,
-  time,
-  timePeriod,
-  quantity,
-}: HandleSubmitParams) => {
-  axiosInstance
-    .put("/user/addFoodLog", {
-      foodId,
-      time,
-      timePeriod,
-      quantity,
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+const FoodCard = ({
+  details,
+  addedFood,
+}: {
+  details: LatestDiet;
+  addedFood: string[];
+}) => {
+  // console.log("details", details);
 
-const FoodCard = ({ details }: { details: LatestDiet }) => {
-  console.log("details", details);
+  const [addedFoodList, setAddedFoodList] = useState<string[]>([]);
+  const [change, setChange] = useState(false);
+
+  // useEffect(() => {
+  //   const currentTime = new Date();
+  //   const foodTime = new Date();
+  //   const [hours, minutes] = details.time.split(":").map(Number);
+  //   foodTime.setHours(hours, minutes);
+
+  //   const timeLeft = foodTime.getTime() - currentTime.getTime();
+
+  //   let timerId: NodeJS.Timeout;
+
+  //   const isFoodAdded =
+  //     addedFood?.includes(details.foodId._id) ||
+  //     addedFoodList?.includes(details.foodId._id);
+
+  //     console.log("isFoodAdded", isFoodAdded);
+
+  //   if (timeLeft > 0 && !isFoodAdded) {
+  //     console.log(details.foodId.foodname, "timeLeft", timeLeft);
+
+  //     console.log('from the first if condition of timeLeft > 0 and !isFoodAdded')
+  //     timerId = setTimeout(() => {
+  //       handleSubmit({
+  //         foodId: details.foodId._id,
+  //         time: details.time,
+  //         timePeriod: details.timePeriod,
+  //         quantity: details.quantity,
+  //         status: false,
+  //       });
+  //     }, timeLeft);
+  //   } else if (timeLeft < 0 && !isFoodAdded) {
+  //     console.log('from the second if condition of timeLeft < 0 and !isFoodAdded')
+  //     handleSubmit({
+  //       foodId: details.foodId._id,
+  //       time: details.time,
+  //       timePeriod: details.timePeriod,
+  //       quantity: details.quantity,
+  //       status: false,
+  //     });
+  //   }
+
+  //   return () => {
+  //     if (timerId) {
+  //       clearTimeout(timerId);
+  //     }
+  //   };
+  // }, [details, change]);
+
+  const handleSubmit = async ({
+    foodId,
+    time,
+    timePeriod,
+    quantity,
+    status = true,
+  }: HandleSubmitParams) => {
+    console.log("calling the api after the time up");
+    axiosInstance
+      .put("/user/addFoodLog", {
+        foodId,
+        time,
+        timePeriod,
+        quantity,
+        status,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          setAddedFoodList([...addedFoodList, foodId]);
+          // setChange(!change);
+          swal({
+            title: "Yum Yum",
+            text: "Food Added to your History!",
+            icon: "success",
+            timer: 1500,
+            buttons: {},
+          });
+        } else {
+          swal({
+            title: "Oops",
+            text: "Something went wrong",
+            icon: "error",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        swal({
+          title: "Oops",
+          text: "Something went wrong",
+          icon: "error",
+        });
+      });
+  };
+
   return (
     <div className="bg-slate-900 p-3 rounded-lg md:flex ">
       <div className="md:w-44 ">
@@ -118,6 +203,10 @@ const FoodCard = ({ details }: { details: LatestDiet }) => {
           </div>
           <div>
             <Button
+              disabled={
+                addedFood?.includes(details.foodId._id) ||
+                addedFoodList?.includes(details.foodId._id)
+              }
               onClick={() => {
                 handleSubmit({
                   foodId: details.foodId._id,

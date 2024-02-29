@@ -70,7 +70,7 @@ const OtpForm = () => {
           />
         </label>
         <button
-          type="submit"
+          type="submit" 
           className="w-full px-3 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-500"
         >
           Submit

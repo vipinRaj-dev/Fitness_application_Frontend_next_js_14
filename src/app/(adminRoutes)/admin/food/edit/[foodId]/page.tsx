@@ -7,11 +7,11 @@ const page = ({
     foodId: string;
   };
 }) => {
-  return <div>edit food page with the id {params.foodId}
-  
-  <SetFoodAdmin foodId= {params.foodId} />
-    </div>;
+  return (
+    <div>
+      <SetFoodAdmin foodId={params.foodId} />
+    </div>
+  );
 };
 
 export default page;
-  

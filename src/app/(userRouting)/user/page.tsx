@@ -146,9 +146,9 @@ const Userpage = () => {
           <div>
             <h1 className="text-4xl font-semibold">Diet</h1>
           </div>
-          <div>
+          {/* <div>
             <Button>Add Food</Button>
-          </div>
+          </div> */}
         </div>
       </div>
 

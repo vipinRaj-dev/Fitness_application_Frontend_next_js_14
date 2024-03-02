@@ -189,122 +189,261 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           <div className="bg-black md:h-1/2 w-1/2 md:w-full ">calander</div>
         </div>
 
-        <div className="bg-pink-400 md:w-1/2 h-1/2 md:h-full w-full">
+        <div className="bg-black md:w-1/2 h-1/2 md:h-full w-full">
           report
         </div>
       </div>
-      <div className="h-screen bg-slate-500">
-        <div>
-          <Link href={`/trainer/addDiet/${client_Id}`}>
-            <Button>Add Food</Button>
-          </Link>
+
+      <div className="h-screen p-10 ">
+        <div className="flex justify-between">
+          <div>
+            <h1 className="text-xl font-semibold tracking-wide">
+              Schedule Diet
+            </h1>
+          </div>
+          <div>
+            <Link href={`/trainer/addDiet/${client_Id}`}>
+              <Button>Add Food</Button>
+            </Link>
+          </div>
         </div>
-        <div>
+        <div className="mt-5 mb-20 relative">
+          <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+        </div>
+        <div className=" p-5 h-5/6overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestFoodByTrainer.map((food: any, index) => {
             return (
-              <div key={food._id}>
-                <h1>{index + 1}</h1>
+              // <div key={food._id}>
+              //   <h1>{index + 1}</h1>
 
-                <h1>{food.foodId.foodname}</h1>
-                <h1>{food.foodId.description}</h1>
-                <h3>Ingredients</h3>
-                {food.foodId.ingredients.map(
-                  (ingredient: string, index: number) => {
-                    return (
-                      <div key={index}>
-                        <p>{ingredient}</p>
-                      </div>
-                    );
-                  }
-                )}
+              //   <h1>{food.foodId.foodname}</h1>
+              //   <h1>{food.foodId.description}</h1>
+              //   <h3>Ingredients</h3>
+              //   {food.foodId.ingredients.map(
+              //     (ingredient: string, index: number) => {
+              //       return (
+              //         <div key={index}>
+              //           <p>{ingredient}</p>
+              //         </div>
+              //       );
+              //     }
+              //   )}
 
-                <h3>Nutrition</h3>
-                {Object.entries(food.foodId.nutrition).map(
-                  ([key, value], index) => {
-                    if (key !== "_id" && value && value !== 0) {
-                      return (
-                        <div key={index}>
-                          <p>
-                            {key}: {value.toString()}
-                          </p>
-                        </div>
-                      );
-                    }
-                  }
-                )}
-                <div>
-                  {
-                    <div>
-                      <p>Quantity</p>
-                      <p>{food.quantity}</p>
-                      <p>Time</p>
-                      <p>{food.time}</p>
-                      <p>Time Period</p>
-                      <p>{food.timePeriod}</p>
-                    </div>
-                  }
+              //   <h3>Nutrition</h3>
+              //   {Object.entries(food.foodId.nutrition).map(
+              //     ([key, value], index) => {
+              //       if (key !== "_id" && value && value !== 0) {
+              //         return (
+              //           <div key={index}>
+              //             <p>
+              //               {key}: {value.toString()}
+              //             </p>
+              //           </div>
+              //         );
+              //       }
+              //     }
+              //   )}
+              //   <div>
+              //     {
+              //       <div>
+              //         <p>Quantity</p>
+              //         <p>{food.quantity}</p>
+              //         <p>Time</p>
+              //         <p>{food.time}</p>
+              //         <p>Time Period</p>
+              //         <p>{food.timePeriod}</p>
+              //       </div>
+              //     }
+              //   </div>
+              //   <Dialog>
+              //     <DialogTrigger asChild>
+              //       <Button variant="outline">Edit Profile</Button>
+              //     </DialogTrigger>
+              //     <DialogContent className="sm:max-w-[425px]">
+              //       <DialogHeader>
+              //         <DialogTitle>Edit</DialogTitle>
+              //         <DialogDescription>Add Time details</DialogDescription>
+              //       </DialogHeader>
+              //       <div className="grid gap-4 py-4">
+              //         <div className="grid grid-cols-4 items-center gap-4">
+              //           <Label htmlFor="time" className="text-right">
+              //             Name
+              //           </Label>
+              //           <select
+              //             className="text-black"
+              //             name="timePeriod"
+              //             value={state.timePeriod}
+              //             onChange={handleChange}
+              //           >
+              //             <option value="morning">morning</option>
+              //             <option value="afternoon">afternoon</option>
+              //             <option value="evening">evening</option>
+              //           </select>
+              //         </div>
+              //         <div className="grid grid-cols-4 items-center gap-4">
+              //           <Label htmlFor="username" className="text-right">
+              //             Quantity
+              //           </Label>
+              //           <Input
+              //             type="number"
+              //             name="quantity"
+              //             value={state.quantity}
+              //             onChange={handleChange}
+              //           />
+              //         </div>
+              //         <div className="grid grid-cols-4 items-center gap-4">
+              //           <Label htmlFor="username" className="text-right">
+              //             Time
+              //           </Label>
+              //           <input
+              //             type="time"
+              //             name="time"
+              //             onChange={handleChange}
+              //             value={state.time}
+              //             className="w-full placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+              //           />
+              //         </div>
+              //       </div>
+              //       <DialogFooter>
+              //         <DialogClose asChild>
+              //           <Button onClick={() => handleSubmit(food._id)}>
+              //             Save changes
+              //           </Button>
+              //         </DialogClose>
+              //       </DialogFooter>
+              //     </DialogContent>
+              //   </Dialog>
+              //   <Button onClick={() => handleRemove(food.foodId._id)}>
+              //     Remove
+              //   </Button>
+              // </div>
+
+              <div
+                className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
+                key={food._id}
+              >
+                <div className="flex items-center gap-3 h-full w-80">
+                  <div className="rounded-3xl w-32  overflow-hidden">
+                    <img
+                      className="w-full h-full object-contain "
+                      src={food.foodId.photoUrl}
+                      alt={food.foodId.name}
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <h1>{food.foodId.foodname}</h1>
+                  </div>
                 </div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline">Edit Profile</Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Edit</DialogTitle>
-                      <DialogDescription>Add Time details</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="time" className="text-right">
-                          Name
-                        </Label>
-                        <select
-                          className="text-black"
-                          name="timePeriod"
-                          value={state.timePeriod}
-                          onChange={handleChange}
-                        >
-                          <option value="morning">morning</option>
-                          <option value="afternoon">afternoon</option>
-                          <option value="evening">evening</option>
-                        </select>
+
+                <div>
+                  {food && food.foodId.nutrition ? (
+                    Object.entries(food.foodId.nutrition).map(
+                      ([key, value]) => {
+                        if (typeof value === "number" && value !== 0) {
+                          return (
+                            <div key={key}>
+                              <h1>
+                                {key} : {value}
+                              </h1>
+                            </div>
+                          );
+                        } else {
+                          return null;
+                        }
+                      }
+                    )
+                  ) : (
+                    <p>No nutrition information available.</p>
+                  )}
+                </div>
+
+                <div className="flex gap-3">
+                  <div>
+                    {
+                      <div>
+                        <div className="flex">
+                          <p>Quantity : </p>
+                          <p>{food.quantity}</p>
+                        </div>
+                        <div className="flex">
+                          <p>Time : </p>
+                          <p>{food.time}</p>
+                        </div>
+                        <div className="flex">
+                          <p>Time Period : </p>
+                          <p>{food.timePeriod}</p>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="text-right">
-                          Quantity
-                        </Label>
-                        <Input
-                          type="number"
-                          name="quantity"
-                          value={state.quantity}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="text-right">
-                          Time
-                        </Label>
-                        <input
-                          type="time"
-                          name="time"
-                          onChange={handleChange}
-                          value={state.time}
-                          className="w-full placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button onClick={() => handleSubmit(food._id)}>
-                          Save changes
-                        </Button>
-                      </DialogClose>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-                <Button onClick={() => handleRemove(food.foodId._id)}>
-                  Remove
-                </Button>
+                    }
+                  </div>
+                  <div className="flex items-center px-5">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className=" bg-black" variant="outline">Edit Profile</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px] bg-black">
+                        <DialogHeader>
+                          <DialogTitle>Edit</DialogTitle>
+                          <DialogDescription>
+                            Add Time details
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="time" className="text-right">
+                              Name
+                            </Label>
+                            <select
+                              className="text-black p-1 w-32 rounded-md"
+                              name="timePeriod"
+                              value={state.timePeriod}
+                              onChange={handleChange}
+                            >
+                              <option value="morning">morning</option>
+                              <option value="afternoon">afternoon</option>
+                              <option value="evening">evening</option>
+                            </select>
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Quantity
+                            </Label>
+                            <Input
+                              className="text-white p-2 w-32 "
+                              type="number"
+                              name="quantity"
+                              value={state.quantity}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Time
+                            </Label>
+                            <input
+                            
+                              type="time"
+                              name="time"
+                              onChange={handleChange}
+                              value={state.time}
+                              className="w-full placeholder-gray-500 p-1 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button onClick={() => handleSubmit(food._id)}>
+                              Save changes
+                            </Button>
+                          </DialogClose>
+                          <Button onClick={() => handleRemove(food.foodId._id)}>
+                            Remove
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
               </div>
             );
           })}

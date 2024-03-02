@@ -2,6 +2,7 @@
 import axiosInstance from "@/axios/creatingInstance";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 type Food = {
   _id: string;
@@ -69,40 +70,78 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
       .catch((err) => {
         console.log(err.response.data);
       });
-  }
+  };
   return (
-    <div>
-      FoodSearch {clientId}
-      {foodList.map((food: Food, index) => {
-        return (
-          <div key={food._id}>
-            <h1>Number : {index + 1}</h1>
-            <h1>{food.foodname}</h1>
-            <h2>{food.description}</h2>
-            <h3>Type: {food.foodtype}</h3>
-            <h4>Ingredients: {food.ingredients.join(", ")}</h4>
-            <h4>Nutrition:</h4>
-            <p>Calories: {food.nutrition.calories}</p>
-            <p>Protein: {food.nutrition.protein}</p>
-            <p>Carbs: {food.nutrition.carbs}</p>
-            <p>Fat: {food.nutrition.fat}</p>
-            <p>
-              Quantity: {food.quantity} {food.unit}
-            </p>
-            <img
-              className="w-20 h-20 rounded-full"
-              src={food.photoUrl}
-              alt={food.foodname}
-            />
+    <div className="p-16">
+      <div className="p-5">
+        {foodList.map((food: any) => (
+          <div
+            className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
+            key={food._id}
+          >
+            <div className="flex gap-3 h-full">
+              <div className="rounded-3xl w-32  overflow-hidden">
+                <img
+                  className="w-full h-full object-contain "
+                  src={food.photoUrl}
+                  alt={food.name}
+                />
+              </div>
+              <div className=" h-full overflow-auto scrollbar-none">
+                <div>
+                  <h1 className="text-xl font-semibold">{food.foodname}</h1>
+                </div>
 
-            {addedFoodId.includes(food._id) ? (
-              <Button onClick={() => deleteFood(food._id)}>Delete Food</Button>
-            ) : (
-              <Button onClick={() => addFood(food._id)}>Add Food</Button>
-            )}
+                <div className="flex gap-2 text-green-300 font-extralight">
+                  <p>Ingredients : </p>
+                  {food.ingredients.map((ingredient: any, index: number) => {
+                    return <p key={index}>{ingredient}</p>;
+                  })}
+                </div>
+
+                <div className="  w-96">{food.description}</div>
+              </div>
+            </div>
+
+            <div>
+              {food && food.nutrition ? (
+                Object.entries(food.nutrition).map(([key, value]) => {
+                  if (typeof value === "number" && value !== 0) {
+                    return (
+                      <div key={key}>
+                        <h1>
+                          {key} : {value}
+                        </h1>
+                      </div>
+                    );
+                  } else {
+                    return null;
+                  }
+                })
+              ) : (
+                <p>No nutrition information available.</p>
+              )}
+            </div>
+            <div>
+              {addedFoodId.includes(food._id) ? (
+                <Button
+                  className="rounded-3xl bg-green-400 hover:bg-green-500"
+                  onClick={() => deleteFood(food._id)}
+                >
+                  Delete Food
+                </Button>
+              ) : (
+                <Button
+                  className="rounded-3xl bg-green-400 hover:bg-green-500"
+                  onClick={() => addFood(food._id)}
+                >
+                  Add Food
+                </Button>
+              )}
+            </div>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 };

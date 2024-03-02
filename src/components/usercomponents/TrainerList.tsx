@@ -22,7 +22,7 @@ const TrainerList = () => {
 
   useEffect(() => {
     console.log("TrainerList from user side");
-    const getTrainer = () => {
+    const getTrainer = () => { 
       axiosInstance
         .get("/user/getAllTrainers")
         .then((res) => {

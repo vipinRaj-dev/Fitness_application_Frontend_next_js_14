@@ -26,60 +26,18 @@ const Userpage = () => {
         .get("/user/homePage")
         .then((res) => {
           console.log(res.data);
-          setLatestDiet(res.data.latestDiet);
+          setLatestDiet(res.data.dietFood);
+          setAddedFood(res.data.addedFood);
         })
         .catch((err) => {
           console.log(err);
         });
     };
     fetchUser();
-    const fetchFoodLog = async () => {
-      axiosInstance
-        .get("/user/getFoodLog")
-        .then((res) => {
-          console.log(res.data.arrayOfFoods);
-          setAddedFood(res.data.arrayOfFoods);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
 
-    fetchFoodLog();
   }, []);
 
-  const makePayment = async () => {
-    // console.log("payment done");
-
-    const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-    );
-
-    const body = {
-      amount: 2500,
-      plan: "premium",
-    };
-    const headers = {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${Cookies.get("jwttoken")}`,
-    };
-
-    const response = await fetch(`${baseUrl}/user/create-checkout-session`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-    });
-    const session = await response.json();
-    if (stripe) {
-      const result: any = await stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
-      if (result.error) {
-        console.log(result.error.message);
-      }
-    }
-  };
-
+ 
   return (
     <div className="">
       <div className="flex justify-end p-3">

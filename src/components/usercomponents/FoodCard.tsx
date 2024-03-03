@@ -43,9 +43,6 @@ type LatestDiet = Diet;
 interface HandleSubmitParams {
   foodId: string;
   time: string;
-  timePeriod: string;
-  quantity: number;
-  status?: boolean;
 }
 
 const FoodCard = ({
@@ -58,70 +55,18 @@ const FoodCard = ({
   // console.log("details", details);
 
   const [addedFoodList, setAddedFoodList] = useState<string[]>([]);
-  const [change, setChange] = useState(false);
+  // const [change, setChange] = useState(false);
 
-  // useEffect(() => {
-  //   const currentTime = new Date();
-  //   const foodTime = new Date();
-  //   const [hours, minutes] = details.time.split(":").map(Number);
-  //   foodTime.setHours(hours, minutes);
+  useEffect(() => {
+    setAddedFoodList(addedFood);
+  }, [addedFood]);
 
-  //   const timeLeft = foodTime.getTime() - currentTime.getTime();
-
-  //   let timerId: NodeJS.Timeout;
-
-  //   const isFoodAdded =
-  //     addedFood?.includes(details.foodId._id) ||
-  //     addedFoodList?.includes(details.foodId._id);
-
-  //     console.log("isFoodAdded", isFoodAdded);
-
-  //   if (timeLeft > 0 && !isFoodAdded) {
-  //     console.log(details.foodId.foodname, "timeLeft", timeLeft);
-
-  //     console.log('from the first if condition of timeLeft > 0 and !isFoodAdded')
-  //     timerId = setTimeout(() => {
-  //       handleSubmit({
-  //         foodId: details.foodId._id,
-  //         time: details.time,
-  //         timePeriod: details.timePeriod,
-  //         quantity: details.quantity,
-  //         status: false,
-  //       });
-  //     }, timeLeft);
-  //   } else if (timeLeft < 0 && !isFoodAdded) {
-  //     console.log('from the second if condition of timeLeft < 0 and !isFoodAdded')
-  //     handleSubmit({
-  //       foodId: details.foodId._id,
-  //       time: details.time,
-  //       timePeriod: details.timePeriod,
-  //       quantity: details.quantity,
-  //       status: false,
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (timerId) {
-  //       clearTimeout(timerId);
-  //     }
-  //   };
-  // }, [details, change]);
-
-  const handleSubmit = async ({
-    foodId,
-    time,
-    timePeriod,
-    quantity,
-    status = true,
-  }: HandleSubmitParams) => {
-    console.log("calling the api after the time up");
+  
+  const handleSubmit = async ({ foodId, time }: HandleSubmitParams) => {
     axiosInstance
       .put("/user/addFoodLog", {
         foodId,
         time,
-        timePeriod,
-        quantity,
-        status,
       })
       .then((res) => {
         console.log(res);
@@ -135,11 +80,21 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        } else {
+        }else if(res.status === 201) {
+          swal({
+            title: "Oops",
+            text: "You are not reached the time to eat this food",
+            icon: "warning",
+            timer: 1500,  
+            buttons: {},
+          });
+        }else {
           swal({
             title: "Oops",
             text: "Something went wrong",
             icon: "error",
+            timer: 1500,
+            buttons: {},
           });
         }
       })
@@ -151,6 +106,29 @@ const FoodCard = ({
           icon: "error",
         });
       });
+  };
+
+  const formatTime = (time24: string) => {
+    const [hours, minutes] = time24.split(":");
+    const hrs = Number(hours);
+    const period = hrs >= 12 ? "PM" : "AM";
+    const hrs12 = hrs > 12 ? hrs - 12 : hrs;
+
+    return `${hrs12 === 0 ? 12 : hrs12}:${minutes} ${period}`;
+  };
+
+  const isFoodTimeGreater = (foodTimeStr: string, food_id?: string) => {
+    const currentTime = new Date();
+    const foodTime = new Date();
+
+    const [hours, minutes] = foodTimeStr.split(":").map(Number);
+    foodTime.setHours(hours, minutes);
+
+    if (food_id && addedFoodList.includes(food_id)) {
+      return false;
+    }
+
+    return foodTime.getTime() < currentTime.getTime();
   };
 
   return (
@@ -165,7 +143,9 @@ const FoodCard = ({
             <h1 className="font-semibold text-xl">{details.foodId.foodname}</h1>
           </div>
           <div>
-            <p className="text-sm font-light">Before : {details.time}</p>
+            <p className="text-sm font-light">
+              Before : {formatTime(details.time)}
+            </p>
           </div>
         </div>
 
@@ -185,7 +165,6 @@ const FoodCard = ({
           <div>
             <div>
               <Badge variant="secondary">
-                {" "}
                 Calorie : {details.foodId.nutrition.calories}
               </Badge>
             </div>
@@ -204,20 +183,22 @@ const FoodCard = ({
           <div>
             <Button
               disabled={
-                addedFood?.includes(details.foodId._id) ||
-                addedFoodList?.includes(details.foodId._id)
+                isFoodTimeGreater(details.time, details.foodId._id) ||
+                addedFoodList.includes(details.foodId._id)
               }
               onClick={() => {
                 handleSubmit({
                   foodId: details.foodId._id,
                   time: details.time,
-                  timePeriod: details.timePeriod,
-                  quantity: details.quantity,
                 });
               }}
               size={"sm"}
             >
-              Yum !!
+              {isFoodTimeGreater(details.time , details.foodId._id)
+                ? "You Missed"
+                : addedFoodList.includes(details.foodId._id)
+                ? "Eated"
+                : "Yum !!"}
             </Button>
           </div>
         </div>

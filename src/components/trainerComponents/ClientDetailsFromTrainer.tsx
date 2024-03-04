@@ -2,9 +2,12 @@
 
 import axiosInstance from "@/axios/creatingInstance";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
 import {
   Dialog,
   DialogContent,
@@ -45,6 +48,7 @@ type User = {
 };
 
 const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
+  const router = useRouter();
   const [clientDetails, setClientDetails] = useState<User | null>(null);
   const [latestFoodByTrainer, setLatestFoodByTrainer] = useState<any[]>([]);
   const [done, setDone] = useState(false);
@@ -65,8 +69,12 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         setClientDetails(res.data);
         setLatestFoodByTrainer(res.data.latestFoodByTrainer);
       })
-      .catch((err) => {
-        // console.log(err.response.data);
+      .catch((err: Error | any) => {
+        console.log(err.response.data);
+        if (err.response.status === 404) {
+          Cookies.remove("jwttoken");
+          router.replace("/sign-in");
+        }
       });
   }, [client_Id, done]);
   // console.log(clientDetails);

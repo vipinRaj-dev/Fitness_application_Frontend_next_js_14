@@ -58,9 +58,10 @@ const SignInForm = () => {
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     axios
       .post(`${baseUrl}/auth/login`, data, { withCredentials: true })
-      .then(function (response) {
-        console.log(response);
-        router.push("/");
+      .then((res) => {
+        if (res.status === 200) {
+          router.replace("/");
+        }
       })
       .catch(function (error) {
         if (error.response) {
@@ -100,13 +101,13 @@ const SignInForm = () => {
                   />
                 </FormControl>
                 <div className="flex justify-end items-center">
-            <Link
-              className="hover:underline text-center"
-              href="/forgotpassword"
-            >
-              ForgotPassword
-            </Link>
-          </div>
+                  <Link
+                    className="hover:underline text-center"
+                    href="/forgotpassword"
+                  >
+                    ForgotPassword
+                  </Link>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -120,7 +121,6 @@ const SignInForm = () => {
               Sign Up
             </Link>
           </p>
-         
         </form>
       </Form>
     </div>

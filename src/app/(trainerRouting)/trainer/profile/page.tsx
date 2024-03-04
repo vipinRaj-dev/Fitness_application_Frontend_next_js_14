@@ -3,6 +3,9 @@ import axiosInstance from "@/axios/creatingInstance";
 import Dnaspinner from "@/components/loadingui/Dnaspinner";
 import React, { useEffect, useState } from "react";
 import swal from "sweetalert";
+
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 type FormState = {
   description: string;
   email: string;
@@ -16,6 +19,7 @@ type FormState = {
 };
 
 const TrainerProfile = () => {
+  const router = useRouter();
   const [form, setForm] = useState<FormState>({
     _id: "",
     name: "",
@@ -39,8 +43,12 @@ const TrainerProfile = () => {
           ...prevState,
           ...res.data.trainer,
         }));
-      } catch (error) {
+      } catch (error: Error | any) {
         console.log(error);
+        if (error.response.status === 404) {
+          Cookies.remove("jwttoken");
+          router.replace("/sign-in");
+        }
       }
     };
     fetchUser();

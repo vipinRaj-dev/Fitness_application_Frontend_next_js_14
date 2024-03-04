@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+
+import Cookies from "js-cookie";
 
 import {
   Dialog,
@@ -60,13 +63,17 @@ const TrainerHomePage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [render, setRender] = useState<boolean>(false);
 
+  const router = useRouter()
+
+
+
   useEffect(() => {
     // Fetch data from the server
     const fetchTrainerData = async () => {
       await axiosInstance
         .get("trainer/profile")
         .then((res) => {
-          console.log("res.data", res.data);
+          // console.log("res.data", res.data);
           setTrainerData((prevState) => ({
             ...prevState,
             ...res.data.trainer,
@@ -78,6 +85,10 @@ const TrainerHomePage = () => {
         })
         .catch((error) => {
           console.log(error);
+          if(error.response.status === 404){
+            Cookies.remove("jwttoken");
+            router.replace('/sign-in')
+          }
         });
     };
     fetchTrainerData();

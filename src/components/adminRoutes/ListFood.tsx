@@ -61,6 +61,9 @@ const ListFood = () => {
                 <div>
                   <h1 className="text-xl font-semibold">{food.foodname}</h1>
                 </div>
+                <div>
+                  <h1 className="font-extralight">approx : {food.quantity} {food.unit}</h1>
+                </div>
 
                 <div className="flex gap-2 text-green-300 font-extralight">
                   <p>Ingredients : </p>

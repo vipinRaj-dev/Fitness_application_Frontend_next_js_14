@@ -148,7 +148,7 @@ const FoodCard = ({
             </p>
           </div>
         </div>
-
+       <h1 className="text-center mb-1">approx :{details.foodId.quantity} {details.foodId.unit} </h1>
         <div className="flex justify-around">
           <div>
             <div>

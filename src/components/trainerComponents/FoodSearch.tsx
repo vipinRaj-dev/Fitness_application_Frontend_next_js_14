@@ -28,6 +28,7 @@ type Food = {
 const FoodSearch = ({ clientId }: { clientId: string }) => {
   const [foodList, setFoodList] = useState<Food[]>([]);
   const [addedFoodId, setAddedFoodId] = useState<string[]>([]);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     // console.log(clientId);
@@ -36,13 +37,14 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
       .then((res) => {
         // console.log(res.data);
         setFoodList(res.data.allFood);
-        setAddedFoodId((prev) => [...prev, ...res.data.listOfFood]);
+        setAddedFoodId(res.data.listOfFood);
         // console.log(res.data.listOfFood);
+        console.log(res.data);
       })
       .catch((err) => {
-        // console.log(err.response.data);
+        console.log(err);
       });
-  }, [clientId]);
+  }, []);
 
   const addFood = (foodId: string) => {
     axiosInstance
@@ -54,21 +56,28 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
         }
       })
       .catch((err) => {
-        // console.log(err.response.data);
+        console.log(err);
       });
   };
-
   const deleteFood = (foodId: string) => {
     axiosInstance
       .delete(`/trainer/deleteFood/${clientId}/${foodId}`)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
-          setAddedFoodId((prev) => prev.filter((id) => id !== foodId));
+          // console.log(res.data);
+          setAddedFoodId((prev) => {
+            const index = prev.findIndex((id) => id === foodId);
+            if (index !== -1) {
+              const newAddedFoodId = [...prev];
+              newAddedFoodId.splice(index, 1);
+              return newAddedFoodId;
+            }
+            return prev;
+          });
         }
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err);
       });
   };
   return (
@@ -91,7 +100,11 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
                 <div>
                   <h1 className="text-xl font-semibold">{food.foodname}</h1>
                 </div>
-
+                <div>
+                  <h1 className="font-extralight">
+                    approx : {food.quantity} {food.unit}
+                  </h1>
+                </div>
                 <div className="flex gap-2 text-green-300 font-extralight">
                   <p>Ingredients : </p>
                   {food.ingredients.map((ingredient: any, index: number) => {
@@ -122,22 +135,22 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
                 <p>No nutrition information available.</p>
               )}
             </div>
-            <div>
-              {addedFoodId.includes(food._id) ? (
-                <Button
-                  className="rounded-3xl bg-green-400 hover:bg-green-500"
-                  onClick={() => deleteFood(food._id)}
-                >
-                  Delete Food
-                </Button>
-              ) : (
-                <Button
-                  className="rounded-3xl bg-green-400 hover:bg-green-500"
-                  onClick={() => addFood(food._id)}
-                >
-                  Add Food
-                </Button>
-              )}
+            <div className=" p-3 space-x-4 rounded-full flex">
+              <Button
+                onClick={() => deleteFood(food._id)}
+                className="rounded-xl"
+              >
+                -
+              </Button>
+
+              <div className="flex items-center">
+                <p>
+                  {addedFoodId.filter((id) => id === food._id).length}
+                </p>
+              </div>
+              <Button onClick={() => addFood(food._id)} className="rounded-xl">
+                +
+              </Button>
             </div>
           </div>
         ))}

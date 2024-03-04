@@ -152,6 +152,15 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
       .then((res) => {
         setLoading(false);
         console.log(res.data);
+       if(res.status === 200){
+        swal({
+          title: "Success!",
+          text: "Food added successfully",
+          icon: "success",
+          timer: 1500,
+          buttons: {}
+        });
+       }
       })
       .catch((err: Error | any) => {
         console.log(err.response.data);
@@ -161,7 +170,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
   // console.log("QuantityUnit", QuantityUnit);
   // console.log("foodType", foodType);
 
-  let units = ["kg", "ml", "cup", "tbsp", "tsp", "mg"];
+  let units = ["kg", "gm", "ml", "cup", "tbsp", "tsp", "mg", "nos"];
 
   let types = ["Fruit", "Vegetable", "Meat", "Fish", "Dairy", "Nuts", "Sweets"];
   // console.log("form", form);

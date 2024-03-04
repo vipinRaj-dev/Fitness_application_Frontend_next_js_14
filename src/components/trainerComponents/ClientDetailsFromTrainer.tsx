@@ -109,7 +109,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     console.log(foodId, client_Id);
     try {
       axiosInstance
-        .delete(`/trainer/deleteFood/${client_Id}/${foodId}`)
+        .delete(`/trainer/singleFoodDelete/${client_Id}/${foodId}`)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.data);
@@ -189,9 +189,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           <div className="bg-black md:h-1/2 w-1/2 md:w-full ">calander</div>
         </div>
 
-        <div className="bg-black md:w-1/2 h-1/2 md:h-full w-full">
-          report
-        </div>
+        <div className="bg-black md:w-1/2 h-1/2 md:h-full w-full">report</div>
       </div>
 
       <div className="h-screen p-10 ">
@@ -213,111 +211,6 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         <div className=" p-5 h-5/6overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestFoodByTrainer.map((food: any, index) => {
             return (
-              // <div key={food._id}>
-              //   <h1>{index + 1}</h1>
-
-              //   <h1>{food.foodId.foodname}</h1>
-              //   <h1>{food.foodId.description}</h1>
-              //   <h3>Ingredients</h3>
-              //   {food.foodId.ingredients.map(
-              //     (ingredient: string, index: number) => {
-              //       return (
-              //         <div key={index}>
-              //           <p>{ingredient}</p>
-              //         </div>
-              //       );
-              //     }
-              //   )}
-
-              //   <h3>Nutrition</h3>
-              //   {Object.entries(food.foodId.nutrition).map(
-              //     ([key, value], index) => {
-              //       if (key !== "_id" && value && value !== 0) {
-              //         return (
-              //           <div key={index}>
-              //             <p>
-              //               {key}: {value.toString()}
-              //             </p>
-              //           </div>
-              //         );
-              //       }
-              //     }
-              //   )}
-              //   <div>
-              //     {
-              //       <div>
-              //         <p>Quantity</p>
-              //         <p>{food.quantity}</p>
-              //         <p>Time</p>
-              //         <p>{food.time}</p>
-              //         <p>Time Period</p>
-              //         <p>{food.timePeriod}</p>
-              //       </div>
-              //     }
-              //   </div>
-              //   <Dialog>
-              //     <DialogTrigger asChild>
-              //       <Button variant="outline">Edit Profile</Button>
-              //     </DialogTrigger>
-              //     <DialogContent className="sm:max-w-[425px]">
-              //       <DialogHeader>
-              //         <DialogTitle>Edit</DialogTitle>
-              //         <DialogDescription>Add Time details</DialogDescription>
-              //       </DialogHeader>
-              //       <div className="grid gap-4 py-4">
-              //         <div className="grid grid-cols-4 items-center gap-4">
-              //           <Label htmlFor="time" className="text-right">
-              //             Name
-              //           </Label>
-              //           <select
-              //             className="text-black"
-              //             name="timePeriod"
-              //             value={state.timePeriod}
-              //             onChange={handleChange}
-              //           >
-              //             <option value="morning">morning</option>
-              //             <option value="afternoon">afternoon</option>
-              //             <option value="evening">evening</option>
-              //           </select>
-              //         </div>
-              //         <div className="grid grid-cols-4 items-center gap-4">
-              //           <Label htmlFor="username" className="text-right">
-              //             Quantity
-              //           </Label>
-              //           <Input
-              //             type="number"
-              //             name="quantity"
-              //             value={state.quantity}
-              //             onChange={handleChange}
-              //           />
-              //         </div>
-              //         <div className="grid grid-cols-4 items-center gap-4">
-              //           <Label htmlFor="username" className="text-right">
-              //             Time
-              //           </Label>
-              //           <input
-              //             type="time"
-              //             name="time"
-              //             onChange={handleChange}
-              //             value={state.time}
-              //             className="w-full placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
-              //           />
-              //         </div>
-              //       </div>
-              //       <DialogFooter>
-              //         <DialogClose asChild>
-              //           <Button onClick={() => handleSubmit(food._id)}>
-              //             Save changes
-              //           </Button>
-              //         </DialogClose>
-              //       </DialogFooter>
-              //     </DialogContent>
-              //   </Dialog>
-              //   <Button onClick={() => handleRemove(food.foodId._id)}>
-              //     Remove
-              //   </Button>
-              // </div>
-
               <div
                 className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
                 key={food._id}
@@ -379,7 +272,9 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                   <div className="flex items-center px-5">
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button className=" bg-black" variant="outline">Edit Profile</Button>
+                        <Button className=" bg-black" variant="outline">
+                          Edit Profile
+                        </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[425px] bg-black">
                         <DialogHeader>
@@ -421,7 +316,6 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                               Time
                             </Label>
                             <input
-                            
                               type="time"
                               name="time"
                               onChange={handleChange}
@@ -436,7 +330,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                               Save changes
                             </Button>
                           </DialogClose>
-                          <Button onClick={() => handleRemove(food.foodId._id)}>
+                          <Button onClick={() => handleRemove(food._id)}>
                             Remove
                           </Button>
                         </DialogFooter>

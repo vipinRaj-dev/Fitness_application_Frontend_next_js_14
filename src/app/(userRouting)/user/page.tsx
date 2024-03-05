@@ -17,11 +17,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 
-
 const Userpage = () => {
   const [latestDiet, setLatestDiet] = useState([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
-
+  const [hasTrainer, setHasTrainer] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,6 +30,7 @@ const Userpage = () => {
           console.log(res.data);
           setLatestDiet(res.data.dietFood);
           setAddedFoodDocIds(res.data.addedFoodDocIds);
+          setHasTrainer(res.data.hasTrainer);
         })
         .catch((err) => {
           console.log(err);
@@ -41,8 +41,6 @@ const Userpage = () => {
 
   return (
     <div className="">
-      
-
       {/* <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
         <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl">
           <h1 className="font-semibold text-center">Attandance</h1>
@@ -98,13 +96,19 @@ const Userpage = () => {
       </div>
 
       <div>
-        <div className="flex justify-between py-8">
+        <div className="flex justify-center gap-5 py-8">
           <div>
             <h1 className="text-4xl font-semibold">Diet</h1>
           </div>
-          {/* <div>
-            <Button>Add Food</Button>
-          </div> */}
+          {hasTrainer ? (
+            ""
+          ) : (
+            <div>
+              <Link href="/user/addFood">
+                <Button className="bg-gradient-to-r from-green-200 to-slate-700 hover:from-slate-700 hover:to-green-200">Edit Diet</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 

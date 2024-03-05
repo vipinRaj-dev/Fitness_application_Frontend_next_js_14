@@ -27,6 +27,7 @@ type Food = {
 };
 
 const FoodSearch = ({ clientId }: { clientId: string }) => {
+  console.log("clientId", clientId);
   const [foodList, setFoodList] = useState<Food[]>([]);
   const [addedFoodId, setAddedFoodId] = useState<string[]>([]);
 
@@ -109,7 +110,8 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
       });
   };
   return (
-    <div className="md:p-16">
+    <div className="">
+      <h1 className="text-center font-semibold text-xl">Choose you favorite food</h1>
       <div className="flex justify-end space-x-2 w-full">
         <Input
           className=" max-w-sm "
@@ -119,7 +121,7 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
         />
       </div>
       <div className="p-10 ">
-        <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-gray-600 to-transparent" />
+        <div className="w-full h-0.5 bg-gradient-to-b from-transparent via-gray-600 to-transparent" />
         <div className="flex flex-row justify-center md:gap-28 md:py-8 ">
           {filterFood.map((food, index) => (
             <div

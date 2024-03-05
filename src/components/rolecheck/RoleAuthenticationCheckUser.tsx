@@ -7,8 +7,14 @@ import Cookies from "js-cookie";
 import Spinner from "../loadingui/Spinner";
 import swal from "sweetalert";
 import { useRouter } from "next/navigation";
+
+import { userStore } from "@/store/user";
+
 const RoleAuthenticationCheckUser = () => {
   const [loading, setLoading] = useState(true);
+
+  const setUser = userStore((state) => state.setUser);
+
   const router = useRouter();
   useEffect(() => {
     const myCookie = Cookies.get("jwttoken");
@@ -24,6 +30,10 @@ const RoleAuthenticationCheckUser = () => {
           if (res.data.role !== "user") {
             router.replace("/NotAuthorized");
           } else {
+            setUser({
+              UserId: res.data.userId,
+              email: res.data.email,
+            });
             setLoading(false);
           }
         })

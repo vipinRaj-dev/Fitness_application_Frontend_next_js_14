@@ -20,7 +20,7 @@ interface Trainer {
 const AllTrainer = () => {
   const [trainer, setTrainer] = useState<Trainer[]>([]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);  
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(4);
   const [totalPages, setTotalPages] = useState(0);

@@ -41,37 +41,36 @@ interface Diet {
 type LatestDiet = Diet;
 
 interface HandleSubmitParams {
-  foodId: string;
   time: string;
+  foodDocId: string;
 }
 
 const FoodCard = ({
   details,
-  addedFood,
+  addedFoodDocIds,
 }: {
   details: LatestDiet;
-  addedFood: string[];
+  addedFoodDocIds: string[];
 }) => {
   // console.log("details", details);
 
-  const [addedFoodList, setAddedFoodList] = useState<string[]>([]);
+  const [addedFoodDocIdsList, setAddedFoodDocIdsList] = useState<string[]>([]);
   // const [change, setChange] = useState(false);
 
   useEffect(() => {
-    setAddedFoodList(addedFood);
-  }, [addedFood]);
+    setAddedFoodDocIdsList(addedFoodDocIds);
+  }, [addedFoodDocIds]);
 
-  
-  const handleSubmit = async ({ foodId, time }: HandleSubmitParams) => {
+  const handleSubmit = async ({ time, foodDocId }: HandleSubmitParams) => {
     axiosInstance
       .put("/user/addFoodLog", {
-        foodId,
         time,
+        foodDocId,
       })
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
-          setAddedFoodList([...addedFoodList, foodId]);
+          setAddedFoodDocIdsList([...addedFoodDocIdsList, foodDocId]);
           // setChange(!change);
           swal({
             title: "Yum Yum",
@@ -80,15 +79,24 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        }else if(res.status === 201) {
+        } else if (res.status === 201) {
           swal({
             title: "Oops",
             text: "You are not reached the time to eat this food",
             icon: "warning",
-            timer: 1500,  
+            timer: 1500,
             buttons: {},
           });
-        }else {
+        }else if (res.status === 400) {
+          swal({
+            title: "Oops",
+            text: "You can't eat this food now, You are Late",
+            icon: "warning",
+            timer: 1500,
+            buttons: {},
+          });
+        }
+         else {
           swal({
             title: "Oops",
             text: "Something went wrong",
@@ -117,14 +125,14 @@ const FoodCard = ({
     return `${hrs12 === 0 ? 12 : hrs12}:${minutes} ${period}`;
   };
 
-  const isFoodTimeGreater = (foodTimeStr: string, food_id?: string) => {
+  const isFoodTimeGreater = (foodTimeStr: string, detailsDocId: string) => {
     const currentTime = new Date();
     const foodTime = new Date();
 
     const [hours, minutes] = foodTimeStr.split(":").map(Number);
     foodTime.setHours(hours, minutes);
 
-    if (food_id && addedFoodList.includes(food_id)) {
+    if (detailsDocId && addedFoodDocIdsList.includes(detailsDocId)) {
       return false;
     }
 
@@ -148,7 +156,9 @@ const FoodCard = ({
             </p>
           </div>
         </div>
-       <h1 className="text-center mb-1">approx :{details.foodId.quantity} {details.foodId.unit} </h1>
+        <h1 className="text-center mb-1">
+          approx :{details.foodId.quantity} {details.foodId.unit}{" "}
+        </h1>
         <div className="flex justify-around">
           <div>
             <div>
@@ -183,20 +193,20 @@ const FoodCard = ({
           <div>
             <Button
               disabled={
-                isFoodTimeGreater(details.time, details.foodId._id) ||
-                addedFoodList.includes(details.foodId._id)
+                isFoodTimeGreater(details.time, details._id) ||
+                addedFoodDocIdsList.includes(details._id)
               }
               onClick={() => {
                 handleSubmit({
-                  foodId: details.foodId._id,
                   time: details.time,
+                  foodDocId: details._id,
                 });
               }}
               size={"sm"}
             >
-              {isFoodTimeGreater(details.time , details.foodId._id)
+              {isFoodTimeGreater(details.time, details._id)
                 ? "You Missed"
-                : addedFoodList.includes(details.foodId._id)
+                : addedFoodDocIdsList.includes(details._id)
                 ? "Eated"
                 : "Yum !!"}
             </Button>

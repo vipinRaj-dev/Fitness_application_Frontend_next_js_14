@@ -17,9 +17,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 
+
 const Userpage = () => {
   const [latestDiet, setLatestDiet] = useState([]);
-  const [addedFood, setAddedFood] = useState<string[]>([]);
+  const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
+
+
   useEffect(() => {
     const fetchUser = async () => {
       axiosInstance
@@ -27,23 +30,18 @@ const Userpage = () => {
         .then((res) => {
           console.log(res.data);
           setLatestDiet(res.data.dietFood);
-          setAddedFood(res.data.addedFood);
+          setAddedFoodDocIds(res.data.addedFoodDocIds);
         })
         .catch((err) => {
           console.log(err);
         });
     };
     fetchUser();
-
   }, []);
 
- 
   return (
     <div className="">
-      <div className="flex justify-end p-3">
-        <h1 className="mx-2">Workouting</h1>
-        <Switch className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500" />
-      </div>
+      
 
       {/* <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
         <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl">
@@ -122,7 +120,7 @@ const Userpage = () => {
                       <FoodCard
                         key={food._id}
                         details={food}
-                        addedFood={addedFood}
+                        addedFoodDocIds={addedFoodDocIds}
                       />
                     );
                 })}
@@ -138,7 +136,7 @@ const Userpage = () => {
                       <FoodCard
                         key={food._id}
                         details={food}
-                        addedFood={addedFood}
+                        addedFoodDocIds={addedFoodDocIds}
                       />
                     );
                 })}
@@ -154,7 +152,7 @@ const Userpage = () => {
                       <FoodCard
                         key={food._id}
                         details={food}
-                        addedFood={addedFood}
+                        addedFoodDocIds={addedFoodDocIds}
                       />
                     );
                 })}

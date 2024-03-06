@@ -1,7 +1,7 @@
 "use client";
 import axiosInstance from "@/axios/creatingInstance";
 import Dnaspinner from "@/components/loadingui/Dnaspinner";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import Link from "next/link";
@@ -33,9 +33,50 @@ type FormState = {
   Thyroid: boolean;
 };
 
+type Nutrition = {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
+type FoodId = {
+  foodname: string;
+  foodtype: string;
+  nutrition: Nutrition;
+  photoUrl: string;
+};
+
+type FoodLog = {
+  foodId: FoodId;
+  quantity: string;
+  status: boolean;
+  time: string;
+  timePeriod: string;
+  updatedAt: string;
+  userId: string;
+};
+
+type AttendanceData = {
+  foodLogs: FoodLog[];
+  isPresent: boolean;
+  userId: string;
+};
+
+type ResponseType = {
+  attandanceData: AttendanceData;
+};
+
 const UserProfile = () => {
   const router = useRouter();
-  const [date, setDate] = React.useState<Date>();
+  const [date, setDate] = React.useState<Date>(
+    new Date(new Date().setHours(0, 0, 0, 0))
+  );
+  const [userCreatedDate, setUserCreatedDate] = useState<Date>();
+
+  const [attendanceData, setAttendanceData] =
+    useState<ResponseType["attandanceData"]>();
+
   const [form, setForm] = useState<FormState>({
     _id: "",
     name: "",
@@ -58,15 +99,16 @@ const UserProfile = () => {
       try {
         await axiosInstance
           .get("user/profile")
-          .then(
-            (res) =>
-              setForm((prevState) => ({
-                ...prevState,
-                ...res.data.user,
-                ...res.data.user.healthIssues,
-              }))
-            // console.log(res.data.user)
-          )
+          .then((res) => {
+            setForm((prevState) => ({
+              ...prevState,
+              ...res.data.user,
+              ...res.data.user.healthIssues,
+            }));
+            let userCreated = new Date(res.data.user.createdAt);
+            userCreated.setHours(0, 0, 0, 0);
+            setUserCreatedDate(userCreated);
+          })
           .catch((err) => {
             console.log("error inside the api call");
             console.log(err);
@@ -83,6 +125,23 @@ const UserProfile = () => {
     };
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (date) {
+      console.log("date", date);
+      console.log("userCreatedDate", userCreatedDate);
+
+      axiosInstance
+        .get(`user/getDate/${date}`)
+        .then((res) => {
+          console.log(res.data);
+          setAttendanceData(res.data.attandanceData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [date]);
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -170,6 +229,13 @@ const UserProfile = () => {
   const openHealthIssues = () => {
     setOpenInput(true);
   };
+
+  const setDateToStart = (date: Date | number) => {
+    let newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    return newDate;
+  };
+
   if (loading) {
     return <Dnaspinner />;
   }
@@ -363,29 +429,66 @@ const UserProfile = () => {
         </div>
 
         <div className="bg-black h-screen md:w-4/6">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className="w-[240px] pl-3 text-left font-normal"
-              >
-                {date ? date.toDateString() : <span>Pick a date</span>}
-                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Calendar
-                mode="single"
-                showOutsideDays={false}
-                onDayClick={(day) => setDate(day)}
-                selected={date}
-                disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
-                }
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
+          <div className="flex justify-end p-5">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className="w-[240px] pl-3 text-left font-normal"
+                >
+                  {date ? date.toDateString() : <span>Pick a date</span>}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <Calendar
+                  mode="single"
+                  showOutsideDays={false}
+                  onDayClick={(day) => setDate(setDateToStart(day))}
+                  selected={date}
+                  disabled={(date) =>
+                    date < (userCreatedDate ?? new Date()) || date > new Date()
+                  }
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div className="bg-slate-700">
+            details
+            {attendanceData && attendanceData.isPresent && (
+              <div className="flex justify-center p-3">
+                <Badge>Present</Badge>
+              </div>
+            )}
+            {attendanceData &&
+              attendanceData.foodLogs.map((data, index) => {
+                return (
+                  <div key={index} className="flex justify-between p-3">
+                    <div>
+                      <img
+                        src={data.foodId.photoUrl}
+                        alt={data.foodId.foodname}
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+                    <div>
+                      <p>{data.foodId.foodname}</p>
+                      <p>{data.quantity}</p>
+                    </div>
+                    <div>
+                      <p>{data.time}</p>
+                      <p>{data.timePeriod}</p>
+                    </div>
+                    <div>
+                      <p>{data.status ? "Taken" : "Not Taken"}</p>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>

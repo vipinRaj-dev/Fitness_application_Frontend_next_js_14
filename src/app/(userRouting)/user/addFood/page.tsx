@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 const page = () => {
   const user = userStore((state) => state.user);
   const client_Id = user.UserId;
-  const [latestFoodByTrainer, setLatestFoodByTrainer] = useState<any[]>([]);
+  const [latestDiet, setLatestDiet] = useState<any[]>([]);
   const [listOpen, setListOpen] = useState(false);
 
   const [done, setDone] = useState(false);
@@ -35,20 +35,20 @@ const page = () => {
 
   useEffect(() => {
     // console.log(client_Id);
-
     axiosInstance
-      .get(`/trainer/client/${client_Id}`)
+      .get(`/food/client/${client_Id}`)
       .then((res) => {
-        console.log(
-          "res.data.latestFoodByTrainer",
-          res.data.latestFoodByTrainer
-        );
-        setLatestFoodByTrainer(res.data.latestFoodByTrainer);
+        console.log("res.data.latestDiet", res.data.latestDiet);
+        setLatestDiet(res.data.latestDiet);
       })
       .catch((err: Error | any) => {
         console.log(err.response.data);
       });
   }, [client_Id, done]);
+
+  const updateParent = () => {
+    setDone(!done);
+  };
 
   const handleChange = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
@@ -68,7 +68,7 @@ const page = () => {
     console.log(foodId, client_Id);
     try {
       axiosInstance
-        .put(`/trainer/addTimeDetails/${client_Id}/${foodId}`, state)
+        .put(`/food/addTimeDetails/${client_Id}/${foodId}`, state)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.data);
@@ -87,12 +87,12 @@ const page = () => {
     console.log(foodId, client_Id);
     try {
       axiosInstance
-        .delete(`/trainer/singleFoodDelete/${client_Id}/${foodId}`)
+        .delete(`/food/deletePerFood/${client_Id}/${foodId}`)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.data);
             setDone(!done);
-            // setLatestFoodByTrainer(latestFoodByTrainer.filter(food => food._id !== foodId));
+            // setLatestDiet(latestDiet.filter(food => food._id !== foodId));
           }
         })
         .catch((err) => {
@@ -110,7 +110,7 @@ const page = () => {
           Edit you Existing food details
         </h1>
         <div className=" p-5 h-4/6 rounded-2xl shadow-2xl shadow-slate-800 overflow-y-scroll scrollbar-none scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-          {latestFoodByTrainer.map((food: any, index) => {
+          {latestDiet.map((food: any, index) => {
             return (
               <div
                 className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
@@ -254,7 +254,9 @@ const page = () => {
         </div>
       </div>
 
-      {listOpen && <FoodSearch clientId={client_Id} />}
+      {listOpen && (
+        <FoodSearch clientId={client_Id} updateParent={updateParent} />
+      )}
     </div>
   );
 };

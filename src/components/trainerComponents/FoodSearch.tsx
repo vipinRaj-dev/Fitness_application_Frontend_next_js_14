@@ -9,7 +9,7 @@ type Food = {
   _id: string;
   createdAt: string;
   description: string;
-  foodname: string;
+  foodname: string;  
   foodtype: string;
   ingredients: string[];
   nutrition: {
@@ -25,8 +25,12 @@ type Food = {
   unit: string;
   added?: boolean;
 };
+type FoodSearchProps = {
+  clientId: string;
+  updateParent?: () => void;
+};
 
-const FoodSearch = ({ clientId }: { clientId: string }) => {
+const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
   console.log("clientId", clientId);
   const [foodList, setFoodList] = useState<Food[]>([]);
   const [addedFoodId, setAddedFoodId] = useState<string[]>([]);
@@ -40,7 +44,7 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
   useEffect(() => {
     // console.log(clientId);
     axiosInstance
-      .get(`/trainer/allFood/${clientId}`, {
+      .get(`/food/allFood/${clientId}`, {
         params: {
           page,
           search,
@@ -75,22 +79,24 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
     // { foodtype: "Sweets", image: "/images/sweets.png" },
   ];
 
-  const addFood = (foodId: string) => {
+  const increaseQuantity = (foodId: string) => {
     axiosInstance
-      .post(`/trainer/addFood/${clientId}`, { foodId })
+      .post(`/food/addFood/${clientId}`, { foodId })
       .then((res) => {
         // console.log(res.data);
+
         if (res.status === 200) {
           setAddedFoodId((prev) => [...prev, res.data.foodId]);
+          updateParent && updateParent();
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const deleteFood = (foodId: string) => {
+  const decreaseQuantity = (foodId: string) => {
     axiosInstance
-      .delete(`/trainer/deleteFood/${clientId}/${foodId}`)
+      .delete(`/food/deleteFood/${clientId}/${foodId}`)
       .then((res) => {
         if (res.status === 200) {
           // console.log(res.data);
@@ -103,6 +109,8 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
             }
             return prev;
           });
+
+          updateParent && updateParent();  
         }
       })
       .catch((err) => {
@@ -111,7 +119,9 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
   };
   return (
     <div className="">
-      <h1 className="text-center font-semibold text-xl">Choose you favorite food</h1>
+      <h1 className="text-center font-semibold text-xl">
+        Choose you favorite food
+      </h1>
       <div className="flex justify-end space-x-2 w-full">
         <Input
           className=" max-w-sm "
@@ -231,7 +241,7 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
             </div>
             <div className=" p-3 space-x-4 rounded-full flex">
               <Button
-                onClick={() => deleteFood(food._id)}
+                onClick={() => decreaseQuantity(food._id)}
                 className="rounded-xl"
               >
                 -
@@ -240,7 +250,7 @@ const FoodSearch = ({ clientId }: { clientId: string }) => {
               <div className="flex items-center">
                 <p>{addedFoodId.filter((id) => id === food._id).length}</p>
               </div>
-              <Button onClick={() => addFood(food._id)} className="rounded-xl">
+              <Button onClick={() => increaseQuantity(food._id)} className="rounded-xl">
                 +
               </Button>
             </div>

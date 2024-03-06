@@ -6,6 +6,16 @@ import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+
 type FormState = {
   _id: string;
   name: string;
@@ -25,6 +35,7 @@ type FormState = {
 
 const UserProfile = () => {
   const router = useRouter();
+  const [date, setDate] = React.useState<Date>();
   const [form, setForm] = useState<FormState>({
     _id: "",
     name: "",
@@ -47,14 +58,14 @@ const UserProfile = () => {
       try {
         await axiosInstance
           .get("user/profile")
-          .then((res) =>
-            setForm((prevState) => ({
-              ...prevState,
-              ...res.data.user,
-              ...res.data.user.healthIssues,
-            }))
-          // console.log(res.data.user)
-
+          .then(
+            (res) =>
+              setForm((prevState) => ({
+                ...prevState,
+                ...res.data.user,
+                ...res.data.user.healthIssues,
+              }))
+            // console.log(res.data.user)
           )
           .catch((err) => {
             console.log("error inside the api call");
@@ -80,7 +91,7 @@ const UserProfile = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      setForm(prevState => ({
+      setForm((prevState) => ({
         ...prevState,
         [name]: checked,
       }));
@@ -90,10 +101,10 @@ const UserProfile = () => {
         [name]: e.target.files ? e.target.files[0] : prevState.profileImage,
       }));
     } else {
-      setForm(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
+      setForm((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
   };
 
@@ -162,188 +173,222 @@ const UserProfile = () => {
   if (loading) {
     return <Dnaspinner />;
   }
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center min-h-96 py-2"
-    >
-      <div className="flex flex-col bg-slate-900 p-20 rounded-xl shadow-2xl w-full md:w-full lg:w-9/12 space-y-6">
-        <div className="flex justify-center ">
-          {form.profileImage && (
-            <img
-              className="rounded-3xl border-2 border-slate-500"
-              src={
-                typeof form.profileImage === "string"
-                  ? form.profileImage
-                  : "https://cdn-icons-png.flaticon.com/512/219/219970.png"
-              }
-              width={300}
-              alt=""
-            />
-          )}
+    <div>
+      <div className="md:flex w-full">
+        <div className="md:w-2/6">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center justify-center min-h-96 py-2"
+          >
+            <div className="flex flex-col bg-slate-900 p-20 rounded-xl shadow-2xl w-full md:w-full lg:w-9/12 space-y-6">
+              <div className="flex justify-center ">
+                {form.profileImage && (
+                  <img
+                    className="rounded-3xl border-2 border-slate-500"
+                    src={
+                      typeof form.profileImage === "string"
+                        ? form.profileImage
+                        : "https://cdn-icons-png.flaticon.com/512/219/219970.png"
+                    }
+                    width={300}
+                    alt=""
+                  />
+                )}
+              </div>
+
+              {/* <Image src='http://res.cloudinary.com/dxxbvjmz5/image/upload/v1707805602/user-Images/x74bkkb3btxdeexaeyol.png' alt="demoImage" width={100} height={100}></Image> */}
+              <label>
+                Image
+                <input
+                  name="image"
+                  type="file"
+                  onChange={handleInputChange}
+                  className="rounded px-3 py-2 w-full"
+                />
+              </label>
+              <h2 className="text-center text-xl font-extrabold">
+                User Profile
+              </h2>
+              <label>
+                Name
+                <input
+                  value={form.name}
+                  name="name"
+                  type="text"
+                  onChange={handleInputChange}
+                  placeholder="Name"
+                  className="rounded px-3 py-2 w-ful text-black"
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  value={form.email}
+                  name="email"
+                  type="email"
+                  onChange={handleInputChange}
+                  placeholder="Email"
+                  className="rounded px-3 py-2 w-full  text-black"
+                />
+              </label>
+              <label>
+                Phone Number
+                <input
+                  value={form.mobileNumber}
+                  name="mobileNumber"
+                  type="number"
+                  onChange={handleInputChange}
+                  placeholder="Phone Number"
+                  className="rounded px-3 py-2 w-full  text-black"
+                />
+              </label>
+              <label>
+                Weight
+                <input
+                  value={form.weight}
+                  name="weight"
+                  type="number"
+                  onChange={handleInputChange}
+                  placeholder="Weight"
+                  className="rounded px-3 py-2 w-full  text-black"
+                />
+              </label>
+              <label>
+                Height
+                <input
+                  value={form.height}
+                  name="height"
+                  type="number"
+                  onChange={handleInputChange}
+                  placeholder="Height"
+                  className="rounded px-3 py-2 w-full  text-black"
+                />
+              </label>
+
+              <label>
+                Do you have any health issues?{" "}
+                <Badge onClick={openHealthIssues} variant="secondary">
+                  Click to Add
+                </Badge>
+              </label>
+
+              {openInput && (
+                <>
+                  <label>
+                    Blood Pressure
+                    <input
+                      value={form.BloodPressure}
+                      name="BloodPressure"
+                      type="number"
+                      onChange={handleInputChange}
+                      placeholder="Blood Pressure"
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                  <label>
+                    Diabetes
+                    <input
+                      value={form.Diabetes}
+                      name="Diabetes"
+                      type="number"
+                      onChange={handleInputChange}
+                      placeholder="Diabetes"
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                  <label>
+                    cholesterol
+                    <input
+                      value={form.cholesterol}
+                      name="cholesterol"
+                      type="number"
+                      onChange={handleInputChange}
+                      placeholder="cholesterol"
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                  <label>
+                    Heart Disease
+                    <input
+                      checked={form.HeartDisease}
+                      name="HeartDisease"
+                      type="checkbox"
+                      onChange={handleInputChange}
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                  <label>
+                    Kidney Disease
+                    <input
+                      checked={form.KidneyDisease}
+                      name="KidneyDisease"
+                      type="checkbox"
+                      onChange={handleInputChange}
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                  <label>
+                    Liver Disease
+                    <input
+                      checked={form.LiverDisease}
+                      name="LiverDisease"
+                      type="checkbox"
+                      onChange={handleInputChange}
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                  <label>
+                    Thyroid
+                    <input
+                      checked={form.Thyroid}
+                      name="Thyroid"
+                      type="checkbox"
+                      onChange={handleInputChange}
+                      className="rounded px-3 py-2 w-full  text-black"
+                    />
+                  </label>
+                </>
+              )}
+
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+              >
+                Update
+              </button>
+            </div>
+          </form>
         </div>
 
-        {/* <Image src='http://res.cloudinary.com/dxxbvjmz5/image/upload/v1707805602/user-Images/x74bkkb3btxdeexaeyol.png' alt="demoImage" width={100} height={100}></Image> */}
-        <label>
-          Image
-          <input
-            name="image"
-            type="file"
-            onChange={handleInputChange}
-            className="rounded px-3 py-2 w-full"
-          />
-        </label>
-        <h2 className="text-center text-xl font-extrabold">User Profile</h2>
-        <label>
-          Name
-          <input
-            value={form.name}
-            name="name"
-            type="text"
-            onChange={handleInputChange}
-            placeholder="Name"
-            className="rounded px-3 py-2 w-ful text-black"
-          />
-        </label>
-        <label>
-          Email
-          <input
-            value={form.email}
-            name="email"
-            type="email"
-            onChange={handleInputChange}
-            placeholder="Email"
-            className="rounded px-3 py-2 w-full  text-black"
-          />
-        </label>
-        <label>
-          Phone Number
-          <input
-            value={form.mobileNumber}
-            name="mobileNumber"
-            type="number"
-            onChange={handleInputChange}
-            placeholder="Phone Number"
-            className="rounded px-3 py-2 w-full  text-black"
-          />
-        </label>
-        <label>
-          Weight
-          <input
-            value={form.weight}
-            name="weight"
-            type="number"
-            onChange={handleInputChange}
-            placeholder="Weight"
-            className="rounded px-3 py-2 w-full  text-black"
-          />
-        </label>
-        <label>
-          Height
-          <input
-            value={form.height}
-            name="height"
-            type="number"
-            onChange={handleInputChange}
-            placeholder="Height"
-            className="rounded px-3 py-2 w-full  text-black"
-          />
-        </label>
-
-        <label>
-          Do you have any health issues?{" "}
-          <Badge onClick={openHealthIssues} variant="secondary">
-            Click to Add
-          </Badge>
-        </label>
-
-        {openInput && (
-          <>
-            <label>
-              Blood Pressure
-              <input
-                value={form.BloodPressure}
-                name="BloodPressure"
-                type="number"
-                onChange={handleInputChange}
-                placeholder="Blood Pressure"
-                className="rounded px-3 py-2 w-full  text-black"
+        <div className="bg-black h-screen md:w-4/6">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className="w-[240px] pl-3 text-left font-normal"
+              >
+                {date ? date.toDateString() : <span>Pick a date</span>}
+                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Calendar
+                mode="single"
+                showOutsideDays={false}
+                onDayClick={(day) => setDate(day)}
+                selected={date}
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
+                initialFocus
               />
-            </label>
-            <label>
-              Diabetes
-              <input
-                value={form.Diabetes}
-                name="Diabetes"
-                type="number"
-                onChange={handleInputChange}
-                placeholder="Diabetes"
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
-            <label>
-              cholesterol
-              <input
-                value={form.cholesterol}
-                name="cholesterol"
-                type="number"
-                onChange={handleInputChange}
-                placeholder="cholesterol"
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
-            <label>
-              Heart Disease
-              <input
-                checked={form.HeartDisease}
-                name="HeartDisease"
-                type="checkbox"
-                onChange={handleInputChange}
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
-            <label>
-              Kidney Disease
-              <input
-                checked={form.KidneyDisease}
-                name="KidneyDisease"
-                type="checkbox"
-                onChange={handleInputChange}
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
-            <label>
-              Liver Disease
-              <input
-                checked={form.LiverDisease}
-                name="LiverDisease"
-                type="checkbox"
-                onChange={handleInputChange}
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
-            <label>
-              Thyroid
-              <input
-                checked={form.Thyroid}
-                name="Thyroid"
-                type="checkbox"
-                onChange={handleInputChange}
-                className="rounded px-3 py-2 w-full  text-black"
-              />
-            </label>
-           
-          </>
-        )}
-
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-        >
-          Update
-        </button>
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
-    </form>
+    </div>
   );
 };
 

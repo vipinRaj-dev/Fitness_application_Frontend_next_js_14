@@ -17,8 +17,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 
+type DietFood = {
+  time: string;
+}[];
+
 const Userpage = () => {
-  const [latestDiet, setLatestDiet] = useState([]);
+  const [latestDiet, setLatestDiet] = useState<DietFood>([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
   const [hasTrainer, setHasTrainer] = useState(false);
 
@@ -105,7 +109,9 @@ const Userpage = () => {
           ) : (
             <div>
               <Link href="/user/addFood">
-                <Button className="bg-gradient-to-r from-green-200 to-slate-700 hover:from-slate-700 hover:to-green-200">Edit Diet</Button>
+                <Button className="bg-gradient-to-r from-green-200 to-slate-700 hover:from-slate-700 hover:to-green-200">
+                  Edit Diet
+                </Button>
               </Link>
             </div>
           )}
@@ -118,48 +124,69 @@ const Userpage = () => {
             <h1 className="text-2xl">Morning</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
               {latestDiet &&
-                latestDiet.map((food: any, index) => {
-                  if (food.timePeriod === "morning")
+                [...latestDiet]
+                  .sort((a, b) => {
                     return (
-                      <FoodCard
-                        key={food._id}
-                        details={food}
-                        addedFoodDocIds={addedFoodDocIds}
-                      />
+                      Number(a.time.replace(":", ".")) -
+                      Number(b.time.replace(":", "."))
                     );
-                })}
+                  })
+                  .map((food: any) => {
+                    if (food.timePeriod === "morning")
+                      return (
+                        <FoodCard
+                          key={food._id}
+                          details={food}
+                          addedFoodDocIds={addedFoodDocIds}
+                        />
+                      );
+                  })}
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Noon</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
               {latestDiet &&
-                latestDiet.map((food: any, index) => {
-                  if (food.timePeriod === "afternoon")
+                [...latestDiet]
+                  .sort((a, b) => {
                     return (
-                      <FoodCard
-                        key={food._id}
-                        details={food}
-                        addedFoodDocIds={addedFoodDocIds}
-                      />
+                      Number(a.time.replace(":", ".")) -
+                      Number(b.time.replace(":", "."))
                     );
-                })}
+                  })
+                  .map((food: any) => {
+                    if (food.timePeriod === "afternoon")
+                      return (
+                        <FoodCard
+                          key={food._id}
+                          details={food}
+                          addedFoodDocIds={addedFoodDocIds}
+                        />
+                      );
+                  })}
             </div>
           </div>
           <div>
             <h1 className="text-2xl">Evening</h1>
             <div className="h-screen  space-y-3 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
               {latestDiet &&
-                latestDiet.map((food: any, index) => {
-                  if (food.timePeriod === "evening")
+                [...latestDiet]
+                  .sort((a, b) => {
                     return (
-                      <FoodCard
-                        key={food._id}
-                        details={food}
-                        addedFoodDocIds={addedFoodDocIds}
-                      />
+                      Number(a.time.replace(":", ".")) -
+                      Number(b.time.replace(":", "."))
                     );
-                })}
+                  })
+                  .map((food: any) => {
+                    if (food.timePeriod === "evening")
+                      return (
+                        <FoodCard
+                          key={food._id}
+                          details={food}
+                          addedFoodDocIds={addedFoodDocIds}
+                        />
+                      );
+                  })}
             </div>
           </div>
         </div>

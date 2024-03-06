@@ -8,6 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
+
 import {
   Dialog,
   DialogContent,
@@ -21,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { late, string } from "zod";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { Clock, Clock10Icon } from "lucide-react";
 
 type User = {
   admissionNumber: number;
@@ -39,7 +44,7 @@ type User = {
   height: number;
   mobileNumber: number;
   name: string;
-  profileImage: string; 
+  profileImage: string;
   trainerPaymentDetails: string[];
   trainerPaymentDueDate: string;
   userBlocked: boolean;
@@ -50,10 +55,10 @@ type User = {
 const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const router = useRouter();
   const [clientDetails, setClientDetails] = useState<User | null>(null);
-  const [latestFoodByTrainer, setLatestFoodByTrainer] = useState<any[]>([]);
+  const [latestDiet, setLatestDiet] = useState<any[]>([]);
   const [done, setDone] = useState(false);
 
-  const [state, setState] = useState({
+  const [schedule, setSchedule] = useState({
     timePeriod: "morning",
     quantity: 0,
     time: "10:00",
@@ -63,11 +68,11 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     // console.log(client_Id);
 
     axiosInstance
-      .get(`/trainer/client/${client_Id}`)
+      .get(`/food/client/${client_Id}`)
       .then((res) => {
-        // console.log(res.data.latestFoodByTrainer);
+        // console.log(res.data.latestDiet);
         setClientDetails(res.data);
-        setLatestFoodByTrainer(res.data.latestFoodByTrainer);
+        setLatestDiet(res.data.latestDiet);
       })
       .catch((err: Error | any) => {
         console.log(err.response.data);
@@ -78,27 +83,41 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       });
   }, [client_Id, done]);
   // console.log(clientDetails);
-  console.log(latestFoodByTrainer);
+  console.log(latestDiet);
 
-  const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.name;
-    if (!name) {
-      return;
-    }
+  // const handleChange = (
+  //   event: React.ChangeEvent<{ name?: string; value: string | null }>
+  // ) => {
+  //   const name = event.target.name;
+  //   if (!name) {
+  //     return;
+  //   }
 
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
+  //   setSchedule({
+  //     ...schedule,
+  //     [name]: event.target.value,
+  //   });
+  // };
+
+  // const handleTimeChange = (value: string | null) => {
+  //   setSchedule({
+  //     ...schedule,
+  //     time: value as string,
+  //   });
+  // };
+
+  const handleChange = (name: string, value: string | null) => {
+    setSchedule(prevSchedule => ({
+      ...prevSchedule,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (foodId: string) => {
     console.log(foodId, client_Id);
     try {
       axiosInstance
-        .put(`/trainer/addTimeDetails/${client_Id}/${foodId}`, state)
+        .put(`/food/addTimeDetails/${client_Id}/${foodId}`, schedule)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.data);
@@ -117,12 +136,12 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     console.log(foodId, client_Id);
     try {
       axiosInstance
-        .delete(`/trainer/singleFoodDelete/${client_Id}/${foodId}`)
+        .delete(`/food/deletePerFood/${client_Id}/${foodId}`)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.data);
             setDone(!done);
-            // setLatestFoodByTrainer(latestFoodByTrainer.filter(food => food._id !== foodId));
+            // setLatestDiet(latestDiet.filter(food => food._id !== foodId));
           }
         })
         .catch((err) => {
@@ -217,7 +236,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
         </div>
         <div className=" p-5 h-5/6overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-          {latestFoodByTrainer.map((food: any, index) => {
+          {latestDiet.map((food: any, index) => {
             return (
               <div
                 className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
@@ -299,8 +318,8 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                             <select
                               className="text-black p-1 w-32 rounded-md"
                               name="timePeriod"
-                              value={state.timePeriod}
-                              onChange={handleChange}
+                              value={schedule.timePeriod}
+                              onChange={(event) => handleChange('timePeriod', event.target.value)}
                             >
                               <option value="morning">morning</option>
                               <option value="afternoon">afternoon</option>
@@ -315,20 +334,25 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                               className="text-white p-2 w-32 "
                               type="number"
                               name="quantity"
-                              value={state.quantity}
-                              onChange={handleChange}
+                              value={schedule.quantity}
+                              onChange={(event) => handleChange('quantity', event.target.value)}
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="username" className="text-right">
                               Time
                             </Label>
-                            <input
+                            {/* <input
                               type="time"
                               name="time"
                               onChange={handleChange}
-                              value={state.time}
+                              value={schedule.time}
                               className="w-full placeholder-gray-500 p-1 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300"
+                            /> */}
+                            <TimePicker
+                            className={"text-gray-600 p-2 w-44 rounded-md bg-white"}
+                              onChange={(value) => handleChange('time', value)}
+                              value={schedule.time}
                             />
                           </div>
                         </div>

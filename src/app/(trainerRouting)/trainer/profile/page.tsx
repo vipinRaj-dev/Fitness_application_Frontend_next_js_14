@@ -3,20 +3,61 @@ import axiosInstance from "@/axios/creatingInstance";
 import Dnaspinner from "@/components/loadingui/Dnaspinner";
 import React, { useEffect, useState } from "react";
 import swal from "sweetalert";
-
+import { z } from "zod";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 type FormState = {
   description: string;
   email: string;
-  experience: number;
-  mobileNumber: number;
+  experience: number | string;
+  mobileNumber: number | string;
   name: string;
-  price: number;
+  price: number | string;
   profilePicture: string;
   specializedIn: string;
-  _id: string;
+  _id?: string;
 };
+
+type errorState = {
+  name: string;
+  email: string;
+  mobileNumber: string;
+  profilePicture: string;
+  specializedIn: string;
+  price: string;
+  description: string;
+  experience: string;
+};
+const schema = z.object({
+  image: z.any().refine((file) => {
+    // Replace this with your actual validation logic
+    return file.type === 'image/avif' || file.type === 'image/png';
+  }, "Invalid image file"),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .transform((str) => str.replace(/\s+/g, " "))
+    .transform((str) => str.trim()),
+  email: z.string().email("Invalid email address"),
+  description: z.string().min(1, "Description is required"),
+  specializedIn: z.string().min(1, "SpecializedIn is required"),
+  price: z
+    .number()
+    .int()
+    .min(1, "Price is required")
+    .or(z.string().min(1, "Price is required")),
+  mobileNumber: z
+    .string()
+    .min(10, "Mobile Number should be 10 digits")
+    .max(10, "Mobile Number should be 10 digits")
+    .or(
+      z
+        .number()
+        .int()
+        .min(1000000000, "Mobile Number should be 10 digits")
+        .max(9999999999, "Mobile Number should be 10 digits")
+    ),
+});
 
 const TrainerProfile = () => {
   const router = useRouter();
@@ -24,12 +65,12 @@ const TrainerProfile = () => {
     _id: "",
     name: "",
     email: "",
-    mobileNumber: 0,
+    mobileNumber: "",
     profilePicture: "",
     specializedIn: "",
-    price: 0,
+    price: "",
     description: "",
-    experience: 0,
+    experience: "",
   });
 
   useEffect(() => {
@@ -54,7 +95,16 @@ const TrainerProfile = () => {
     fetchUser();
   }, []);
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormState>({
+    name: "",
+    email: "",
+    mobileNumber: "",
+    profilePicture: "",
+    specializedIn: "",
+    price: "",
+    description: "",
+    experience: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,55 +124,87 @@ const TrainerProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    //console.log(" form send");
 
-    //console.log(form);
-
-    const formData = new FormData();
-    Object.keys(form).forEach((key) => {
-      formData.append(key, form[key]);
-    });
-
-    await axiosInstance
-      .put("/trainer/profileUpdate", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        // console.log(res.data);
-        setLoading(false);
-        if (res.status === 200) {
-          // console.log(res.data);
-          if (res.data?.data?.url) {
-            setForm((prevState) => ({
-              ...prevState,
-              profilePicture: res.data.data.url,
-            }));
-          }
-          swal({
-            title: "seccess!",
-            text: "Updated succesfully",
-            icon: "success",
-          });
-        } else {
-          swal({
-            title: "Profile Not Updated",
-            text: "Your profile has not been updated",
-            icon: "error",
-          });
-        }
-      })
-      .catch((err: Error | any) => {
-        setLoading(false);
-        // console.log(err);
-        swal({
-          title: "warning!",
-          text: "Your profile has not been updated",
-          icon: "warning",
-        });
+    const result = schema.safeParse(form);
+    if (!result.success) {
+      const errorMap = result.error.formErrors.fieldErrors;
+      console.log("errorMap", errorMap);
+      setErrors((prevError) => {
+        return {
+          ...prevError,
+          name: errorMap.name ? errorMap.name[0] : "",
+          email: errorMap.email ? errorMap.email[0] : "",
+          mobileNumber: errorMap.mobileNumber ? errorMap.mobileNumber[0] : "",
+          specializedIn: errorMap.specializedIn
+            ? errorMap.specializedIn[0]
+            : "",
+          price: errorMap.price ? errorMap.price[0] : "",
+          description: errorMap.description ? errorMap.description[0] : "",
+          profilePicture : errorMap.image ? errorMap.image[0] : "",
+        };
       });
+    } else {
+      setLoading(true);
+      setErrors({
+        name: "",
+        email: "",
+        mobileNumber: "",
+        profilePicture: "",
+        specializedIn: "",
+        price: "",
+        description: "",
+        experience: "",
+      });
+
+      console.log(" form send");
+
+      console.log(form);
+
+      const formData = new FormData();
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
+      });
+
+      await axiosInstance
+        .put("/trainer/profileUpdate", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          // console.log(res.data);
+          setLoading(false);
+          if (res.status === 200) {
+            // console.log(res.data);
+            if (res.data?.data?.url) {
+              setForm((prevState) => ({
+                ...prevState,
+                profilePicture: res.data.data.url,
+              }));
+            }
+            swal({
+              title: "seccess!",
+              text: "Updated succesfully",
+              icon: "success",
+            });
+          } else {
+            swal({
+              title: "Profile Not Updated",
+              text: "Your profile has not been updated",
+              icon: "error",
+            });
+          }
+        })
+        .catch((err: Error | any) => {
+          setLoading(false);
+          // console.log(err);
+          swal({
+            title: "warning!",
+            text: "Your profile has not been updated",
+            icon: "warning",
+          });
+        });
+    }
   };
 
   if (loading) {
@@ -130,6 +212,7 @@ const TrainerProfile = () => {
   }
   return (
     <form
+      noValidate
       onSubmit={handleSubmit}
       className="flex flex-col items-center justify-center min-h-96 py-2"
     >
@@ -149,7 +232,6 @@ const TrainerProfile = () => {
           )}
         </div>
 
-        {/* <Image src='http://res.cloudinary.com/dxxbvjmz5/image/upload/v1707805602/user-Images/x74bkkb3btxdeexaeyol.png' alt="demoImage" width={100} height={100}></Image> */}
         <label>
           Image
           <input
@@ -158,6 +240,7 @@ const TrainerProfile = () => {
             onChange={handleInputChange}
             className="rounded px-3 py-2 w-full"
           />
+          {errors.profilePicture && <p className="text-red-600 mt-2">{errors.profilePicture}</p>}
         </label>
         <h2 className="text-center text-xl font-extrabold">Trainer Profile</h2>
         <label>
@@ -170,6 +253,7 @@ const TrainerProfile = () => {
             placeholder="Name"
             className="rounded px-3 py-2 w-ful text-black"
           />
+          {errors.name && <p className="text-red-600 mt-2">{errors.name}</p>}
         </label>
         <label>
           Email
@@ -181,6 +265,7 @@ const TrainerProfile = () => {
             placeholder="Email"
             className="rounded px-3 py-2 w-full  text-black"
           />
+          {errors.email && <p className="text-red-600 mt-2">{errors.email}</p>}
         </label>
         <label>
           Phone Number
@@ -192,6 +277,9 @@ const TrainerProfile = () => {
             placeholder="Phone Number"
             className="rounded px-3 py-2 w-full  text-black"
           />
+          {errors.mobileNumber && (
+            <p className="text-red-600 mt-2">{errors.mobileNumber}</p>
+          )}
         </label>
         <label>
           Experience
@@ -203,6 +291,9 @@ const TrainerProfile = () => {
             placeholder="experience"
             className="rounded px-3 py-2 w-full  text-black"
           />
+          {errors.experience && (
+            <p className="text-red-600 mt-2">{errors.experience}</p>
+          )}
         </label>
         <label>
           SpecializedIn
@@ -214,6 +305,9 @@ const TrainerProfile = () => {
             placeholder="specializedIn"
             className="rounded px-3 py-2 w-full  text-black"
           />
+          {errors.specializedIn && (
+            <p className="text-red-600 mt-2">{errors.specializedIn}</p>
+          )}
         </label>
         <label>
           Description
@@ -225,6 +319,9 @@ const TrainerProfile = () => {
             placeholder="description"
             className="rounded px-3 py-2 w-full  text-black"
           />
+          {errors.description && (
+            <p className="text-red-600 mt-2">{errors.description}</p>
+          )}
         </label>
         <label>
           Price
@@ -236,6 +333,7 @@ const TrainerProfile = () => {
             placeholder="price"
             className="rounded px-3 py-2 w-full  text-black"
           />
+          {errors.price && <p className="text-red-600 mt-2">{errors.price}</p>}
         </label>
 
         <button

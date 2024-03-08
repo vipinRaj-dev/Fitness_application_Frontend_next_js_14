@@ -73,7 +73,7 @@ type AttendanceData = {
   userId: string;
 };
 
-type ResponseType = { 
+type ResponseType = {
   attandanceData: AttendanceData;
 };
 
@@ -106,6 +106,11 @@ const UserProfile = () => {
     Thyroid: false,
   });
 
+  type error = {
+    mobileNumber?: string;
+    height?: string;
+    weight?: string;
+  };
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -155,12 +160,16 @@ const UserProfile = () => {
     }
   }, [date]);
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<error>({});
   const [loading, setLoading] = useState(false);
   const [openInput, setOpenInput] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+    setErrors((prevState) => ({
+      ...prevState,
+      [name]: "",
+    }));
     if (type === "checkbox") {
       setForm((prevState) => ({
         ...prevState,
@@ -181,53 +190,73 @@ const UserProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    console.log(" form send");
+    // setLoading(true);
 
     console.log(form);
-
-    const formData = new FormData();
-    Object.keys(form).forEach((key) => {
-      formData.append(key, form[key]);
-    });
-
- 
-    await axiosInstance
-      .put("/user/profileUpdate", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        // console.log(res.data);
-        setLoading(false);
-        if (res.status === 200) {
-          setForm((prevState) => ({
-            ...prevState,
-            profileImage: res.data?.imageData?.url,
-          }));
-          swal({
-            title: "seccess!",
-            text: "Updated succesfully",
-            icon: "success",
-          });
-        } else {
-          swal({
-            title: "Profile Not Updated",
-            text: "Your profile has not been updated",
-            icon: "error",
-          });
-        }
-      })
-      .catch((err: Error | any) => {
-        setLoading(false);
-        console.log(err.response.data);
-        swal({
-          title: "warning!",
-          text: err.response.data.msg,
-          icon: "warning",
-        });
+    if (
+      form.mobileNumber.toString().length < 10 ||
+      form.mobileNumber.toString().length > 10
+    ) {
+      setErrors((prevState) => ({
+        ...prevState,
+        mobileNumber: "Mobile Number should be 10 digit",
+      }));
+    } else if (form.height.toString().length > 3 || form.height.toString().length < 1) {
+      setErrors((prevState) => ({
+        ...prevState,
+        height: "Height should be less than 3 digit",
+      }));
+    } else if (form.weight.toString().length > 3 || form.weight.toString().length < 1 ) {
+      console.log("weight error");
+      setErrors((prevState) => ({
+        ...prevState,
+        weight: "Weight should be less than 3 digit",
+      }));
+    } else {
+      console.log("form send");
+      setLoading(true);
+      const formData = new FormData();
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
       });
+
+      await axiosInstance
+        .put("/user/profileUpdate", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          // console.log(res.data);
+          setLoading(false);
+          if (res.status === 200) {
+            setForm((prevState) => ({
+              ...prevState,
+              profileImage: res.data?.imageData?.url,
+            }));
+            swal({
+              title: "seccess!",
+              text: "Updated succesfully",
+              icon: "success",
+            });
+          } else {
+            swal({
+              title: "Profile Not Updated",
+              text: "Your profile has not been updated",
+              icon: "error",
+            });
+          }
+        })
+        .catch((err: Error | any) => {
+          setLoading(false);
+          console.log(err.response.data);
+          swal({
+            title: "warning!",
+            text: err.response.data.msg,
+            icon: "warning",
+          });
+        });
+    }
   };
 
   const openHealthIssues = () => {
@@ -313,6 +342,9 @@ const UserProfile = () => {
                   placeholder="Phone Number"
                   className="rounded px-3 py-2 w-full  text-black"
                 />
+                {errors.mobileNumber && (
+                  <p className="text-red-600 text-xs">{errors.mobileNumber}</p>
+                )}
               </label>
               <label>
                 Weight
@@ -324,6 +356,9 @@ const UserProfile = () => {
                   placeholder="Weight"
                   className="rounded px-3 py-2 w-full  text-black"
                 />
+                {errors.weight && (
+                  <p className="text-red-600 text-xs">{errors.weight}</p>
+                )}
               </label>
               <label>
                 Height
@@ -335,6 +370,9 @@ const UserProfile = () => {
                   placeholder="Height"
                   className="rounded px-3 py-2 w-full  text-black"
                 />
+                {errors.height && (
+                  <p className="text-red-600 text-xs">{errors.height}</p>
+                )}
               </label>
 
               <label>
@@ -484,7 +522,8 @@ const UserProfile = () => {
                   filteredLogs.reduce(
                     (total, log) => {
                       return {
-                        calories:total.calories + log.foodId.nutrition.calories,
+                        calories:
+                          total.calories + log.foodId.nutrition.calories,
                         protein: total.protein + log.foodId.nutrition.protein,
                         carbs: total.carbs + log.foodId.nutrition.carbs,
                         fat: total.fat + log.foodId.nutrition.fat,

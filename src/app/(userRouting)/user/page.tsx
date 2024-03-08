@@ -25,6 +25,7 @@ const Userpage = () => {
   const [latestDiet, setLatestDiet] = useState<DietFood>([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
   const [hasTrainer, setHasTrainer] = useState(false);
+  const [attendanceId , setAttendanceId] = useState<string>("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,6 +36,7 @@ const Userpage = () => {
           setLatestDiet(res.data.dietFood);
           setAddedFoodDocIds(res.data.addedFoodDocIds);
           setHasTrainer(res.data.hasTrainer);
+          setAttendanceId(res.data.attendanceDocId);
         })
         .catch((err) => {
           console.log(err);
@@ -45,7 +47,7 @@ const Userpage = () => {
 
   return (
     <div className="">
-      {/* <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
+      <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
         <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl">
           <h1 className="font-semibold text-center">Attandance</h1>
           <div className="h-full w-full pb-10">
@@ -62,7 +64,7 @@ const Userpage = () => {
           <h1 className="font-semibold text-center">Attandance</h1>
           <BarChartPlot />
         </div>
-      </div> */}
+      </div>
 
       <div className=" w-full h-screen p-1 mt-10 md:mt-36">
         <div className="h-3/6  gap-5 md:flex md:justify-evenly">
@@ -138,6 +140,7 @@ const Userpage = () => {
                           key={food._id}
                           details={food}
                           addedFoodDocIds={addedFoodDocIds}
+                          attendanceId = {attendanceId}
                         />
                       );
                   })}
@@ -161,6 +164,8 @@ const Userpage = () => {
                           key={food._id}
                           details={food}
                           addedFoodDocIds={addedFoodDocIds}
+                          attendanceId = {attendanceId}
+
                         />
                       );
                   })}
@@ -184,6 +189,8 @@ const Userpage = () => {
                           key={food._id}
                           details={food}
                           addedFoodDocIds={addedFoodDocIds}
+                          attendanceId = {attendanceId}
+
                         />
                       );
                   })}

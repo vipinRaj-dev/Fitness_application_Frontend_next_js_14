@@ -48,9 +48,11 @@ interface HandleSubmitParams {
 const FoodCard = ({
   details,
   addedFoodDocIds,
+  attendanceId
 }: {
   details: LatestDiet;
   addedFoodDocIds: string[];
+  attendanceId : string
 }) => {
   // console.log("details", details);
 
@@ -66,6 +68,7 @@ const FoodCard = ({
       .put("/user/addFoodLog", {
         time,
         foodDocId,
+        attendanceId
       })
       .then((res) => {
         console.log(res);
@@ -119,7 +122,7 @@ const FoodCard = ({
   const formatTime = (time24: string) => {
     const [hours, minutes] = time24.split(":");
     const hrs = Number(hours);
-    const period = hrs >= 12 ? "PM" : "AM";
+    const period = hrs >= 12 ? "PM" : "AM"; 
     const hrs12 = hrs > 12 ? hrs - 12 : hrs;
 
     return `${hrs12 === 0 ? 12 : hrs12}:${minutes} ${period}`;

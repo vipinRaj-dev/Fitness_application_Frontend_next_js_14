@@ -10,11 +10,21 @@ import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
+import Image from "next/image";
 
 type FormState = {
   _id: string;
@@ -63,13 +73,15 @@ type AttendanceData = {
   userId: string;
 };
 
-type ResponseType = {
+type ResponseType = { 
   attandanceData: AttendanceData;
 };
 
 const UserProfile = () => {
   const router = useRouter();
-  const [date, setDate] = React.useState<Date>(
+  const timePeriods = ["morning", "afternoon", "evening"];
+
+  const [date, setDate] = useState<Date>(
     new Date(new Date().setHours(0, 0, 0, 0))
   );
   const [userCreatedDate, setUserCreatedDate] = useState<Date>();
@@ -179,15 +191,7 @@ const UserProfile = () => {
       formData.append(key, form[key]);
     });
 
-    // const formData = new FormData();
-    // Object.keys(form).forEach((key) => {
-    //   const value = form[key as keyof FormState];
-    //   formData.append(key, typeof value === 'number' ? value.toString() : value);
-    // });
-
-    // console.log(formData);
-    // console.log(form);
-
+ 
     await axiosInstance
       .put("/user/profileUpdate", formData, {
         headers: {
@@ -428,8 +432,8 @@ const UserProfile = () => {
           </form>
         </div>
 
-        <div className="bg-black h-screen md:w-4/6">
-          <div className="flex justify-end p-5">
+        <div className="bg-black h-screen md:w-4/6 p-5">
+          <div className="flex justify-end p-3">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -455,39 +459,104 @@ const UserProfile = () => {
             </Popover>
           </div>
 
-          <div className="bg-slate-700">
-            details
-            {attendanceData && attendanceData.isPresent && (
-              <div className="flex justify-center p-3">
-                <Badge>Present</Badge>
-              </div>
-            )}
-            {attendanceData &&
-              attendanceData.foodLogs.map((data, index) => {
+          <div className="m-5">
+            <div className="flex justify-center pb-3">
+              {attendanceData && attendanceData.isPresent ? (
+                <Badge variant={"outline"} className="bg-green-500 p-2">
+                  Present : {date && date.toDateString()}
+                </Badge>
+              ) : (
+                <Badge className="bg-red-500 p-2">
+                  Absent : {date && date.toDateString()}
+                </Badge>
+              )}
+            </div>
+
+            <div className="w-full h-36  flex justify-evenly">
+              {timePeriods.map((period) => {
+                const filteredLogs =
+                  attendanceData &&
+                  attendanceData.foodLogs.filter(
+                    (log) => log.timePeriod === period && log.status === true
+                  );
+                const totalNutrition =
+                  filteredLogs &&
+                  filteredLogs.reduce(
+                    (total, log) => {
+                      return {
+                        calories:total.calories + log.foodId.nutrition.calories,
+                        protein: total.protein + log.foodId.nutrition.protein,
+                        carbs: total.carbs + log.foodId.nutrition.carbs,
+                        fat: total.fat + log.foodId.nutrition.fat,
+                      };
+                    },
+                    { calories: 0, protein: 0, carbs: 0, fat: 0 }
+                  );
+
                 return (
-                  <div key={index} className="flex justify-between p-3">
-                    <div>
-                      <img
-                        src={data.foodId.photoUrl}
-                        alt={data.foodId.foodname}
-                        width={50}
-                        height={50}
-                      />
-                    </div>
-                    <div>
-                      <p>{data.foodId.foodname}</p>
-                      <p>{data.quantity}</p>
-                    </div>
-                    <div>
-                      <p>{data.time}</p>
-                      <p>{data.timePeriod}</p>
-                    </div>
-                    <div>
-                      <p>{data.status ? "Taken" : "Not Taken"}</p>
-                    </div>
+                  <div
+                    key={period}
+                    className="w-1/4 bg-slate-600 rounded-lg p-3"
+                  >
+                    <h1 className="text-xl font-semibold mb-1">{`${
+                      period.charAt(0).toUpperCase() + period.slice(1)
+                    } Meal`}</h1>
+                    <h1>
+                      Calories : {totalNutrition && totalNutrition.calories}
+                    </h1>
+                    <h1>
+                      Protein : {totalNutrition && totalNutrition.protein}
+                    </h1>
+                    <h1>Carb : {totalNutrition && totalNutrition.carbs}</h1>
+                    <h1>Fat : {totalNutrition && totalNutrition.fat}</h1>
                   </div>
                 );
               })}
+
+              {/* <div className="w-1/4 bg-slate-600 rounded-lg p-5">box</div>
+              <div className="w-1/4 bg-slate-600 rounded-lg p-5">box</div> */}
+            </div>
+          </div>
+
+          <div className=" rounded-lg h-3/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+            <Table>
+              <TableCaption className="p-5">Date wise Result</TableCaption>
+              <TableHeader className="bg-black">
+                <TableRow>
+                  <TableHead className="w-[100px]">Image</TableHead>
+                  <TableHead>Food Name</TableHead>
+                  <TableHead>Time</TableHead>
+                  <TableHead className="text-right">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              {attendanceData &&
+                attendanceData.foodLogs.map((data, index) => {
+                  return (
+                    <TableBody className="bg-slate-800">
+                      <TableRow>
+                        <TableCell className="font-medium">
+                          {/* <img src={data.foodId.photoUrl} alt="food image" /> */}
+                          <Image
+                            className="rounded-xl"
+                            src={data.foodId.photoUrl}
+                            width={60}
+                            height={60}
+                            alt="food image"
+                          />
+                        </TableCell>
+                        <TableCell>{data.foodId.foodname}</TableCell>
+                        <TableCell>
+                          <h1> {data.time}</h1>
+                          <h1> {data.timePeriod}</h1>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <p>{data.status ? "Taken" : "Not Taken"}</p>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  );
+                })}
+            </Table>
           </div>
         </div>
       </div>

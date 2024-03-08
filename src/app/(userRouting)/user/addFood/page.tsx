@@ -106,9 +106,10 @@ const page = () => {
   return (
     <div>
       <div className=" p-5 h-screen ">
-        <h1 className="text-center font-semibold p-5 text-2xl">
-          Edit you Existing food details
+        <h1 className="text-center font-semibold pt-5 text-2xl">
+          Edit next diet plan
         </h1>
+        <p className="text-center font-thin pb-3 italic">Note :"It would reflect in your next diet plan"</p>
         <div className=" p-5 h-4/6 rounded-2xl shadow-2xl shadow-slate-800 overflow-y-scroll scrollbar-none scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestDiet.map((food: any, index) => {
             return (

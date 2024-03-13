@@ -37,7 +37,7 @@ type FoodFormState = {
   fat: number;
   carbohydrate: number;
   calories: number;
-};
+}; 
 
 const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
   const [QuantityUnit, setQuantityUnit] = useState<string>("Select unit");
@@ -152,15 +152,30 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
       .then((res) => {
         setLoading(false);
         console.log(res.data);
-       if(res.status === 200){
-        swal({
-          title: "Success!",
-          text: "Food added successfully",
-          icon: "success",
-          timer: 1500,
-          buttons: {}
-        });
-       }
+        if (res.status === 200) {
+          // make all the fields empty
+          setForm({
+            image: "",
+            foodname: "",
+            quantity: 0,
+            foodtype: "",
+            unit: "",
+            description: "",
+            ingredients: "",
+            protein: 0,
+            fat: 0,
+            carbohydrate: 0,
+            calories: 0,
+          });
+
+          swal({
+            title: "Success!",
+            text: "Food added successfully",
+            icon: "success",
+            timer: 1500,
+            buttons: {},
+          });
+        }
       })
       .catch((err: Error | any) => {
         console.log(err.response.data);

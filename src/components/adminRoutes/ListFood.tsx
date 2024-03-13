@@ -6,12 +6,12 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Input } from "../ui/input";
 
-const ListFood = () => {
+const ListFood = () => { 
   const [foodList, setFoodList] = useState([]);
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(4);
+  const [limit, setLimit] = useState(4);  
   const [totalPages, setTotalPages] = useState(0);
   const [filter, setFilter] = useState("");
 

@@ -321,7 +321,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                   const filteredLogs =
                     attendanceData &&
                     attendanceData.foodLogs.filter(
-                      (log) => log.timePeriod === period
+                      (log) => log.timePeriod === period && log.status === true
                     );
                   const totalNutrition =
                     filteredLogs &&
@@ -407,7 +407,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         </div>
       </div>
 
-      <div className="h-screen p-10 ">
+      <div className="h-screen p-10">
         <div className="flex justify-between">
           <div>
             <h1 className="text-xl font-semibold tracking-wide">
@@ -423,7 +423,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         <div className="mt-5 mb-20 relative">
           <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
         </div>
-        <div className=" p-5 h-5/6overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+        <div className=" p-5 h-5/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestDiet.map((food: any, index) => {
             return (
               <div
@@ -568,6 +568,11 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
             );
           })}
         </div>
+      </div>
+
+      <div className="bg-gray-500 h-screen">
+        Workout Schedule
+        
       </div>
     </div>
   );

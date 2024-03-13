@@ -470,7 +470,7 @@ const UserProfile = () => {
           </form>
         </div>
 
-        <div className="bg-black h-screen md:w-4/6 p-5">
+        <div className=" h-screen md:w-4/6 p-5">
           <div className="flex justify-end p-3">
             <Popover>
               <PopoverTrigger asChild>

@@ -60,20 +60,20 @@ const page = () => {
             <TableHead>Received Date</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Due Date</TableHead>
-            <TableHead className="text-right">Invoice</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {payments.map((payment) => {
             return (
-              <TableRow>
-                <TableCell className="font-medium">
+              <TableRow key={payment._id}>
+                <TableCell className="font-medium truncate">
                   {payment.transactionId}
                 </TableCell>
                 <TableCell>
                   <img
                     src={payment.clientDetails.profileImage}
-                    width={60}
+                    width={40}
+                    height={40}
                     className="rounded-xl"
                   />
                 </TableCell>
@@ -86,9 +86,7 @@ const page = () => {
                 <TableCell>
                   {new Date(payment.clientDetails.dueDate).toLocaleDateString()}
                 </TableCell>
-                <TableCell className="text-right">
-                  <a href={payment.receiptUrl}> Bill </a>
-                </TableCell>
+                
               </TableRow>
             );
           })}

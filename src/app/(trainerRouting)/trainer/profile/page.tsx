@@ -18,20 +18,13 @@ type FormState = {
   _id?: string;
 };
 
-type errorState = {
-  name: string;
-  email: string;
-  mobileNumber: string;
-  profilePicture: string;
-  specializedIn: string;
-  price: string;
-  description: string;
-  experience: string;
-};
 const schema = z.object({
   image: z.any().refine((file) => {
-    // Replace this with your actual validation logic
-    return file.type === 'image/avif' || file.type === 'image/png';
+    if (!file) {
+      return true;
+    }
+    console.log(file);
+    return file.type === "image/avif" || file.type === "image/png";
   }, "Invalid image file"),
   name: z
     .string()
@@ -126,6 +119,7 @@ const TrainerProfile = () => {
     e.preventDefault();
 
     const result = schema.safeParse(form);
+    console.log("form", form);
     if (!result.success) {
       const errorMap = result.error.formErrors.fieldErrors;
       console.log("errorMap", errorMap);
@@ -140,7 +134,7 @@ const TrainerProfile = () => {
             : "",
           price: errorMap.price ? errorMap.price[0] : "",
           description: errorMap.description ? errorMap.description[0] : "",
-          profilePicture : errorMap.image ? errorMap.image[0] : "",
+          profilePicture: errorMap.image ? errorMap.image[0] : "",
         };
       });
     } else {
@@ -240,7 +234,9 @@ const TrainerProfile = () => {
             onChange={handleInputChange}
             className="rounded px-3 py-2 w-full"
           />
-          {errors.profilePicture && <p className="text-red-600 mt-2">{errors.profilePicture}</p>}
+          {errors.profilePicture && (
+            <p className="text-red-600 mt-2">{errors.profilePicture}</p>
+          )}
         </label>
         <h2 className="text-center text-xl font-extrabold">Trainer Profile</h2>
         <label>

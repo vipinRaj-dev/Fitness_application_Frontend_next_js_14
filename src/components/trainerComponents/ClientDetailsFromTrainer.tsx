@@ -27,7 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import {
   Dialog,
@@ -103,6 +103,32 @@ type ResponseType = {
   attandanceData: AttendanceData;
 };
 
+type WorkoutSet = {
+  reps: number;
+  weight: number;
+  completedReps: number;
+  _id: string;
+};
+
+type WorkoutId = {
+  createdAt: string;
+  description: string;
+  publicId: string;
+  targetMuscle: string;
+  thumbnailUrl: string;
+  videoUrl: string;
+  workoutName: string;
+  _id: string;
+};
+
+type WorkOutData = {
+  workoutId: WorkoutId;
+  workoutSet: WorkoutSet[];
+  _id: string;
+}[];
+
+// Usage
+
 const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const router = useRouter();
 
@@ -110,7 +136,19 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
 
   const [clientDetails, setClientDetails] = useState<User | null>(null);
   const [latestDiet, setLatestDiet] = useState<any[]>([]);
+
+  const [workout, setWorkout] = useState<WorkOutData>([]);
+  const [documentId, setDocumentId] = useState<string>("");
+
   const [done, setDone] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const [toEdit, setToEdit] = useState({
+    reps: "",
+    weight: "",
+    workoutSetId: "",
+    eachWorkoutSetId: "",
+  });
 
   const [attendanceData, setAttendanceData] =
     useState<ResponseType["attandanceData"]>();
@@ -119,6 +157,8 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const [date, setDate] = useState<Date>(
     new Date(new Date().setHours(0, 0, 0, 0))
   );
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [schedule, setSchedule] = useState({
     timePeriod: "morning",
@@ -153,7 +193,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
 
   useEffect(() => {
     if (date) {
-      console.log("date", date);
+      // console.log("date", date);
 
       axiosInstance
         .get(`trainer/getFood/${client_Id}/${date}`)
@@ -166,6 +206,19 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         });
     }
   }, [date]);
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/workouts/getWorkoutsTrainer/${client_Id}`)
+      .then((res) => {
+        console.log("workoutData", res.data.workOutData);
+        setWorkout(res.data.workOutData);
+        setDocumentId(res.data.documentId);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [client_Id, success]);
 
   const handleChange = (name: string, value: string | null) => {
     setSchedule((prevSchedule) => ({
@@ -217,6 +270,44 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     let newDate = new Date(date);
     newDate.setHours(0, 0, 0, 0);
     return newDate;
+  };
+
+  const editSet = () => {
+    console.log("edit");
+    console.log(toEdit);
+    axiosInstance
+      .put("/workouts/editSet", {
+        documentId,
+        workoutSetId: toEdit.workoutSetId,
+        eachWorkoutSetId: toEdit.eachWorkoutSetId,
+        reps: toEdit.reps,
+        weight: toEdit.weight,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setSuccess(!success);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteSet = (workoutSetId: string, eachWorkoutSetId: string) => {
+    console.log("Delete");
+    console.log(eachWorkoutSetId, workoutSetId, documentId);
+    axiosInstance
+      .delete(`/workouts/deleteSet/${documentId}/${workoutSetId}/${eachWorkoutSetId}`,
+      {
+        
+      }
+      )
+      .then((res) => {
+        console.log(res.data);
+        setSuccess(!success);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -377,10 +468,9 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                 {attendanceData &&
                   attendanceData.foodLogs.map((data, index) => {
                     return (
-                      <TableBody className="bg-slate-800 ">
+                      <TableBody key={index} className="bg-slate-800 ">
                         <TableRow>
                           <TableCell className="font-medium">
-                            {/* <img src={data.foodId.photoUrl} alt="food image" /> */}
                             <Image
                               className="rounded-xl"
                               src={data.foodId.photoUrl}
@@ -572,7 +662,100 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
 
       <div className="bg-gray-500 h-screen">
         Workout Schedule
-        
+        <div>
+          <Link href={`/trainer/addWorkout/${client_Id}`}>
+            <Button>Add workouts</Button>
+          </Link>
+        </div>
+        <div>
+          {workout &&
+            workout.map((workoutItem, index) => {
+              return (
+                <div className="p-5" key={workoutItem._id}>
+                  <h1>{workoutItem.workoutId.workoutName}</h1>
+                  <p>{workoutItem.workoutId.description}</p>
+                  <div>
+                    {workoutItem.workoutSet.map((set, index) => {
+                      return (
+                        <div key={set._id}>
+                          <h1>{index + 1}</h1>
+                          <h1>Reps : {set.reps}</h1>
+                          <h1>Weight : {set.weight}</h1>
+                          <Trash2
+                            onClick={() => deleteSet(workoutItem._id, set._id)}
+                          />
+                          <Dialog
+                            open={isDialogOpen}
+                            onOpenChange={(isOpen) => {
+                              setIsDialogOpen(isOpen);
+                            }}
+                          >
+                            <DialogTrigger asChild>
+                              <Pencil
+                                onClick={() => {
+                                  setToEdit({
+                                    reps: set.reps.toString(),
+                                    weight: set.weight.toString(),
+                                    workoutSetId: workoutItem._id,
+                                    eachWorkoutSetId: set._id,
+                                  });
+                                }}
+                                color="#001adb"
+                              />
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>
+                                  Set Workout reps and Weight to the user
+                                </DialogTitle>
+                                <div className="flex justify-between items-center gap-2">
+                                  <div>
+                                    <Label htmlFor="reps">Reps</Label>
+                                    <Input
+                                      type="number"
+                                      id="reps"
+                                      onChange={(e) =>
+                                        setToEdit({
+                                          ...toEdit,
+                                          reps: e.target.value,
+                                        })
+                                      }
+                                      value={toEdit.reps}
+                                      placeholder="Enter Reps"
+                                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="weight">Weight</Label>
+                                    <Input
+                                      type="number"
+                                      id="weight"
+                                      onChange={(e) =>
+                                        setToEdit({
+                                          ...toEdit,
+                                          weight: e.target.value,
+                                        })
+                                      }
+                                      value={toEdit.weight}
+                                      placeholder="Enter Weight"
+                                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                                    />
+                                  </div>
+                                </div>
+                              </DialogHeader>
+                              <DialogClose asChild>
+                                <Button onClick={editSet}>Reset</Button>
+                              </DialogClose>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+        </div>
       </div>
     </div>
   );

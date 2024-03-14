@@ -40,6 +40,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
 
   const [reps, setReps] = useState("");
   const [weight, setWeight] = useState("");
+  const [workoutId, setWorkoutId] = useState(""); 
 
   const [workoutSet, setWorkoutSet] = useState<WorkoutSet[]>([]);
   const [page, setPage] = useState(1);
@@ -69,7 +70,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
       });
   }, [page, search]);
 
-  const setWorkout = (workoutId: string) => {
+  const setWorkout = () => {
     axiosInstance
       .put(`/workouts/set`, {
         clientId,
@@ -141,6 +142,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
                   onOpenChange={(isOpen) => {
                     setWorkoutSet([]);
                     setIsDialogOpen(isOpen);
+                    setWorkoutId(workout._id);
                   }}
                 >
                   <DialogTrigger asChild>
@@ -204,7 +206,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
                         </div>
                       ))}
                     </div>
-                    <Button onClick={() => setWorkout(workout._id)}>
+                    <Button onClick={setWorkout}>
                       Set Workout
                     </Button>
                   </DialogContent>

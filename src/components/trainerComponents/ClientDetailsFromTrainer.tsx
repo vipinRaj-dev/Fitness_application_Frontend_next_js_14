@@ -172,10 +172,10 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     axiosInstance
       .get(`/food/client/${client_Id}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setClientDetails(res.data);
         setLatestDiet(res.data.latestDiet);
-        console.log("res.data.createdAt", res.data.createdAt);
+        // console.log("res.data.createdAt", res.data.createdAt);
         let userCreated = new Date(res.data.createdAt);
         userCreated.setHours(0, 0, 0, 0);
         setUserCreatedDate(userCreated);
@@ -188,8 +188,8 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         }
       });
   }, [client_Id, done]);
-  // console.log(clientDetails);
-  // console.log(latestDiet);
+  //  console.log(clientDetails);
+  //  console.log(latestDiet);
 
   useEffect(() => {
     if (date) {
@@ -198,7 +198,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       axiosInstance
         .get(`trainer/getFood/${client_Id}/${date}`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setAttendanceData(res.data.attandanceData);
         })
         .catch((err) => {
@@ -211,7 +211,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     axiosInstance
       .get(`/workouts/getWorkoutsTrainer/${client_Id}`)
       .then((res) => {
-        console.log("workoutData", res.data.workOutData);
+        // console.log("workoutData", res.data.workOutData);
         setWorkout(res.data.workOutData);
         setDocumentId(res.data.documentId);
       })
@@ -228,13 +228,13 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   };
 
   const handleSubmit = async (foodId: string) => {
-    console.log(foodId, client_Id);
+    // console.log(foodId, client_Id);
     try {
       axiosInstance
         .put(`/food/addTimeDetails/${client_Id}/${foodId}`, schedule)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            // console.log(res.data);
             setDone(!done);
           }
         })
@@ -247,13 +247,13 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   };
 
   const handleRemove = (foodId: string) => {
-    console.log(foodId, client_Id);
+    // console.log(foodId, client_Id);
     try {
       axiosInstance
         .delete(`/food/deletePerFood/${client_Id}/${foodId}`)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            // console.log(res.data);
             setDone(!done);
             // setLatestDiet(latestDiet.filter(food => food._id !== foodId));
           }
@@ -273,8 +273,8 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   };
 
   const editSet = () => {
-    console.log("edit");
-    console.log(toEdit);
+    // console.log("edit");
+    // console.log(toEdit);
     axiosInstance
       .put("/workouts/editSet", {
         documentId,
@@ -284,7 +284,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         weight: toEdit.weight,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSuccess(!success);
       })
       .catch((err) => {
@@ -293,22 +293,34 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   };
 
   const deleteSet = (workoutSetId: string, eachWorkoutSetId: string) => {
-    console.log("Delete");
-    console.log(eachWorkoutSetId, workoutSetId, documentId);
+    // console.log("Delete");
+    // console.log(eachWorkoutSetId, workoutSetId, documentId);
     axiosInstance
-      .delete(`/workouts/deleteSet/${documentId}/${workoutSetId}/${eachWorkoutSetId}`,
-      {
-        
-      }
+      .delete(
+        `/workouts/deleteSet/${documentId}/${workoutSetId}/${eachWorkoutSetId}`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSuccess(!success);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const deleteWorkout = (workoutId: string) => {
+    // console.log("Delete");
+    // console.log(workoutId, documentId);
+    axiosInstance
+      .delete(`/workouts/deleteWorkout/${documentId}/${workoutId}`)
+      .then((res) => {
+        // console.log(res.data);
+        setSuccess(!success);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   return (
     <div>
@@ -667,11 +679,12 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
             <Button>Add workouts</Button>
           </Link>
         </div>
-        <div>
+        <div className="p-5">
           {workout &&
             workout.map((workoutItem, index) => {
               return (
-                <div className="p-5" key={workoutItem._id}>
+                <div className="p-5 border-2" key={workoutItem._id}>
+                  <Trash2 onClick={() => deleteWorkout(workoutItem._id)} />
                   <h1>{workoutItem.workoutId.workoutName}</h1>
                   <p>{workoutItem.workoutId.description}</p>
                   <div>

@@ -131,6 +131,11 @@ type ResponseType = {
 
 // Usage
 
+type WorkoutSet = {
+  reps: number;
+  weight: number;
+};
+
 const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const router = useRouter();
 
@@ -170,6 +175,10 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
     quantity: 0,
     time: "10:00",
   });
+
+  const [addSetDialog, setAddSetDialog] = useState(false);
+
+  // const [workoutSet, setWorkoutSet] = useState<WorkoutSet[]>([]);
 
   useEffect(() => {
     // console.log(client_Id);
@@ -328,7 +337,23 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       });
   };
 
-  console.log("workoutDataPerDay", workoutDataPerDay);
+  const addSetWorkout = () => {
+    axiosInstance
+      .put(`/workouts/addNewSet`, {
+        documentId,
+        workoutSetId: toEdit.workoutSetId,
+        reps: toEdit.reps,
+        weight: toEdit.weight,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAddSetDialog(false);
+        setSuccess(!success);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div>
@@ -488,7 +513,10 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                 {attendanceData &&
                   attendanceData.foodLogs.map((data, index) => {
                     return (
-                      <TableBody key={index} className="bg-slate-800 border-b-2 border-slate-600 ">
+                      <TableBody
+                        key={index}
+                        className="bg-slate-800 border-b-2 border-slate-600 "
+                      >
                         <TableRow>
                           <TableCell className="font-medium">
                             <Image
@@ -752,8 +780,19 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
               return (
                 <div className="p-5 border-2" key={workoutItem._id}>
                   <div className="flex gap-3">
-                  <Plus color="#2ae549" />
-                  <Trash2 onClick={() => deleteWorkout(workoutItem._id)} />
+                    <Plus
+                      color="#2ae549"
+                      onClick={() => {
+                        setAddSetDialog(true);
+                        setToEdit({
+                          reps: "",
+                          weight: "",
+                          workoutSetId: workoutItem._id,
+                          eachWorkoutSetId: "",
+                        });
+                      }}
+                    />
+                    <Trash2 onClick={() => deleteWorkout(workoutItem._id)} />
                   </div>
                   <h1>{workoutItem.workoutId.workoutName}</h1>
                   <p>{workoutItem.workoutId.description}</p>
@@ -835,6 +874,58 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
               </DialogHeader>
               <DialogClose asChild>
                 <Button onClick={editSet}>Reset</Button>
+              </DialogClose>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog
+            open={addSetDialog}
+            onOpenChange={(isOpen) => {
+              setAddSetDialog(isOpen);
+            }}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  Add New Workout reps and Weight to the user
+                </DialogTitle>
+                <div className="flex justify-between items-center gap-2">
+                  <div>
+                    <Label htmlFor="reps">Reps</Label>
+                    <Input
+                      type="number"
+                      id="reps"
+                      onChange={(e) =>
+                        setToEdit({
+                          ...toEdit,
+                          reps: e.target.value,
+                        })
+                      }
+                      value={toEdit.reps}
+                      placeholder="Enter Reps"
+                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="weight">Weight</Label>
+                    <Input
+                      type="number"
+                      id="weight"
+                      onChange={(e) =>
+                        setToEdit({
+                          ...toEdit,
+                          weight: e.target.value,
+                        })
+                      }
+                      value={toEdit.weight}
+                      placeholder="Enter Weight"
+                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              </DialogHeader>
+              <DialogClose asChild>
+                <Button onClick={addSetWorkout}>Add New Set</Button>
               </DialogClose>
             </DialogContent>
           </Dialog>

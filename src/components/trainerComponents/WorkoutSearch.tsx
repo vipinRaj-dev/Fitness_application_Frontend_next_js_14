@@ -40,7 +40,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
 
   const [reps, setReps] = useState("");
   const [weight, setWeight] = useState("");
-  const [workoutId, setWorkoutId] = useState(""); 
+  const [workoutId, setWorkoutId] = useState("");
 
   const [workoutSet, setWorkoutSet] = useState<WorkoutSet[]>([]);
   const [page, setPage] = useState(1);
@@ -58,7 +58,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setWorkouts(res.data.allWorkouts);
         if (search !== "") {
           setPage(1);
@@ -78,7 +78,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
         workoutSet,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.status === 200) {
           setIsDialogOpen(false);
         }
@@ -136,82 +136,15 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
               <h1>{workout.workoutName}</h1>
               <p>{workout.description}</p>
 
-              <div>
-                <Dialog
-                  open={isDialogOpen}
-                  onOpenChange={(isOpen) => {
-                    setWorkoutSet([]);
-                    setIsDialogOpen(isOpen);
-                    setWorkoutId(workout._id);
-                  }}
-                >
-                  <DialogTrigger asChild>
-                    <Button>Set Workout</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        Set Workout reps and Weight to the user
-                      </DialogTitle>
-                      <div className="flex justify-between items-center gap-2">
-                        <div>
-                          <Label htmlFor="reps">Reps</Label>
-                          <Input
-                            type="number"
-                            id="reps"
-                            onChange={(e) => setReps(e.target.value)}
-                            value={reps}
-                            placeholder="Enter Reps"
-                            className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="weight">Weight</Label>
-                          <Input
-                            type="number"
-                            id="weight"
-                            onChange={(e) => setWeight(e.target.value)}
-                            value={weight}
-                            placeholder="Enter Weight"
-                            className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
-                          />
-                        </div>
-                        <div className="mt-6">
-                          <Button
-                            onClick={() => {
-                              reps &&
-                                weight &&
-                                setWorkoutSet([
-                                  ...workoutSet,
-                                  {
-                                    reps: parseInt(reps),
-                                    weight: parseInt(weight),
-                                  },
-                                ]);
-                              setReps("");
-                              setWeight("");
-                            }}
-                          >
-                            Set
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogHeader>
-                    <div>
-                      {workoutSet.map((set, index) => (
-                        <div key={index} className="flex gap-2 justify-evenly">
-                          <p>Set : {index + 1}</p>
-                          <p>Reps: {set.reps}</p>
-                          <p>Weight: {set.weight}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <Button onClick={setWorkout}>
-                      Set Workout
-                    </Button>
-                  </DialogContent>
-                </Dialog>
-              </div>
+              <Button
+                onClick={() => {
+                  setIsDialogOpen(true);
+                  setWorkoutSet([]);
+                  setWorkoutId(workout._id);
+                }}
+              >
+                Set Workout
+              </Button>
 
               <div>
                 <Dialog>
@@ -222,7 +155,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
                     <DialogHeader>
                       <DialogTitle>
                         <div className="flex justify-between p-5">
-                          <h1>{workout.workoutName}</h1>{" "}
+                          <h1>{workout.workoutName}</h1>
                           <h1>{workout.targetMuscle}</h1>
                         </div>
                       </DialogTitle>
@@ -237,6 +170,76 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
               </div>
             </div>
           ))}
+        <div>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(isOpen) => {
+              setIsDialogOpen(isOpen);
+            }}
+          >
+            <DialogTrigger asChild></DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  Set Workout reps and Weight to the user
+                </DialogTitle>
+                <div className="flex justify-between items-center gap-2">
+                  <div>
+                    <Label htmlFor="reps">Reps</Label>
+                    <Input
+                      type="number"
+                      id="reps"
+                      onChange={(e) => setReps(e.target.value)}
+                      value={reps}
+                      placeholder="Enter Reps"
+                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="weight">Weight</Label>
+                    <Input
+                      type="number"
+                      id="weight"
+                      onChange={(e) => setWeight(e.target.value)}
+                      value={weight}
+                      placeholder="Enter Weight"
+                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                    />
+                  </div>
+                  <div className="mt-6">
+                    <Button
+                      onClick={() => {
+                        reps &&
+                          weight &&
+                          setWorkoutSet([
+                            ...workoutSet,
+                            {
+                              reps: parseInt(reps),
+                              weight: parseInt(weight),
+                            },
+                          ]);
+                        setReps("");
+                        setWeight("");
+                      }}
+                    >
+                      Set
+                    </Button>
+                  </div>
+                </div>
+              </DialogHeader>
+              <div>
+                {workoutSet.map((set, index) => (
+                  <div key={index} className="flex gap-2 justify-evenly">
+                    <p>Set : {index + 1}</p>
+                    <p>Reps: {set.reps}</p>
+                    <p>Weight: {set.weight}</p>
+                  </div>
+                ))}
+              </div>
+              <Button onClick={setWorkout}>Set Workout</Button>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </div>
   );

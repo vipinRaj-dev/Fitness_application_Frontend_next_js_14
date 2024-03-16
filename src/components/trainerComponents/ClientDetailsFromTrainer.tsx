@@ -27,7 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Pencil, Trash2 } from "lucide-react";
+import { CalendarIcon, Pencil, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import {
   Dialog,
@@ -43,6 +43,8 @@ import { Label } from "@/components/ui/label";
 import { late, string } from "zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Clock, Clock10Icon } from "lucide-react";
+
+import { WorkoutData } from "@/types/workoutTypes";
 
 type User = {
   admissionNumber: number;
@@ -103,29 +105,29 @@ type ResponseType = {
   attandanceData: AttendanceData;
 };
 
-type WorkoutSet = {
-  reps: number;
-  weight: number;
-  completedReps: number;
-  _id: string;
-};
+// type WorkoutSet = {
+//   reps: number;
+//   weight: number;
+//   completedReps: number;
+//   _id: string;
+// };
 
-type WorkoutId = {
-  createdAt: string;
-  description: string;
-  publicId: string;
-  targetMuscle: string;
-  thumbnailUrl: string;
-  videoUrl: string;
-  workoutName: string;
-  _id: string;
-};
+// type WorkoutId = {
+//   createdAt: string;
+//   description: string;
+//   publicId: string;
+//   targetMuscle: string;
+//   thumbnailUrl: string;
+//   videoUrl: string;
+//   workoutName: string;
+//   _id: string;
+// };
 
-type WorkOutData = {
-  workoutId: WorkoutId;
-  workoutSet: WorkoutSet[];
-  _id: string;
-}[];
+// type WorkOutData = {
+//   workoutId: WorkoutId;
+//   workoutSet: WorkoutSet[];
+//   _id: string;
+// }[];
 
 // Usage
 
@@ -137,7 +139,6 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const [clientDetails, setClientDetails] = useState<User | null>(null);
   const [latestDiet, setLatestDiet] = useState<any[]>([]);
 
-  const [workout, setWorkout] = useState<WorkOutData>([]);
   const [documentId, setDocumentId] = useState<string>("");
 
   const [done, setDone] = useState(false);
@@ -152,6 +153,10 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
 
   const [attendanceData, setAttendanceData] =
     useState<ResponseType["attandanceData"]>();
+
+  const [workout, setWorkout] = useState<WorkoutData[]>([]);
+
+  const [workoutDataPerDay, setWorkoutDataPerDay] = useState<WorkoutData[]>([]);
 
   const [userCreatedDate, setUserCreatedDate] = useState<Date>();
   const [date, setDate] = useState<Date>(
@@ -196,10 +201,11 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       // console.log("date", date);
 
       axiosInstance
-        .get(`trainer/getFood/${client_Id}/${date}`)
+        .get(`/food/getFood/${client_Id}/${date}`)
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           setAttendanceData(res.data.attandanceData);
+          setWorkoutDataPerDay(res.data.attandanceData.workOutLogs.workOuts);
         })
         .catch((err) => {
           console.log(err);
@@ -320,7 +326,9 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
+
+  console.log("workoutDataPerDay", workoutDataPerDay);
 
   return (
     <div>
@@ -405,7 +413,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         </div>
 
         <div className=" md:w-1/2 h-1/2 md:h-full w-full">
-          <div className=" h-screen md:w-full  p-5">
+          <div className=" h-screen md:w-full p-5 space-y-6">
             <div className="m-5">
               <div className="flex justify-center pb-3">
                 {attendanceData && attendanceData.isPresent ? (
@@ -466,9 +474,9 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
               </div>
             </div>
 
-            <div className=" rounded-lg h-3/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+            <div className=" rounded-lg h-2/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
               <Table>
-                <TableCaption className="p-5">Date wise Result</TableCaption>
+                <TableCaption className="">Date wise Result</TableCaption>
                 <TableHeader className="">
                   <TableRow>
                     <TableHead className="w-[100px]">Image</TableHead>
@@ -480,7 +488,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                 {attendanceData &&
                   attendanceData.foodLogs.map((data, index) => {
                     return (
-                      <TableBody key={index} className="bg-slate-800 ">
+                      <TableBody key={index} className="bg-slate-800 border-b-2 border-slate-600 ">
                         <TableRow>
                           <TableCell className="font-medium">
                             <Image
@@ -505,11 +513,70 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                   })}
               </Table>
             </div>
+
+            <div className=" rounded-lg h-3/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+              <Table>
+                <TableCaption className="">Date wise Result</TableCaption>
+                <TableHeader className="">
+                  <TableRow>
+                    <TableHead className="w-[100px]">Image</TableHead>
+                    <TableHead>Workout Name</TableHead>
+                    <TableHead>Target Muscle</TableHead>
+                    <TableHead>Weight</TableHead>
+                    <TableHead>Reps</TableHead>
+                    <TableHead className="text-right">completed Reps</TableHead>
+                  </TableRow>
+                </TableHeader>
+                {workoutDataPerDay &&
+                  workoutDataPerDay.map((workout, index) => (
+                    <TableBody
+                      key={index}
+                      className="bg-slate-800 border-b-2 border-slate-600 "
+                    >
+                      {workout.workoutSet.map((workoutSet, index) => (
+                        <TableRow key={index}>
+                          {index === 0 && (
+                            <>
+                              <TableCell
+                                className="font-medium"
+                                rowSpan={workout.workoutSet.length}
+                              >
+                                <Image
+                                  className="rounded-xl"
+                                  src={workout.workoutId.thumbnailUrl}
+                                  width={60}
+                                  height={60}
+                                  alt="workout image"
+                                />
+                              </TableCell>
+                              <TableCell rowSpan={workout.workoutSet.length}>
+                                {workout.workoutId.workoutName}
+                              </TableCell>
+                              <TableCell rowSpan={workout.workoutSet.length}>
+                                {workout.workoutId.targetMuscle}
+                              </TableCell>
+                            </>
+                          )}
+                          <TableCell>
+                            <h1> {workoutSet.weight}</h1>
+                          </TableCell>
+                          <TableCell>
+                            <h1> {workoutSet.reps}</h1>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <p>{workoutSet.completedReps}</p>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  ))}
+              </Table>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="h-screen p-10">
+      <div className="h-screen p-10 mt-20">
         <div className="flex justify-between">
           <div>
             <h1 className="text-xl font-semibold tracking-wide">
@@ -529,7 +596,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           {latestDiet.map((food: any, index) => {
             return (
               <div
-                className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
+                className="flex gap-2 mb-4 h-26 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
                 key={food._id}
               >
                 <div className="flex items-center gap-3 h-full w-80">
@@ -684,7 +751,10 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
             workout.map((workoutItem, index) => {
               return (
                 <div className="p-5 border-2" key={workoutItem._id}>
+                  <div className="flex gap-3">
+                  <Plus color="#2ae549" />
                   <Trash2 onClick={() => deleteWorkout(workoutItem._id)} />
+                  </div>
                   <h1>{workoutItem.workoutId.workoutName}</h1>
                   <p>{workoutItem.workoutId.description}</p>
                   <div>
@@ -697,70 +767,18 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                           <Trash2
                             onClick={() => deleteSet(workoutItem._id, set._id)}
                           />
-                          <Dialog
-                            open={isDialogOpen}
-                            onOpenChange={(isOpen) => {
-                              setIsDialogOpen(isOpen);
+                          <Pencil
+                            onClick={() => {
+                              setIsDialogOpen(true);
+                              setToEdit({
+                                reps: set.reps.toString(),
+                                weight: set.weight.toString(),
+                                workoutSetId: workoutItem._id,
+                                eachWorkoutSetId: set._id,
+                              });
                             }}
-                          >
-                            <DialogTrigger asChild>
-                              <Pencil
-                                onClick={() => {
-                                  setToEdit({
-                                    reps: set.reps.toString(),
-                                    weight: set.weight.toString(),
-                                    workoutSetId: workoutItem._id,
-                                    eachWorkoutSetId: set._id,
-                                  });
-                                }}
-                                color="#001adb"
-                              />
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>
-                                  Set Workout reps and Weight to the user
-                                </DialogTitle>
-                                <div className="flex justify-between items-center gap-2">
-                                  <div>
-                                    <Label htmlFor="reps">Reps</Label>
-                                    <Input
-                                      type="number"
-                                      id="reps"
-                                      onChange={(e) =>
-                                        setToEdit({
-                                          ...toEdit,
-                                          reps: e.target.value,
-                                        })
-                                      }
-                                      value={toEdit.reps}
-                                      placeholder="Enter Reps"
-                                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label htmlFor="weight">Weight</Label>
-                                    <Input
-                                      type="number"
-                                      id="weight"
-                                      onChange={(e) =>
-                                        setToEdit({
-                                          ...toEdit,
-                                          weight: e.target.value,
-                                        })
-                                      }
-                                      value={toEdit.weight}
-                                      placeholder="Enter Weight"
-                                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
-                                    />
-                                  </div>
-                                </div>
-                              </DialogHeader>
-                              <DialogClose asChild>
-                                <Button onClick={editSet}>Reset</Button>
-                              </DialogClose>
-                            </DialogContent>
-                          </Dialog>
+                            color="#001adb"
+                          />
                         </div>
                       );
                     })}
@@ -768,6 +786,58 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                 </div>
               );
             })}
+
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(isOpen) => {
+              setIsDialogOpen(isOpen);
+            }}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  Set Workout reps and Weight to the user
+                </DialogTitle>
+                <div className="flex justify-between items-center gap-2">
+                  <div>
+                    <Label htmlFor="reps">Reps</Label>
+                    <Input
+                      type="number"
+                      id="reps"
+                      onChange={(e) =>
+                        setToEdit({
+                          ...toEdit,
+                          reps: e.target.value,
+                        })
+                      }
+                      value={toEdit.reps}
+                      placeholder="Enter Reps"
+                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="weight">Weight</Label>
+                    <Input
+                      type="number"
+                      id="weight"
+                      onChange={(e) =>
+                        setToEdit({
+                          ...toEdit,
+                          weight: e.target.value,
+                        })
+                      }
+                      value={toEdit.weight}
+                      placeholder="Enter Weight"
+                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              </DialogHeader>
+              <DialogClose asChild>
+                <Button onClick={editSet}>Reset</Button>
+              </DialogClose>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

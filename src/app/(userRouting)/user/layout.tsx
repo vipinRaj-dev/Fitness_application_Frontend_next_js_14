@@ -141,18 +141,13 @@ export default function RootLayout({
             </div>
             <Avatar className="hidden lg:block">
               <Link href="/user/profile">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src="/images/profileImage.avif" />
               </Link>
-              <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>
         </nav>
 
-
-       
         {children}
-        
-
 
         <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
           <div className="grid gap-10 row-gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">

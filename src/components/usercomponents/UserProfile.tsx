@@ -26,6 +26,8 @@ import {
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
 
+import { AttendanceData } from "@/types/DateWiseResponseData";
+
 type FormState = {
   _id: string;
   name: string;
@@ -43,40 +45,6 @@ type FormState = {
   Thyroid: boolean;
 };
 
-type Nutrition = {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-};
-
-type FoodId = {
-  foodname: string;
-  foodtype: string;
-  nutrition: Nutrition;
-  photoUrl: string;
-};
-
-type FoodLog = {
-  foodId: FoodId;
-  quantity: string;
-  status: boolean;
-  time: string;
-  timePeriod: string;
-  updatedAt: string;
-  userId: string;
-};
-
-type AttendanceData = {
-  foodLogs: FoodLog[];
-  isPresent: boolean;
-  userId: string;
-};
-
-type ResponseType = {
-  attandanceData: AttendanceData;
-};
-
 const UserProfile = () => {
   const router = useRouter();
   const timePeriods = ["morning", "afternoon", "evening"];
@@ -86,8 +54,7 @@ const UserProfile = () => {
   );
   const [userCreatedDate, setUserCreatedDate] = useState<Date>();
 
-  const [attendanceData, setAttendanceData] =
-    useState<ResponseType["attandanceData"]>();
+  const [attendanceData, setAttendanceData] = useState<AttendanceData>();
 
   const [form, setForm] = useState<FormState>({
     _id: "",
@@ -201,12 +168,18 @@ const UserProfile = () => {
         ...prevState,
         mobileNumber: "Mobile Number should be 10 digit",
       }));
-    } else if (form.height.toString().length > 3 || form.height.toString().length < 1) {
+    } else if (
+      form.height.toString().length > 3 ||
+      form.height.toString().length < 1
+    ) {
       setErrors((prevState) => ({
         ...prevState,
         height: "Height should be less than 3 digit",
       }));
-    } else if (form.weight.toString().length > 3 || form.weight.toString().length < 1 ) {
+    } else if (
+      form.weight.toString().length > 3 ||
+      form.weight.toString().length < 1
+    ) {
       console.log("weight error");
       setErrors((prevState) => ({
         ...prevState,
@@ -557,7 +530,7 @@ const UserProfile = () => {
             </div>
           </div>
 
-          <div className=" rounded-lg h-3/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+          <div className=" rounded-lg h-2/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
             <Table>
               <TableCaption className="p-5">Date wise Result</TableCaption>
               <TableHeader className="bg-black">
@@ -569,7 +542,7 @@ const UserProfile = () => {
                 </TableRow>
               </TableHeader>
               {attendanceData &&
-                attendanceData.foodLogs.map((data, index) => {
+                attendanceData?.foodLogs.map((data, index) => {
                   return (
                     <TableBody className="bg-slate-800">
                       <TableRow>
@@ -595,6 +568,64 @@ const UserProfile = () => {
                     </TableBody>
                   );
                 })}
+            </Table>
+          </div>
+          <div className=" rounded-lg h-3/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+            <Table>
+              <TableCaption className="">Date wise Result</TableCaption>
+              <TableHeader className="">
+                <TableRow>
+                  <TableHead className="w-[100px]">Image</TableHead>
+                  <TableHead>Workout Name</TableHead>
+                  <TableHead>Target Muscle</TableHead>
+                  <TableHead>Weight</TableHead>
+                  <TableHead>Reps</TableHead>
+                  <TableHead className="text-right">completed Reps</TableHead>
+                </TableRow>
+              </TableHeader>
+              {attendanceData &&
+                attendanceData?.workOutLogs?.workOuts.map((workout, index) => (
+                  <TableBody
+                    key={index}
+                    className="bg-slate-800 border-b-2 border-slate-600 "
+                  >
+                    {workout.workoutSet.map((workoutSet, index) => (
+                      <TableRow key={index}>
+                        {index === 0 && (
+                          <>
+                            <TableCell
+                              className="font-medium"
+                              rowSpan={workout.workoutSet.length}
+                            >
+                              <Image
+                                className="rounded-xl"
+                                src={workout.workoutId.thumbnailUrl}
+                                width={60}
+                                height={60}
+                                alt="workout image"
+                              />
+                            </TableCell>
+                            <TableCell rowSpan={workout.workoutSet.length}>
+                              {workout.workoutId.workoutName}
+                            </TableCell>
+                            <TableCell rowSpan={workout.workoutSet.length}>
+                              {workout.workoutId.targetMuscle}
+                            </TableCell>
+                          </>
+                        )}
+                        <TableCell>
+                          <h1> {workoutSet.weight}</h1>
+                        </TableCell>
+                        <TableCell>
+                          <h1> {workoutSet.reps}</h1>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <p>{workoutSet.completedReps}</p>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                ))}
             </Table>
           </div>
         </div>

@@ -203,7 +203,7 @@ const Userpage = () => {
       <div className="h-screen bg-slate-900 p-5">
         <div className="h-2/6">dumbel image</div>
 
-        <HomePageWorkout />
+        <HomePageWorkout hasTrainer={hasTrainer} />
       </div>
 
       <div>

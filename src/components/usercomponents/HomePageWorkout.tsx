@@ -7,8 +7,8 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { WorkoutData } from "@/types/workoutTypes";
 
-const HomePageWorkout = () => {
-  const [workoutList, setWorkoutList] = useState<WorkoutData>([]);
+const HomePageWorkout = ({ hasTrainer }: { hasTrainer: boolean }) => {
+  const [workoutList, setWorkoutList] = useState<WorkoutData[]>([]);
 
   useEffect(() => {
     try {
@@ -37,6 +37,13 @@ const HomePageWorkout = () => {
         </Link>
       </div>
 
+      {hasTrainer ? null : (
+        <div>
+          <Link href={"/user/addWorkouts"}>
+            <Button>Add workouts</Button>
+          </Link>
+        </div>
+      )}
       <div className="flex ">
         {workoutList &&
           workoutList.map((workout, index) => {

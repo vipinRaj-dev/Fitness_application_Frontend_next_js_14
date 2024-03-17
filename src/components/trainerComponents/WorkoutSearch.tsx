@@ -11,12 +11,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger, 
 } from "@/components/ui/dialog";
-import SetWorkout from "../adminRoutes/SetWorkout";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 type Workout = {
   description: string;
@@ -34,7 +32,13 @@ type WorkoutSet = {
   weight: number;
 };
 
-const WorkoutSearch = ({ clientId }: { clientId: string }) => {
+const WorkoutSearch = ({
+  clientId,
+  onSuccess,
+}: {
+  clientId: string;
+  onSuccess?: ()=>void;
+}) => {
   const [workouts, setWorkouts] = useState<AllWorkouts>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -81,6 +85,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
         // console.log(res.data);
         if (res.status === 200) {
           setIsDialogOpen(false);
+          onSuccess && onSuccess();
         }
       })
       .catch((err) => {
@@ -143,7 +148,7 @@ const WorkoutSearch = ({ clientId }: { clientId: string }) => {
                   setWorkoutId(workout._id);
                 }}
               >
-                Set Workout
+                Add Workout sets
               </Button>
 
               <div>

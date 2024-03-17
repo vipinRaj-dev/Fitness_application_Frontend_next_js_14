@@ -144,7 +144,7 @@ const WorkoutPlaylist = () => {
                 >
                   Play
                 </Button>
-              </div>
+              </div> 
             </div>
           );
         })}

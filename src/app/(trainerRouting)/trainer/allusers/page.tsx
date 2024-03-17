@@ -34,7 +34,7 @@ const page = () => {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           setAllUsers(response.data.allClients);
           setLimit(response.data.limit);
           if (search !== "") {

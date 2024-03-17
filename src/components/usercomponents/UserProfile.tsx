@@ -118,7 +118,7 @@ const UserProfile = () => {
       axiosInstance
         .get(`user/getDate/${date}`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setAttendanceData(res.data.attandanceData);
         })
         .catch((err) => {

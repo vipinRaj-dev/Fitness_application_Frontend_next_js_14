@@ -115,7 +115,7 @@ const TrainerHomePage = () => {
           "trainer/addCertificate",
           formData
         );
-        console.log("response", response);
+        // console.log("response", response);
         setRender(!render);
         setLoading(false);
         swal({
@@ -153,7 +153,7 @@ const TrainerHomePage = () => {
         },
       })
       .then((res) => {
-        console.log("res", res.data);
+        // console.log("res", res.data);
         if (res.status === 200) {
           setRender(!render);
           swal({

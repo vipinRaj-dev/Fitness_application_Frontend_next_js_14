@@ -56,7 +56,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
       axiosInstance
         .get(`/admin/food/${foodId}`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setForm({
             image: res.data.photoUrl,
             foodname: res.data.foodname,
@@ -151,7 +151,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
     })
       .then((res) => {
         setLoading(false);
-        console.log(res.data);
+        // console.log(res.data);
         if (res.status === 200) {
           // make all the fields empty
           setForm({

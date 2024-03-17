@@ -65,7 +65,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         .get(`/admin/workout/${workoutId}`)
 
         .then((res) => {
-          console.log(res.data.workoutData);
+          // console.log(res.data.workoutData);
           setFormData((prev) => ({
             ...prev,
             ...res.data.workoutData,
@@ -95,7 +95,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
     const result = schema.safeParse(formData);
 
@@ -144,7 +144,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         },
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
 
           setProgress(100);
           clearInterval(timer);

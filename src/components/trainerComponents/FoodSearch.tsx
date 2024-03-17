@@ -61,7 +61,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
           setPage(1);
         }
         setTotalPages(Math.ceil(res.data.totalFoodCount / res.data.limit));
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);

@@ -35,7 +35,7 @@ const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRe
     axiosInstance
       .get(`/workouts/getWorkoutsTrainer/${client_Id}`)
       .then((res) => {
-        console.log("workoutData", res.data.workOutData);
+        // console.log("workoutData", res.data.workOutData);
         setWorkout(res.data.workOutData);
         setDocumentId(res.data.documentId);
       })

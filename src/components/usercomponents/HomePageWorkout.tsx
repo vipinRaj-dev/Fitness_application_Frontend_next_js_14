@@ -15,7 +15,7 @@ const HomePageWorkout = ({ hasTrainer }: { hasTrainer: boolean }) => {
       axiosInstance
         .get("/workouts/getWorkouts")
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setWorkoutList(res.data.workOutData);
         })
         .catch((error) => {

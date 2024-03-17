@@ -36,7 +36,7 @@ const AllTrainer = () => {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           setTrainer(response.data.trainer);
           setLimit(response.data.limit);
           if (search !== "") {
@@ -58,7 +58,7 @@ const AllTrainer = () => {
       await axiosInstance
         .put(`/admin/trainer/block/${trainerId}`)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data) {
             setTrainer(
               trainer.map((trainer) =>

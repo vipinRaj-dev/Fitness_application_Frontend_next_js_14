@@ -20,7 +20,7 @@ const WorkoutPlaylist = () => {
       axiosInstance
         .get("/workouts/getWorkouts")
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setWorkoutList(res.data.workOutData);
           setDocumentId(res.data.documentId);
           setPlayingWorkout(res.data.workOutData[0]);
@@ -50,7 +50,7 @@ const WorkoutPlaylist = () => {
         completedReps: completedReps[index],
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.status === 200) {
           const newDisabledButtons = [...disabledButtons];
           newDisabledButtons[index] = true;
@@ -138,7 +138,7 @@ const WorkoutPlaylist = () => {
                 />
                 <Button
                   onClick={() => {
-                    console.log(workout);
+                    // console.log(workout);
                     setPlayingWorkout(workout);
                   }}
                 >

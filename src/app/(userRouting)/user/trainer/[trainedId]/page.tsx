@@ -78,7 +78,7 @@ const page = ({
     axiosInstance
       .get(`/user/getTrainer/${params.trainedId}`)
       .then((res) => {
-        console.log(res.data.trainer);
+        // console.log(res.data.trainer);
         setTrainer(res.data.trainer);
       })
       .catch((err) => {

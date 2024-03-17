@@ -29,7 +29,7 @@ const CreateUser = () => {
     await axiosInstance
       .post(url, userData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if(res.data){
           swal({
             title: "User Created",

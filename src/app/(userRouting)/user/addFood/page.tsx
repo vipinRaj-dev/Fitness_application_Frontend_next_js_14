@@ -38,7 +38,7 @@ const page = () => {
     axiosInstance
       .get(`/food/client/${client_Id}`)
       .then((res) => {
-        console.log("res.data.latestDiet", res.data.latestDiet);
+        // console.log("res.data.latestDiet", res.data.latestDiet);
         setLatestDiet(res.data.latestDiet);
       })
       .catch((err: Error | any) => {
@@ -65,13 +65,13 @@ const page = () => {
   };
 
   const handleSubmit = async (foodId: string) => {
-    console.log(foodId, client_Id);
+    // console.log(foodId, client_Id);
     try {
       axiosInstance
         .put(`/food/addTimeDetails/${client_Id}/${foodId}`, state)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            // console.log(res.data);
             setDone(!done);
           }
         })
@@ -84,13 +84,13 @@ const page = () => {
   };
 
   const handleRemove = (foodId: string) => {
-    console.log(foodId, client_Id);
+    // console.log(foodId, client_Id);
     try {
       axiosInstance
         .delete(`/food/deletePerFood/${client_Id}/${foodId}`)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            // console.log(res.data);
             setDone(!done);
             // setLatestDiet(latestDiet.filter(food => food._id !== foodId));
           }

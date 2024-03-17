@@ -27,7 +27,7 @@ const ListFood = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setFoodList(res.data.allFood);
         if (search !== "") {
           setPage(1);
@@ -57,7 +57,7 @@ const ListFood = () => {
     axiosInstance
       .delete(`/admin/deleteFood/${foodId}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setFoodList((prevFoodList) =>
           prevFoodList.filter((food: { _id: string }) => food._id !== foodId)
         );

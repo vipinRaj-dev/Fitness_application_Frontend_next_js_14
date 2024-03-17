@@ -123,7 +123,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       axiosInstance
         .get(`/food/getFoodAndWorkouts/${client_Id}/${date}`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setAttendanceData(res.data.attandanceData);
           setWorkoutDataPerDay(res.data.attandanceData.workOutLogs.workOuts);
         })

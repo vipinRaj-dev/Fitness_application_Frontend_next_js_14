@@ -39,7 +39,7 @@ const AllUsers = () => {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           setUsers(response.data.users);
           setLimit(response.data.limit);
           if(search !== ""){
@@ -61,7 +61,7 @@ const AllUsers = () => {
       await axiosInstance
         .put(`/admin/user/block/${userId}`)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data) {
             setUsers(
               users.map((user) =>

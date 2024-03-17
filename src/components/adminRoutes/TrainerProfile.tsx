@@ -20,7 +20,7 @@ const TrainerProfile = ({ trainerId }: { trainerId: string }) => {
         .get(`/admin/trainer/${trainerId}`)
         .then((response) => {
           if (response.data) {
-            console.log(response.data);
+            // console.log(response.data);
             setTrainerData(response.data.trainer);
           }
         })

@@ -24,7 +24,7 @@ const OtpFormForgotPassword = () => {
       .post(`${baseUrl}/auth/verifyOtp`, { otp })
       .then((res) => {
         setLoading(true);
-        console.log(res);
+        // console.log(res);
         if (res.status === 200) {
           setLoading(false);
           console.log("User created");

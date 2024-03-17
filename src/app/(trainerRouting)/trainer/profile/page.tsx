@@ -71,7 +71,7 @@ const TrainerProfile = () => {
       try {
         const res = await axiosInstance.get("trainer/profile");
         // console.log('form the profile page')
-        console.log(res.data.trainer);
+        // console.log(res.data.trainer);
 
         setForm((prevState) => ({
           ...prevState,
@@ -119,7 +119,7 @@ const TrainerProfile = () => {
     e.preventDefault();
 
     const result = schema.safeParse(form);
-    console.log("form", form);
+    // console.log("form", form);
     if (!result.success) {
       const errorMap = result.error.formErrors.fieldErrors;
       console.log("errorMap", errorMap);
@@ -152,7 +152,7 @@ const TrainerProfile = () => {
 
       console.log(" form send");
 
-      console.log(form);
+      // console.log(form);
 
       const formData = new FormData();
       Object.keys(form).forEach((key) => {

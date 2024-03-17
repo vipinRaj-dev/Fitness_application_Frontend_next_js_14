@@ -47,7 +47,7 @@ const UpdateTrainer = ({ trainerId }: { trainerId: string }) => {
     await axiosInstance
       .put(`/admin/trainer/${trainerId}`, trainerDetails)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data) {
           swal({
             title: "success!",

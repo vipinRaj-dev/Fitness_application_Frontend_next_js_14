@@ -21,7 +21,7 @@ const UserProfile = ({ userId }: { userId: string }) => {
         .get(`/admin/user/${userId}`)
         .then((response) => {
           if (response.data) {
-            console.log(response.data);
+            // console.log(response.data);
             setUserData(response.data.user);
           }
         })

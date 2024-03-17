@@ -37,7 +37,7 @@ const TrainerList = () => {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setTrainerList(res.data.trainers);
           if (search !== "") {
             setPage(1);

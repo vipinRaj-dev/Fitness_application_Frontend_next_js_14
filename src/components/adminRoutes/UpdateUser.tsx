@@ -47,7 +47,7 @@ const UpdateUser = ({ userId }: { userId: string }) => {
     await axiosInstance
       .put(`/admin/user/${userId}`, userDetails)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data) {
           swal({
             title: "success!",

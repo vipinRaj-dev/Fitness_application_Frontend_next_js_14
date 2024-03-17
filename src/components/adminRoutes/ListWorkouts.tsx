@@ -48,7 +48,7 @@ const ListWorkouts = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setWorkoutsList(res.data.allWorkout);
         if (search !== "") {
           setPage(1);
@@ -67,7 +67,7 @@ const ListWorkouts = () => {
     axiosInstance
       .delete(`/admin/deleteWorkout/${workoutId}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setWorkoutsList((prev) =>
           prev.filter((workout) => workout._id !== workoutId)
         );

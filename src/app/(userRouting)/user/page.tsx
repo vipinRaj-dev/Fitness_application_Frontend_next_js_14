@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import FoodCard from "@/components/usercomponents/FoodCard";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 import HomePageWorkout from "@/components/usercomponents/HomePageWorkout";
@@ -28,19 +29,27 @@ const Userpage = () => {
   const [hasTrainer, setHasTrainer] = useState(false);
   const [attendanceId, setAttendanceId] = useState<string>("");
 
+  const router = useRouter();
   useEffect(() => {
     const fetchUser = async () => {
       axiosInstance
         .get("/user/homePage")
         .then((res) => {
           // console.log(res.data);
-          setLatestDiet(res.data.dietFood);
-          setAddedFoodDocIds(res.data.addedFoodDocIds);
-          setHasTrainer(res.data.hasTrainer);
-          setAttendanceId(res.data.attendanceDocId);
+          if (res.status === 200) {
+            setLatestDiet(res.data.dietFood);
+            setAddedFoodDocIds(res.data.addedFoodDocIds);
+            setHasTrainer(res.data.hasTrainer);
+            setAttendanceId(res.data.attendanceDocId);
+          }
         })
         .catch((err) => {
+          console.log("error inside the api call");
           console.log(err);
+          if (err.response.status === 402) {
+            console.log("purchase");
+            router.replace("/user/subscription");
+          }
         });
     };
     fetchUser();

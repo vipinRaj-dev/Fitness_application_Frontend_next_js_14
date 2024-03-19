@@ -5,6 +5,15 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Input } from "../ui/input";
+import StarRatings from "react-star-ratings";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Trainer = {
   _id: number;
@@ -15,6 +24,7 @@ type Trainer = {
   description: string;
   profilePicture: string;
   price: number;
+  avgRating: number;
 };
 
 const TrainerList = () => {
@@ -22,8 +32,10 @@ const TrainerList = () => {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(4);
+  const [limit, setLimit] = useState(3);
   const [totalPages, setTotalPages] = useState(0);
+
+  const [rating, setRating] = useState('');
 
   useEffect(() => {
     console.log("TrainerList from user side");
@@ -34,6 +46,7 @@ const TrainerList = () => {
             page,
             search,
             limit,
+            filter: rating,
           },
         })
         .then((res) => {
@@ -49,7 +62,7 @@ const TrainerList = () => {
         });
     };
     getTrainer();
-  }, [page, search]);
+  }, [page, search, rating]);
   return (
     <div className="md:p-10 p-2 mt-10">
       <div className="">
@@ -59,15 +72,47 @@ const TrainerList = () => {
             placeholder="Search . . . "
             onChange={(e) => setSearch(e.target.value)}
           />
-         
         </div>
       </div>
       <div>
         <h1 className="text-xl font-semibold tracking-wide mt-5">Trainers</h1>
+        <div className="flex gap-5 items-center mb-10 justify-end">
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={"ghost"}>Filter Rating</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel> Star Rating </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+
+                {[5, 4, 3, 2, 1].map((rating) => (
+                  <DropdownMenuItem
+                    key={rating}
+                    onSelect={() => {
+                      setRating(rating.toString());
+                    }}
+                  >
+                    {
+                      <StarRatings
+                        rating={rating}
+                        starDimension="15px"
+                        starRatedColor="yellow"
+                      />
+                    }
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
       {trainerList.map((trainer) => {
         return (
-          <div className="bg-slate-800 mt-5 w-full h-28 flex justify-between rounded-2xl p-2 md:px-16" key={trainer._id}>
+          <div
+            className="bg-slate-800 mt-5 w-full h-28 flex justify-between rounded-2xl p-2 md:px-16"
+            key={trainer._id}
+          >
             <div className="flex gap-3 md:space-x-9">
               <div className="w-16 h-16 rounded-full overflow-hidden my-auto ">
                 <img
@@ -78,9 +123,21 @@ const TrainerList = () => {
               </div>
               <div className="text-sm leading-loose md:flex">
                 <div>
-                  <h1 className="text-xl font-semibold tracking-wide">
-                    {trainer.name}
-                  </h1>
+                  <div className="flex gap-2">
+                    <h1 className="text-xl font-semibold tracking-wide">
+                      {trainer.name}
+                    </h1>
+                    <div>
+                      <StarRatings
+                        rating={trainer.avgRating}
+                        starRatedColor="yellow"
+                        numberOfStars={5}
+                        name="rating"
+                        starDimension="12px"
+                        starSpacing="1px"
+                      />
+                    </div>
+                  </div>
                   <h1 className="opacity-55 font-light">
                     {trainer.specializedIn}
                   </h1>

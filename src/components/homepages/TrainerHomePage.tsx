@@ -9,6 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 import Cookies from "js-cookie";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   Dialog,
@@ -22,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import swal from "sweetalert";
+import StarRatings from "react-star-ratings";
 
 interface Trainer {
   transformationClientsCount: number;
@@ -54,6 +63,18 @@ interface Trainer {
   }[];
 }
 
+type TrainerReviews = {
+  _id: string;
+  createdAt: string;
+  content: string;
+  rating: number;
+  userId: {
+    _id: string;
+    name: string;
+    profileImage: string;
+  };
+};
+
 const TrainerHomePage = () => {
   const [trainerData, setTrainerData] = useState<Trainer | null>(null);
   const [error, setError] = useState<string>("");
@@ -62,10 +83,17 @@ const TrainerHomePage = () => {
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [render, setRender] = useState<boolean>(false);
+  const [reviews, setReviews] = useState<TrainerReviews[]>([]);
 
-  const router = useRouter()
+  const [rating, setRating] = useState<number>(0);
 
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
 
+  const router = useRouter();
+
+  // console.log("rating", rating);
 
   useEffect(() => {
     // Fetch data from the server
@@ -85,15 +113,36 @@ const TrainerHomePage = () => {
         })
         .catch((error) => {
           console.log(error);
-          if(error.response.status === 404){
+          if (error.response.status === 404) {
             Cookies.remove("jwttoken");
-            router.replace('/sign-in')
+            router.replace("/sign-in");
           }
         });
     };
+
     fetchTrainerData();
   }, [render]);
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      axiosInstance
+        .get("/trainer/reviews", {
+          params: {
+            page,
+            limit,
+            rating,
+          },
+        })
+        .then((res) => {
+          console.log("res.data", res.data);
+          setReviews(res.data.reviews);
+          setLimit(res.data.limit);
+          setTotalPages(Math.ceil(res.data.totalReviews / res.data.limit));
+        });
+    };
+
+    fetchReviews();
+  }, [page, rating]);
   const handleCertficateSubmit = async (e: React.FormEvent, field: string) => {
     e.preventDefault();
     console.log("FIELD", field);
@@ -442,17 +491,17 @@ const TrainerHomePage = () => {
                     {client.name}
                   </h1>
                   <Badge
-                      onClick={(e) =>
-                        handleDelete(e, {
-                          deleteId: client._id,
-                          field: "client",
-                          publicId: client.publicId,
-                        })
-                      }
-                      variant="destructive"
-                    >
-                      Delete
-                    </Badge>
+                    onClick={(e) =>
+                      handleDelete(e, {
+                        deleteId: client._id,
+                        field: "client",
+                        publicId: client.publicId,
+                      })
+                    }
+                    variant="destructive"
+                  >
+                    Delete
+                  </Badge>
                 </div>
                 <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
                   <p className="text-white md:text-base font-light text-start text-sm mt-2">
@@ -461,6 +510,114 @@ const TrainerHomePage = () => {
                 </div>
               </div>
             ))}
+        </div>
+      </div>
+
+      <div className="m-5 md:m-10">
+        <div>
+          <div className="flex justify-between">
+            <div className="flex gap-5 items-center mb-10">
+              <div>
+                <h1 className="text-2xl font-semibold text-center">Reviews</h1>
+              </div>
+              <div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant={"ghost"}>Filter Rating</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel> Star Rating </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    {[5, 4, 3, 2, 1].map((rating) => (
+                      <DropdownMenuItem
+                        key={rating}
+                        onSelect={() => {
+                          setRating(rating);
+                        }}
+                      >
+                        {
+                          <StarRatings
+                            rating={rating}
+                            starDimension="15px"
+                            starRatedColor="yellow"
+                          />
+                        }
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+              >
+                Prev
+              </Button>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index}
+                  onClick={() => setPage(index + 1)}
+                  className={`bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 ${
+                    page === index + 1 ? "bg-blue-500" : ""
+                  }`}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+
+              <Button
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
+                className="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+          {reviews.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {reviews.map((review) => (
+                <div key={review._id} className="bg-slate-900 p-4 rounded-3xl">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={review.userId.profileImage}
+                      alt="profile"
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <h1 className="text-white text-xl font-semibold">
+                      {review.userId.name}
+                    </h1>
+                    <div className="text-white text-lg mt-2">
+                      {
+                        <StarRatings
+                          rating={review.rating}
+                          starRatedColor="yellow"
+                          starDimension="15px"
+                          starSpacing="2px"
+                          starHoverColor="yellow"
+                          starEmptyColor="white"
+                          numberOfStars={5}
+                          name="rating"
+                        />
+                      }
+                    </div>
+                  </div>
+                  <p className="text-white text-sm mt-2">{review.content}</p>
+                  <div className="flex justify-end">
+                    <h1 className="text-white text-opacity-40 text-sm font-semibold">
+                      {new Date(review.createdAt).toLocaleDateString("en-GB")}
+                    </h1>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <h1 className="text-2xl  font-semibold text-center">No Reviews</h1>
+          )}
         </div>
       </div>
     </div>

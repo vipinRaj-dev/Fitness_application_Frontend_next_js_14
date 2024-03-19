@@ -10,7 +10,9 @@ import { Input } from "../ui/input";
 
 const WorkoutPlaylist = () => {
   const [workoutList, setWorkoutList] = useState<WorkoutData[]>([]);
-  const [playingWorkout, setPlayingWorkout] = useState<WorkoutData | null>(null);
+  const [playingWorkout, setPlayingWorkout] = useState<WorkoutData | null>(
+    null
+  );
   const [documentId, setDocumentId] = useState<string>("");
   const [completedReps, setCompletedReps] = useState<string[]>([]);
   const [disabledButtons, setDisabledButtons] = useState<boolean[]>([]);
@@ -34,14 +36,6 @@ const WorkoutPlaylist = () => {
   }, []);
 
   const updateCompletedReps = (index: number) => {
-    // console.log("playingWorkoutId", playingWorkout?.workoutSet[index]._id);
-    // console.log({
-    //   documentId: documentId,
-    //   workoutSetId: playingWorkout?._id,
-    //   eachWorkoutSetId: playingWorkout?.workoutSet[index]._id,
-    //   completedReps: completedReps[index],
-    // });
-
     axiosInstance
       .put("/workouts/updateCompletedReps", {
         documentId: documentId,
@@ -144,7 +138,7 @@ const WorkoutPlaylist = () => {
                 >
                   Play
                 </Button>
-              </div> 
+              </div>
             </div>
           );
         })}

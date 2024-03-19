@@ -34,7 +34,7 @@ const page = () => {
           },
         })
         .then((response) => {
-          // console.log(response.data);
+          console.log(response.data);
           setAllUsers(response.data.allClients);
           setLimit(response.data.limit);
           if (search !== "") {
@@ -99,13 +99,28 @@ const page = () => {
                   </td>
                   <td className="px-4 py-3 overflow-auto">{user.name}</td>
                   <td className="px-4 py-3 overflow-auto">
-                    {new Date(user.trainerPaymentDueDate).toLocaleDateString()}
+                    <p
+                      className={
+                        new Date(user.trainerPaymentDueDate) > new Date()
+                          ? "text-green-100"
+                          : "text-red-400"
+                      }
+                    > 
+                      {" "}
+                      {new Date(
+                        user.trainerPaymentDueDate
+                      ).toLocaleDateString()}
+                    </p>
                   </td>
                   <td className="px-4 py-3 overflow-auto">
                     {user.userBlocked ? "Yes" : "No"}
                   </td>
                   <td className="px-4 py-3 overflow-auto">
-                    <Link href={`/trainer/client/${user._id}`}>View</Link>
+                    {new Date(user.trainerPaymentDueDate) > new Date() ? (
+                      <Link href={`/trainer/client/${user._id}`}>View</Link>
+                    ) : (
+                      "Payment Due"
+                    )}
                   </td>
                 </tr>
               );

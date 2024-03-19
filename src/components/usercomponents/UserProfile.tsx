@@ -19,12 +19,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
+import StarRatings from "react-star-ratings";
 
 import { AttendanceData } from "@/types/DateWiseResponseData";
 
@@ -53,6 +64,18 @@ const UserProfile = () => {
     new Date(new Date().setHours(0, 0, 0, 0))
   );
   const [userCreatedDate, setUserCreatedDate] = useState<Date>();
+
+  const [trainer, setTrainer] = useState({
+    profilePicture: "",
+    name: "",
+    _id: "",
+    trainerPaymentDueDate: "",
+  });
+
+  const [rating, setRating] = useState({
+    starRating: 0,
+    content: "",
+  });
 
   const [attendanceData, setAttendanceData] = useState<AttendanceData>();
 
@@ -84,6 +107,8 @@ const UserProfile = () => {
         await axiosInstance
           .get("user/profile")
           .then((res) => {
+            console.log("userDetails", res.data);
+
             setForm((prevState) => ({
               ...prevState,
               ...res.data.user,
@@ -92,6 +117,12 @@ const UserProfile = () => {
             let userCreated = new Date(res.data.user.createdAt);
             userCreated.setHours(0, 0, 0, 0);
             setUserCreatedDate(userCreated);
+            setTrainer({
+              profilePicture: res.data.user.trainerId.profilePicture,
+              name: res.data.user.trainerId.name,
+              _id: res.data.user.trainerId._id,
+              trainerPaymentDueDate: res.data.user.trainerPaymentDueDate,
+            });
           })
           .catch((err) => {
             console.log("error inside the api call");
@@ -242,6 +273,46 @@ const UserProfile = () => {
     return newDate;
   };
 
+  const applyReview = async () => {
+    console.log(rating);
+    if (rating.starRating === 0) {
+      swal({
+        title: "warning!",
+        text: "Please give a rating",
+        icon: "warning",
+        timer: 1500,
+        buttons: {},
+      });
+    } else {
+      await axiosInstance
+        .post("/user/rating", {
+          rating: rating.starRating,
+          content: rating.content,
+          trainerId: trainer._id,
+        })
+        .then((res) => {
+          console.log(res.data);
+          swal({
+            title: "seccess!",
+            text: "Rating Submitted",
+            icon: "success",
+            timer: 1500,
+            buttons: {},
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          swal({
+            title: "warning!",
+            text: "Rating not submitted",
+            icon: "warning",
+            timer: 1500,
+            buttons: {},
+          });
+        });
+    }
+  };
+
   if (loading) {
     return <Dnaspinner />;
   }
@@ -249,12 +320,12 @@ const UserProfile = () => {
   return (
     <div>
       <div className="md:flex w-full">
-        <div className="md:w-2/6">
+        <div className="md:w-2/6 p-1 ">
           <form
             onSubmit={handleSubmit}
             className="flex flex-col items-center justify-center min-h-96 py-2"
           >
-            <div className="flex flex-col bg-slate-900 p-20 rounded-xl shadow-2xl w-full md:w-full lg:w-9/12 space-y-6">
+            <div className="flex flex-col bg-slate-900 p-5 rounded-xl shadow-2xl w-full md:w-full border-2 border-slate-500  space-y-6">
               <div className="flex justify-center ">
                 {form.profileImage && (
                   <img
@@ -439,6 +510,74 @@ const UserProfile = () => {
               >
                 Update
               </button>
+
+              <div>
+                {trainer.profilePicture && (
+                  <div className="flex justify-evenly">
+                    <img
+                      src={trainer.profilePicture}
+                      alt="trainer"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
+                    <h1>{trainer.name}</h1>
+
+                    <Dialog>
+                      <DialogTrigger>
+                        <Badge>Rate</Badge>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>
+                            Do you want to Rate this Trainer
+                          </DialogTitle>
+                          <DialogDescription className="text-center">
+                            <StarRatings
+                              rating={rating.starRating}
+                              starRatedColor="yellow"
+                              starDimension="35px"
+                              starSpacing="2px"
+                              starHoverColor="yellow"
+                              starEmptyColor="white"
+                              changeRating={(rating) =>
+                                setRating((prev) => {
+                                  return {
+                                    ...prev,
+                                    starRating: rating,
+                                  };
+                                })
+                              }
+                              numberOfStars={5}
+                              name="rating"
+                            />
+                          </DialogDescription>
+                        </DialogHeader>
+                        <Textarea
+                          placeholder="Type you review here..."
+                          onChange={(e) => {
+                            setRating((prev) => {
+                              return {
+                                ...prev,
+                                content: e.target.value,
+                              };
+                            });
+                          }}
+                        />
+                        <Button onClick={applyReview}>Submit</Button>
+                      </DialogContent>
+                    </Dialog>
+                    {new Date(trainer.trainerPaymentDueDate) > new Date() ? (
+                      <>
+                        <Badge>Msg</Badge>
+                        <Badge>Call</Badge>
+                      </>
+                    ) : (
+                      <p className="text-sm text-red-500">Time Expired</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </form>
         </div>
@@ -544,7 +683,7 @@ const UserProfile = () => {
               {attendanceData &&
                 attendanceData?.foodLogs.map((data, index) => {
                   return (
-                    <TableBody className="bg-slate-800">
+                    <TableBody key={index} className="bg-slate-800">
                       <TableRow>
                         <TableCell className="font-medium">
                           {/* <img src={data.foodId.photoUrl} alt="food image" /> */}

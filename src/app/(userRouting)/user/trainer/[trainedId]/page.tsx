@@ -8,7 +8,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import axiosInstance from "@/axios/creatingInstance";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -235,13 +244,30 @@ const page = ({
                       className="w-full h-64 rounded-3xl object-cover mx-auto p-1 md:p-3"
                     />
                     <div className="flex justify-between m-1 px-2 md:px-5">
-                      <h1 className="text-white text-start md:text-2xl font-semibold">
+                      <h1 className="text-white text-start md:text-2xl font-semibold truncate">
                         {certificate.name}
                       </h1>
                     </div>
-                    <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
+                    <div className="w-48 md:w-80  h-20 mx-auto overflow-hidden">
                       <p className="text-white md:text-base font-light text-start text-sm mt-2">
-                        {certificate.content}
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            {certificate.content}
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Description</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                <p className=" w-96 mx-auto break-words">
+                                  {certificate.content}
+                                </p>
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Back</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </p>
                     </div>
                   </div>
@@ -265,13 +291,30 @@ const page = ({
                     className="w-full h-64 rounded-3xl object-cover mx-auto p-1 md:p-3"
                   />
                   <div className="flex justify-between m-1 px-2 md:px-5">
-                    <h1 className="text-white text-start md:text-2xl font-semibold">
+                    <h1 className="text-white text-start md:text-2xl font-semibold truncate">
                       {client.name}
                     </h1>
                   </div>
-                  <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
+                  <div className="w-48 md:w-80  h-20 mx-auto overflow-hidden">
                     <p className="text-white md:text-base font-light text-start text-sm mt-2">
-                      {client.content}
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          {client.content}
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Description</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              <p className=" w-96 mx-auto break-words">
+                                {client.content}
+                              </p>
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Back</AlertDialogCancel>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </p>
                   </div>
                 </div>
@@ -376,7 +419,24 @@ const page = ({
                         }
                       </div>
                     </div>
-                    <p className="text-white text-sm mt-2">{review.content}</p>
+                    <p className="text-white text-sm mt-2 truncate">
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          {review.content}
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Review</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {review.content}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Back</AlertDialogCancel>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </p>
                     <div className="flex justify-end">
                       <h1 className="text-white text-opacity-40 text-sm font-semibold">
                         {new Date(review.createdAt).toLocaleDateString("en-GB")}

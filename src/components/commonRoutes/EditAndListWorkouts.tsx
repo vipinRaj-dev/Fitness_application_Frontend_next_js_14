@@ -14,15 +14,25 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DialogClose } from "@radix-ui/react-dialog"; 
+import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
 
-const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRender? : boolean }) => {
+const EditAndListWorkouts = ({
+  client_Id,
+  reRender,
+}: {
+  client_Id: string;
+  reRender?: boolean;
+}) => {
   const [workout, setWorkout] = useState<WorkoutData[]>([]);
   const [addSetDialog, setAddSetDialog] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [success, setSuccess] = useState(false);
   const [documentId, setDocumentId] = useState<string>("");
+  const [error, setError] = useState({
+    reps: "",
+    weight: "",
+  });
 
   const [toEdit, setToEdit] = useState({
     reps: "",
@@ -42,7 +52,7 @@ const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRe
       .catch((err) => {
         console.log(err);
       });
-  }, [client_Id, success , reRender]);
+  }, [client_Id, success, reRender]);
 
   const editSet = () => {
     // console.log("edit");
@@ -176,16 +186,21 @@ const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRe
             <DialogTitle>Set Workout reps and Weight to the user</DialogTitle>
             <div className="flex justify-between items-center gap-2">
               <div>
+                {error.reps && <p className="text-red-500">{error.reps}</p>}
                 <Label htmlFor="reps">Reps</Label>
                 <Input
+                  min={1}
                   type="number"
                   id="reps"
-                  onChange={(e) =>
-                    setToEdit({
-                      ...toEdit,
-                      reps: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (parseInt(value) >= 0 || value === "") {
+                      setToEdit({
+                        ...toEdit,
+                        reps: value,
+                      });
+                    }
+                  }}
                   value={toEdit.reps}
                   placeholder="Enter Reps"
                   className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
@@ -194,16 +209,20 @@ const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRe
               <div>
                 <Label htmlFor="weight">Weight</Label>
                 <Input
+                  min={1}
                   type="number"
                   id="weight"
-                  onChange={(e) =>
-                    setToEdit({
-                      ...toEdit,
-                      weight: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (parseInt(value) >= 0 || value === "") {
+                      setToEdit({
+                        ...toEdit,
+                        weight: value,
+                      });
+                    }
+                  }}
                   value={toEdit.weight}
-                  placeholder="Enter Weight"
+                  placeholder="Enter Weight in kg"
                   className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
                 />
               </div>
@@ -232,12 +251,15 @@ const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRe
                 <Input
                   type="number"
                   id="reps"
-                  onChange={(e) =>
-                    setToEdit({
-                      ...toEdit,
-                      reps: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (parseInt(value) >= 0 || value === "") {
+                      setToEdit({
+                        ...toEdit,
+                        reps: value,
+                      });
+                    }
+                  }}
                   value={toEdit.reps}
                   placeholder="Enter Reps"
                   className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
@@ -248,12 +270,15 @@ const EditAndListWorkouts = ({ client_Id , reRender }: { client_Id: string; reRe
                 <Input
                   type="number"
                   id="weight"
-                  onChange={(e) =>
-                    setToEdit({
-                      ...toEdit,
-                      weight: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (parseInt(value) >= 0 || value === "") {
+                      setToEdit({
+                        ...toEdit,
+                        weight: value,
+                      });
+                    }
+                  }}
                   value={toEdit.weight}
                   placeholder="Enter Weight"
                   className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"

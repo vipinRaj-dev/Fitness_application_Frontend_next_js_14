@@ -26,13 +26,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import swal from "sweetalert";
 import StarRatings from "react-star-ratings";
+import { Link as ScrollLink } from "react-scroll";
 
 interface Trainer {
+  avgRating: number;
   transformationClientsCount: number;
   certificationsCount: number;
   description: string;
@@ -101,7 +115,7 @@ const TrainerHomePage = () => {
       await axiosInstance
         .get("trainer/profile")
         .then((res) => {
-          // console.log("res.data", res.data);
+          console.log("res.data", res.data);
           setTrainerData((prevState) => ({
             ...prevState,
             ...res.data.trainer,
@@ -134,7 +148,7 @@ const TrainerHomePage = () => {
           },
         })
         .then((res) => {
-          console.log("res.data", res.data);
+          // console.log("res.data hello", res.data);
           setReviews(res.data.reviews);
           setLimit(res.data.limit);
           setTotalPages(Math.ceil(res.data.totalReviews / res.data.limit));
@@ -222,12 +236,6 @@ const TrainerHomePage = () => {
         <div className="w-full relative ">
           <div className="md:flex md:justify-center">
             <div className="p-3 md:w-10/12 flex justify-center">
-              {/* <img
-              className="md:w-full"
-              src="/images/trainercover.png"
-              alt="cover"
-            /> */}
-
               {trainerData?.profilePicture && (
                 <img
                   className="bg-cover bg-center rounded-3xl h-96 md:h-full "
@@ -286,12 +294,33 @@ const TrainerHomePage = () => {
                     {trainerData?.description && trainerData.description}
                   </div>
                 </div>
+                <div className="flex justify-end">
+                  <ScrollLink to="ratings" smooth={true} duration={300}>
+                    <Badge
+                      variant={"outline"}
+                      className="hover:cursor-pointer p-1 gap-3"
+                    >
+                      Show Ratings
+                      <StarRatings
+                        rating={trainerData?.avgRating}
+                        starRatedColor="yellow"
+                        starDimension="15px"
+                        starSpacing="2px"
+                        starHoverColor="yellow"
+                        starEmptyColor="white"
+                        numberOfStars={5}
+                        name="rating"
+                      />
+                    </Badge>
+                  </ScrollLink>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       {/* add Certificate */}
+
       <div>
         <div className="mt-10 md:mr-8 flex justify-end">
           <Dialog>
@@ -378,7 +407,7 @@ const TrainerHomePage = () => {
                     className="w-full h-64 rounded-3xl object-cover mx-auto p-1 md:p-3"
                   />
                   <div className="flex justify-between m-1 px-2 md:px-5">
-                    <h1 className="text-white text-start md:text-2xl font-semibold">
+                    <h1 className="text-white text-start md:text-2xl font-semibold truncate">
                       {certificate.name}
                     </h1>
                     <Badge
@@ -394,9 +423,26 @@ const TrainerHomePage = () => {
                       Delete
                     </Badge>
                   </div>
-                  <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
+                  <div className="w-48 md:w-80  h-20 mx-auto overflow-hidden">
                     <p className="text-white md:text-base font-light text-start text-sm mt-2">
-                      {certificate.content}
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          {certificate.content}
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Description</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              <p className=" w-96 mx-auto break-words">
+                                {certificate.content}
+                              </p>
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Back</AlertDialogCancel>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </p>
                   </div>
                 </div>
@@ -404,6 +450,7 @@ const TrainerHomePage = () => {
           </div>
         </div>
       </div>
+
       <div className="mt-10 md:mr-8 flex  justify-end">
         <Dialog>
           <DialogTrigger asChild>
@@ -487,7 +534,7 @@ const TrainerHomePage = () => {
                   className="w-full h-64 rounded-3xl object-cover mx-auto p-1 md:p-3"
                 />
                 <div className="flex justify-between m-1 px-2 md:px-5">
-                  <h1 className="text-white text-start md:text-2xl font-semibold">
+                  <h1 className="text-white text-start md:text-2xl truncate font-semibold">
                     {client.name}
                   </h1>
                   <Badge
@@ -503,9 +550,24 @@ const TrainerHomePage = () => {
                     Delete
                   </Badge>
                 </div>
-                <div className="w-48 md:w-80  h-20 mx-auto overflow-y-scroll  scrollbar-none overflow-x-hidden">
+                <div className="w-48 md:w-80  h-20 mx-auto overflow-hidden">
                   <p className="text-white md:text-base font-light text-start text-sm mt-2">
-                    {client.content}
+                    <AlertDialog>
+                      <AlertDialogTrigger>{client.content}</AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Description</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            <p className=" w-96 mx-auto break-words">
+                              {client.content}
+                            </p>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Back</AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </p>
                 </div>
               </div>
@@ -578,6 +640,9 @@ const TrainerHomePage = () => {
               </Button>
             </div>
           </div>
+          <div id="ratings">
+            <h1 className="text-2xl font-semibold text-center">Reviews</h1>
+          </div>
           {reviews.length > 0 ? (
             <div className="flex flex-col gap-4">
               {reviews.map((review) => (
@@ -606,7 +671,22 @@ const TrainerHomePage = () => {
                       }
                     </div>
                   </div>
-                  <p className="text-white text-sm mt-2">{review.content}</p>
+                  <p className="text-white text-sm mt-2 truncate">
+                    <AlertDialog>
+                      <AlertDialogTrigger>{review.content}</AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Review</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {review.content}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Back</AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </p>
                   <div className="flex justify-end">
                     <h1 className="text-white text-opacity-40 text-sm font-semibold">
                       {new Date(review.createdAt).toLocaleDateString("en-GB")}

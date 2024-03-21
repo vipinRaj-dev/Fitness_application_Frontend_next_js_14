@@ -71,20 +71,20 @@ const page = () => {
                 </TableCell>
                 <TableCell>
                   <img
-                    src={payment.clientDetails.profileImage}
+                    src={payment.clientDetails?.profileImage}
                     width={40}
                     height={40}
                     className="rounded-xl"
                   />
                 </TableCell>
-                <TableCell>{payment.clientDetails.name}</TableCell>
+                <TableCell>{payment.clientDetails?.name}</TableCell>
                 <TableCell>{payment.planSelected}</TableCell>
                 <TableCell>
                   {new Date(payment.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>{payment.amount}</TableCell>
                 <TableCell>
-                  {new Date(payment.clientDetails.dueDate).toLocaleDateString()}
+                  {new Date(payment.clientDetails?.dueDate).toLocaleDateString()}
                 </TableCell>
                 
               </TableRow>

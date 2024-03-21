@@ -1,6 +1,10 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-const PieChartPlot = () => {
+export interface pieChartData {
+  type: string;
+  count: number;
+}
+const PieChartPlot = (pieData: { data: pieChartData[] }) => {
   const colors = [
     "#8884d8",
     "#FA8072",
@@ -9,50 +13,32 @@ const PieChartPlot = () => {
     "#3AC7EB",
     "#F9A603",
   ];
-  const data = [
-    {
-      name: "Twitter",
-      value: 200400,
-    },
-    {
-      name: "Facebook",
-      value: 205000,
-    },
-    {
-      name: "Instagram",
-      value: 23400,
-    },
-    {
-      name: "Snapchat",
-      value: 20000,
-    },
-    {
-      name: "LinkedIn",
-      value: 29078,
-    },
-    {
-      name: "YouTube",
-      value: 18900,
-    },
-  ];
+
   return (
     <>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart width={730} height={250}>
           <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
+            data={pieData.data}
+            dataKey="count"
+            nameKey="type"
             cx="50%"
             cy="50%"
             fill="#8884d8"
             label
+            labelLine={false}
           >
-            {data.map((entry, index) => (
+            {pieData.data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip
+            contentStyle={{
+              borderRadius: "10px",
+              backgroundColor: "#C0C2C9",
+              color: "#333",
+            }}
+          />
         </PieChart>
       </ResponsiveContainer>
     </>

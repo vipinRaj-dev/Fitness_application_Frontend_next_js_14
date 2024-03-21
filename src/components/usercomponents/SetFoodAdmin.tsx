@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { z } from "zod";
 import {
   DropdownMenuCheckboxItemProps,
   DropdownMenuItem,
@@ -20,7 +21,6 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import axiosInstance from "@/axios/creatingInstance";
 import swal from "sweetalert";
-import { set } from "react-hook-form";
 import Dnaspinner from "../loadingui/Dnaspinner";
 
 // import { usePathname } from "next/navigation";
@@ -28,31 +28,75 @@ import Dnaspinner from "../loadingui/Dnaspinner";
 type FoodFormState = {
   image: File | string;
   foodname: string;
-  quantity: number;
+  quantity: number | string;
   foodtype: string;
   unit: string;
   description: string;
   ingredients: string;
-  protein: number;
-  fat: number;
-  carbohydrate: number;
-  calories: number;
-}; 
+  protein: number | string;
+  fat: number | string;
+  carbohydrate: number | string;
+  calories: number | string;
+};
+const FoodFormStateSchema = z.object({
+  foodname: z
+    .string()
+    .min(1, "Food name is required")
+    .refine(
+      (value) => /^[a-zA-Z, " "]*$/.test(value),
+      "Only Characters are allowed"
+    ),
+  quantity: z
+    .string()
+    .min(1, "Quantity is required")
+    .or(z.number().min(1, "Quantity is required")),
+  foodtype: z.string().min(1, "Food type is required"),
+  unit: z.string().min(1, "Unit is required"),
+  description: z.string().min(1, "Description is required"),
+  ingredients: z.string().min(1, "Ingredients are required"),
+  protein: z
+    .string()
+    .min(1, "Protein is required")
+    .or(z.number().min(1, "Protein is required")),
+  fat: z
+    .string()
+    .min(1, "Fat is required")
+    .or(z.number().min(1, "Fat is required")),
+  carbohydrate: z
+    .string()
+    .min(1, "Carbohydrate is required")
+    .or(z.number().min(1, "Carbohydrate is required")),
+  calories: z
+    .string()
+    .min(1, "Calories is required")
+    .or(z.number().min(1, "Calories is required")),
+});
+
+// component starts here
 
 const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
   const [QuantityUnit, setQuantityUnit] = useState<string>("Select unit");
   const [foodType, setFoodType] = useState<string>("");
-  const [addOrEdit, setAddOrEdit] = useState<string>("add");
+  const [addOrEdit, setAddOrEdit] = useState<string>("Add");
 
   const [loading, setLoading] = useState(false);
 
-  // const pathname = usePathname();
-
-  // console.log("pathname", pathname.split("/")[3]);
+  const [error, setError] = useState({
+    foodname: "",
+    quantity: "",
+    foodtype: "",
+    unit: "",
+    description: "",
+    ingredients: "",
+    protein: "",
+    fat: "",
+    carbohydrate: "",
+    calories: "",
+  });
 
   useEffect(() => {
     if (foodId) {
-      setAddOrEdit("edit");
+      setAddOrEdit("Edit");
       axiosInstance
         .get(`/admin/food/${foodId}`)
         .then((res) => {
@@ -82,19 +126,24 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
   const [form, setForm] = useState<FoodFormState>({
     image: "",
     foodname: "",
-    quantity: 0,
+    quantity: "",
     foodtype: "",
     unit: "",
     description: "",
     ingredients: "",
-    protein: 0,
-    fat: 0,
-    carbohydrate: 0,
-    calories: 0,
+    protein: "",
+    fat: "",
+    carbohydrate: "",
+    calories: "",
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    let { name, value } = event.target;
+    if (
+      ["protein", "fat", "carbohydrate", "calories", "quantity"].includes(name)
+    ) {
+      value = value < "0" ? "" : value;
+    }
     setForm({
       ...form,
       [name]: value,
@@ -136,50 +185,127 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setLoading(true);
 
-    const formData = new FormData();
-    Object.keys(form).forEach((key) => {
-      formData.append(key, form[key]);
-    });
-    let url = foodId ? `/admin/editFood/${foodId}` : "/admin/addFood";
-
-    await axiosInstance[foodId ? "put" : "post"](url, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        setLoading(false);
-        // console.log(res.data);
-        if (res.status === 200) {
-          // make all the fields empty
-          setForm({
-            image: "",
-            foodname: "",
-            quantity: 0,
-            foodtype: "",
-            unit: "",
-            description: "",
-            ingredients: "",
-            protein: 0,
-            fat: 0,
-            carbohydrate: 0,
-            calories: 0,
-          });
-
-          swal({
-            title: "Success!",
-            text: "Food added successfully",
-            icon: "success",
-            timer: 1500,
-            buttons: {},
-          });
+    const trimmedForm = Object.fromEntries(
+      Object.entries(form).map(([key, value]) => {
+        if (typeof value === "string") {
+          return [key, value.replace(/\s+/g, " ")];
         }
+        return [key, value];
       })
-      .catch((err: Error | any) => {
-        console.log(err.response.data);
+    );
+
+    console.log("trimmedForm", trimmedForm);
+    const result = FoodFormStateSchema.safeParse(trimmedForm);
+
+    if (!result.success) {
+      const errorMap = result.error.formErrors.fieldErrors;
+      console.log("errorMap", errorMap);
+
+      setError((prev) => {
+        return {
+          ...prev,
+          foodname: errorMap.foodname ? errorMap.foodname[0] : "",
+          quantity: errorMap.quantity ? errorMap.quantity[0] : "",
+          foodtype: errorMap.foodtype ? errorMap.foodtype[0] : "",
+          unit: errorMap.unit ? errorMap.unit[0] : "",
+          description: errorMap.description ? errorMap.description[0] : "",
+          ingredients: errorMap.ingredients ? errorMap.ingredients[0] : "",
+          protein: errorMap.protein ? errorMap.protein[0] : "",
+          fat: errorMap.fat ? errorMap.fat[0] : "",
+          carbohydrate: errorMap.carbohydrate ? errorMap.carbohydrate[0] : "",
+          calories: errorMap.calories ? errorMap.calories[0] : "",
+        };
       });
+    } else {
+      setError({
+        foodname: "",
+        quantity: "",
+        foodtype: "",
+        unit: "",
+        description: "",
+        ingredients: "",
+        protein: "",
+        fat: "",
+        carbohydrate: "",
+        calories: "",
+      });
+
+      setLoading(true);
+
+      const formData = new FormData();
+      Object.keys(trimmedForm).forEach((key) => {
+        formData.append(key, trimmedForm[key]);
+      });
+      let url = foodId ? `/admin/editFood/${foodId}` : "/admin/addFood";
+
+      await axiosInstance[foodId ? "put" : "post"](url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((res) => {
+          setLoading(false);
+          // console.log(res.data);
+          if (res.status === 200) {
+            // make all the fields empty
+            setForm({
+              image: "",
+              foodname: "",
+              quantity: 0,
+              foodtype: "",
+              unit: "",
+              description: "",
+              ingredients: "",
+              protein: 0,
+              fat: 0,
+              carbohydrate: 0,
+              calories: 0,
+            });
+
+            swal({
+              title: "Success!",
+              text: "Food added successfully",
+              icon: "success",
+              timer: 1500,
+              buttons: {},
+            });
+          }
+        })
+        .catch((err: Error | any) => {
+          setLoading(false);
+          // console.log(err.response.data);
+
+          if (err.response.status === 401) {
+            swal({
+              title: "Error!",
+              text: "Cloudinary API Key is not set",
+              icon: "error",
+              timer: 1500,
+              buttons: {},
+            });
+          }
+          if (err.response.status === 400) {
+            swal({
+              title: "Error!",
+              text: " Add Food Image ",
+              icon: "error",
+              timer: 1500,
+              buttons: {},
+            });
+          }
+
+          if (err.response.status === 500) {
+            swal({
+              title: "Error!",
+              text: "Food Not added ",
+              icon: "error",
+              timer: 1500,
+              buttons: {},
+            });
+          }
+        });
+    }
   };
 
   // console.log("QuantityUnit", QuantityUnit);
@@ -198,8 +324,9 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
   return (
     <div className=" bg-slate-900 rounded-3xl mt-5 h-screen w-11/12 mx-auto p-5">
       <h1 className="text-center font-semibold text-3xl tracking-wide">
-        Add New Food
+        {addOrEdit} Food
       </h1>
+
       <div className="flex justify-center">
         <div className="rounded-3xl overflow-hidden bg-black w-44 ">
           {form.image && typeof form.image === "string" ? (
@@ -229,6 +356,8 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
         <div className="space-y-5 w-full pt-6">
           <div className="space-y-2">
             <Label htmlFor="foodname">Food Name</Label>
+            {error.foodname && <p className="text-red-500">{error.foodname}</p>}
+
             <Input
               className=" rounded-xl"
               id="foodname"
@@ -242,6 +371,10 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
           <div>
             <div className="space-y-2">
               <Label htmlFor="quantity">Quantity</Label>
+              {error.quantity && (
+                <p className="text-red-500">{error.quantity}</p>
+              )}
+
               <div className="flex">
                 <Input
                   id="quantity"
@@ -250,6 +383,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
                   value={form.quantity}
                   onChange={handleInputChange}
                 />
+
                 <div className="m-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger>
@@ -276,11 +410,13 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
                   </DropdownMenu>
                 </div>
               </div>
+              {error.unit && <p className="text-red-500">{error.unit}</p>}
             </div>
           </div>
 
           <div className="flex flex-col space-y-2">
             <Label htmlFor="foodtype">Food Type</Label>
+            {error.foodtype && <p className="text-red-500">{error.foodtype}</p>}
             <div className="flex">
               <Input disabled value={foodType} type="text" />
               <div className="ml-3">
@@ -309,8 +445,11 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
             </div>
           </div>
           <Label htmlFor="description">Description</Label>
+          {error.description && (
+            <p className="text-red-500">{error.description}</p>
+          )}
           <Input
-            className="h-44 rounded-xl text-center"
+            className=" rounded-xl h-20"
             id="description"
             name="description"
             placeholder="Type your message here."
@@ -325,6 +464,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
             </Label>
           </div>
           <label htmlFor="protein">Protein</label>
+          {error.protein && <p className="text-red-500">{error.protein}</p>}
           <Input
             className=" rounded-xl"
             id="protein"
@@ -335,6 +475,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
             onChange={handleInputChange}
           />
           <label htmlFor="fat">Fat</label>
+          {error.fat && <p className="text-red-500">{error.fat}</p>}
           <Input
             className=" rounded-xl"
             id="fat"
@@ -346,6 +487,9 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
           />
 
           <label htmlFor="carbohydrate">Carbohydrate</label>
+          {error.carbohydrate && (
+            <p className="text-red-500">{error.carbohydrate}</p>
+          )}
           <Input
             className=" rounded-xl"
             id="carbohydrate"
@@ -357,6 +501,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
           />
 
           <label htmlFor="calories">Calories</label>
+          {error.calories && <p className="text-red-500">{error.calories}</p>}
           <Input
             className=" rounded-xl"
             id="calories"
@@ -368,8 +513,11 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
           />
 
           <Label htmlFor="ingredients">Ingredients</Label>
+          {error.ingredients && (
+            <p className="text-red-500">{error.ingredients}</p>
+          )}
           <Input
-            className=" rounded-xl h-36 text-center"
+            className=" rounded-xl"
             id="ingredients"
             name="ingredients"
             placeholder="Type your message here."
@@ -378,7 +526,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
           />
         </div>
       </div>
-      <div className="flex justify-center -m-12">
+      <div className="flex justify-center ">
         <Button className="w-40 text-lg font-semibold" onClick={handleSubmit}>
           Submit
         </Button>

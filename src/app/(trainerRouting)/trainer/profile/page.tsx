@@ -18,6 +18,32 @@ type FormState = {
   _id?: string;
 };
 
+const createSchema = (minLength: number, errorMessage: string) => {
+  return z
+    .string()
+    .min(minLength, errorMessage)
+
+    .refine(
+      (value) => value.trim() === value,
+      "No leading or trailing spaces allowed"
+    )
+    .refine(
+      (value) => value === value.replace(/\s+/g, " "),
+      "No multiple spaces allowed"
+    )
+    .refine(
+      (value) => /^[a-zA-Z, .-]*$/.test(value),
+      "Only Characters are allowed"
+    )
+    .refine(
+      (value) => value === value.replace(/\s*,\s*/g, ","),
+      "No multiple spaces or commas allowed"
+    );
+};
+
+const descriptionSchema = createSchema(1, "Description is required");
+const specializedInSchema = createSchema(1, "SpecializedIn is required");
+
 const schema = z.object({
   image: z.any().refine((file) => {
     if (!file) {
@@ -28,12 +54,15 @@ const schema = z.object({
   }, "Invalid image file"),
   name: z
     .string()
-    .min(1, "Name is required")
-    .transform((str) => str.replace(/\s+/g, " "))
-    .transform((str) => str.trim()),
+    .min(3, "Username must be at least 3 characters long")
+    .max(20, "Username must not exceed 20 characters")
+    .refine(
+      (value) => value === value.replace(/\s+/g, " "),
+      "No multiple spaces allowed"
+    ),
   email: z.string().email("Invalid email address"),
-  description: z.string().min(1, "Description is required"),
-  specializedIn: z.string().min(1, "SpecializedIn is required"),
+  description: descriptionSchema,
+  specializedIn: specializedInSchema,
   price: z
     .number()
     .int()
@@ -102,6 +131,21 @@ const TrainerProfile = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (name === "experience" && parseInt(value) < 0) {
+      setErrors((prevError) => {
+        return {
+          ...prevError,
+          experience: "Experience cannot be negative",
+        };
+      });
+    } else if (name === "price" && parseInt(value) < 0) {
+      setErrors((prevError) => {
+        return {
+          ...prevError,
+          price: "Price cannot be negative",
+        };
+      });
+    }
     if (name === "image") {
       setForm((prevState) => ({
         ...prevState,

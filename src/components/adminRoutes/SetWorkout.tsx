@@ -14,7 +14,7 @@ type FormType = {
   workoutName: string;
   targetMuscle: string;
   description: string;
-  video: File | string;
+  video: File | string; 
   videoUrl?: string;
 };
 

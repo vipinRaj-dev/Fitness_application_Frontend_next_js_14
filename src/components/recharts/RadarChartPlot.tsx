@@ -5,27 +5,27 @@ const RadarChartPlot = () => {
     const data = [
         {
           "day": "Monday",
-          "amount": 500
+          "NoOfDays": 4
         },
         {
           "day": "Tuesday",
-          "amount": 300
+          "NoOfDays": 3
         },
         {
           "day": "Wednesday",
-          "amount": 240
+          "NoOfDays": 2
         },
         {
           "day": "Thursday",
-          "amount": 230
+          "NoOfDays": 2
         },
         {
           "day": "Friday",
-          "amount": 150
+          "NoOfDays": 1
         },
         {
           "day": "Saturday",
-          "amount": 300
+          "NoOfDays": 3
         }
       ];
   return (
@@ -34,7 +34,7 @@ const RadarChartPlot = () => {
       <RadarChart outerRadius={90} width={730} height={250} data={data}>
         <PolarGrid />
         <PolarAngleAxis dataKey="day" />
-        <Radar name="Orders" dataKey="amount" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+        <Radar name="Orders" dataKey="NoOfDays" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
         <Legend />
         <Tooltip/>
       </RadarChart>

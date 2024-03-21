@@ -1,11 +1,7 @@
 import RoleAuthenticationCheckAdmin from "@/components/rolecheck/RoleAuthenticationCheckAdmin";
-import { Button } from "@/components/ui/button";
-import HomePageLogout from "@/components/logoutComponent/HomePageLogout";
-import Link from "next/link";
 
 import Sidebar from "@/components/recharts/Sidebar";
 import Navbar from "@/components/recharts/Navbar";
-import Charts from "@/components/recharts/Charts";
 
 export const metadata = {
   title: "Next.js",

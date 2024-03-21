@@ -54,7 +54,7 @@ export default function RootLayout({
             <li>
               <Link
                 className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800 rounded-3xl   p-2"
-                href="/user/workout"
+                href="#Workout"
               >
                 <Dumbbell />
                 Workout
@@ -63,7 +63,7 @@ export default function RootLayout({
             <li>
               <Link
                 className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800 rounded-3xl  p-2"
-                href="/user/diet"
+                href="#diet"
               >
                 <Carrot />
                 Diet
@@ -80,8 +80,8 @@ export default function RootLayout({
             </li>
             <li>
               <Link
-                className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800  rounded-3xl  p-2"
-                href="/user/plan"
+                className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800  rounded-3xl p-2 "
+                href="#purchasePlan"
               >
                 <IndianRupee />
                 Plan
@@ -95,7 +95,7 @@ export default function RootLayout({
             </div>
             <div className="lg:hidden">
               <Sheet>
-                <SheetTrigger>
+                <SheetTrigger asChild>
                   <AlignJustify />
                 </SheetTrigger>
                 <SheetContent>
@@ -130,7 +130,7 @@ export default function RootLayout({
                         <PersonStanding />
                         Trainer
                       </a>
-                      <a className="flex gap-2" href="/user/plan">
+                      <a className="flex gap-2" href="#purchasePlan">
                         <IndianRupee />
                         Plan
                       </a>

@@ -13,6 +13,8 @@ import {
   UserCog,
 } from "lucide-react";
 import Link from "next/link";
+import { Link as ScrollLink } from "react-scroll";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
@@ -67,21 +69,13 @@ export default function RootLayout({
               <li>
                 <Link
                   className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800 rounded-3xl  p-2"
-                  href="/trainer/messages"
+                  href="/trainer/Payments"
                 >
                   {/* <Carrot /> */}
-                  Messages
+                  Payments
                 </Link>
               </li>
-              <li>
-                <Link
-                  className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800 rounded-3xl  p-2"
-                  href="/trainer/reviews"
-                >
-                  {/* <PersonStanding /> */}
-                  Reviews
-                </Link>
-              </li>
+              <li>{/* <PersonStanding /> */}</li>
             </ul>
 
             <div className="flex">
@@ -113,9 +107,9 @@ export default function RootLayout({
                           {/* <Dumbbell /> */}
                           All users
                         </a>
-                        <a className="flex gap-2" href="/trainer/messages">
+                        <a className="flex gap-2" href="/trainer/Payments">
                           {/* <Carrot /> */}
-                          Messages
+                          Payments
                         </a>
                         <a className="flex gap-2" href="/trainer/reviews">
                           {/* <PersonStanding /> */}

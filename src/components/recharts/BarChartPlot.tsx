@@ -8,56 +8,56 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const BarChartPlot = () => {
-  const data = [
-    {
-      name: "Jan",
-      high: 4000,
-      low: 2400,
-    },
-    {
-      name: "Feb",
-      high: 5000,
-      low: 1500,
-    },
-    {
-      name: "Mar",
-      high: 6000,
-      low: 3000,
-    },
-    {
-      name: "Apr",
-      high: 6500,
-      low: 4500,
-    },
-    {
-      name: "May",
-      high: 7000,
-      low: 2200,
-    },
-    {
-      name: "Jun",
-      high: 8000,
-      low: 3500,
-    },
-    {
-      name: "Jul",
-      high: 7400,
-      low: 5500,
-    },
-  ];
-  return ( <>
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart width={730} height={250} data={data}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="high" fill="#82ca9d" />
-        <Bar dataKey="low" fill="#FA8072" />
-      </BarChart>
-    </ResponsiveContainer>
-  </>);
+export type BarChartData = {
+  name?: string;
+  clientCount?: number;
+  NoOfDays?: number;
+  day?: string;
+};
+const BarChartPlot = (barData: { data: BarChartData[] }) => {
+  const dataKey = barData.data[0]?.name ? "name" : "day";
+  const dataValue = barData.data[0]?.clientCount ? "clientCount" : "NoOfDays";
+  return (
+    <>
+      <ResponsiveContainer
+        style={
+          dataKey === "day"
+            ? {
+                backgroundColor: "#34495E",
+                borderRadius: "15px",
+                padding: "15px",
+              }
+            : {}
+        }
+        width="100%"
+        height="100%"
+      >
+        <BarChart width={730} height={250} data={barData.data}>
+          <XAxis dataKey={dataKey} tick={{ fill: "#CACFD2" }} />
+          <YAxis
+            tick={{ fill: "#CACFD2" }}
+            domain={[0, 'dataMax']}
+            interval={1}
+          />
+          <Tooltip
+            contentStyle={{
+              borderRadius: "10px",
+              backgroundColor: "#C0C2C9",
+              color: "#333",
+            }}
+          />
+          <Legend />
+
+          <Bar
+            dataKey={dataValue}
+            fill="#2980B9"
+            barSize={30}
+            minPointSize={3}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </>
+  );
 };
 
 export default BarChartPlot;

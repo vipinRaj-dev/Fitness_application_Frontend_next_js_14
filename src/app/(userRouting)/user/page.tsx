@@ -19,9 +19,18 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 import HomePageWorkout from "@/components/usercomponents/HomePageWorkout";
 
+import { BarChartData } from "@/components/recharts/BarChartPlot";
+import BarChartUser, {
+  BarChartDataUser,
+} from "@/components/recharts/BarChartUser";
+
 type DietFood = {
   time: string;
 }[];
+
+type graphOrder = {
+  [key: string]: number;
+};
 
 const Userpage = () => {
   const [latestDiet, setLatestDiet] = useState<DietFood>([]);
@@ -29,7 +38,62 @@ const Userpage = () => {
   const [hasTrainer, setHasTrainer] = useState(false);
   const [attendanceId, setAttendanceId] = useState<string>("");
 
+  const [AttandanceGraph, setAttandanceGraph] = useState<BarChartData[] | null>(
+    null
+  );
+
+  const [foodStatus, setFoodStatus] = useState<BarChartDataUser[] | null>(null);
   const router = useRouter();
+
+  const getAllGraphData = async () => {
+    const orderOfWeek: graphOrder = {
+      Sun: 0,
+      Mon: 1,
+      Tue: 2,
+      Wed: 3,
+      Thu: 4,
+      Fri: 5,
+      Sat: 6,
+    };
+    const orderOfFood: graphOrder = {
+      morning: 1,
+      afternoon: 2,
+      evening: 3,
+    };
+    await axiosInstance
+      .get("/user/getGraphs")
+      .then((res) => {
+        console.log(res.data);
+
+        const barData = res.data.attendancePerDay
+          .sort(
+            (a: { day: string }, b: { day: string }) =>
+              orderOfWeek[a.day] - orderOfWeek[b.day]
+          )
+          .map((item: any) => ({
+            day: item.day,
+            NoOfDays: item.NoOfDays,
+          }));
+
+        setAttandanceGraph(barData);
+
+        const foodStatus = res.data.foodStatusData
+          .sort(
+            (a: { _id: string }, b: { _id: string }) =>
+              orderOfFood[a._id] - orderOfFood[b._id]
+          )
+          .map((item: any) => ({
+            name: item._id,
+            FoodCount: item.totalFood,
+            ConsumedFood: item.completedCount,
+          }));
+        setFoodStatus(foodStatus);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       axiosInstance
@@ -41,6 +105,7 @@ const Userpage = () => {
             setAddedFoodDocIds(res.data.addedFoodDocIds);
             setHasTrainer(res.data.hasTrainer);
             setAttendanceId(res.data.attendanceDocId);
+            getAllGraphData();
           }
         })
         .catch((err) => {
@@ -57,24 +122,21 @@ const Userpage = () => {
 
   return (
     <div className="">
-      {/* <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
-        <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl">
-          <h1 className="font-semibold text-center">Attandance</h1>
+      <div className="w-full flex flex-wrap md:gap-5 md:justify-center ">
+        <div className="w-full md:w-5/12 h-96 mt-8 md:rounded-3xl rounded-xl">
+          <h1 className="font-semibold text-center p-5">Attandance</h1>
           <div className="h-full w-full pb-10">
-            <AreaChartPlot />
+            <BarChartPlot data={AttandanceGraph ? AttandanceGraph : []} />
           </div>
         </div>
 
-        <div className="w-full md:w-3/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl p-2">
-          <h1 className="font-semibold text-center">Attandance</h1>
-          <PieChartPlot />
+        <div className="w-full md:w-5/12 h-96 mt-8 md:rounded-3xl rounded-xl p-2">
+          <h1 className="font-semibold text-center p-5">Food Consumed</h1>
+          <div className="h-full w-full pb-10">
+            <BarChartUser data={foodStatus ? foodStatus : []} />
+          </div>
         </div>
-
-        <div className="w-full md:w-4/12 h-96 mt-8 bg-slate-900 md:rounded-3xl rounded-xl p-2">
-          <h1 className="font-semibold text-center">Attandance</h1>
-          <BarChartPlot />
-        </div>
-      </div> */}
+      </div>
 
       <div className=" w-full h-screen p-1 mt-10 md:mt-36">
         <div className="h-3/6  gap-5 md:flex md:justify-evenly">
@@ -112,7 +174,7 @@ const Userpage = () => {
       </div>
 
       <div>
-        <div className="flex justify-center gap-5 py-8">
+        <div id="diet" className="flex justify-center gap-5 py-8">
           <div>
             <h1 className="text-4xl font-semibold">Diet</h1>
           </div>
@@ -209,13 +271,13 @@ const Userpage = () => {
 
       <h1>plan details</h1>
 
-      <div className="h-screen bg-slate-900 p-5">
+      <div id="Workout" className="h-screen bg-slate-900 p-5">
         <div className="h-2/6">dumbel image</div>
 
         <HomePageWorkout hasTrainer={hasTrainer} />
       </div>
 
-      <div>
+      <div id="purchasePlan">
         pricing plan
         <div className=" p-10">
           <div className="flex flex-wrap items-center justify-center max-w-4xl mx-auto gap-4 sm:gap-0">

@@ -3,8 +3,17 @@
 import { useEffect, useState } from "react";
 
 import { WorkoutData } from "@/types/workoutTypes";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Ghost, Pencil, Plus, Trash2 } from "lucide-react";
 import axiosInstance from "@/axios/creatingInstance";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import {
   Dialog,
@@ -16,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 const EditAndListWorkouts = ({
   client_Id,
@@ -45,7 +55,7 @@ const EditAndListWorkouts = ({
     axiosInstance
       .get(`/workouts/getWorkoutsTrainer/${client_Id}`)
       .then((res) => {
-        // console.log("workoutData", res.data.workOutData);
+        console.log("workoutData", res.data.workOutData);
         setWorkout(res.data.workOutData);
         setDocumentId(res.data.documentId);
       })
@@ -123,57 +133,123 @@ const EditAndListWorkouts = ({
   };
 
   return (
-    <div className="p-5">
-      {workout &&
-        workout.map((workoutItem, index) => {
-          return (
-            <div className="p-5 border-2" key={workoutItem._id}>
-              <div className="flex gap-3">
-                <Plus
-                  color="#2ae549"
-                  onClick={() => {
-                    setAddSetDialog(true);
-                    setToEdit({
-                      reps: "",
-                      weight: "",
-                      workoutSetId: workoutItem._id,
-                      eachWorkoutSetId: "",
-                    });
-                  }}
-                />
-                <Trash2 onClick={() => deleteWorkout(workoutItem._id)} />
-              </div>
-              <h1>{workoutItem.workoutId.workoutName}</h1>
-              <p>{workoutItem.workoutId.description}</p>
-              <div>
-                {workoutItem.workoutSet.map((set, index) => {
-                  return (
-                    <div key={set._id}>
-                      <h1>{index + 1}</h1>
-                      <h1>Reps : {set.reps}</h1>
-                      <h1>Weight : {set.weight}</h1>
-                      <Trash2
-                        onClick={() => deleteSet(workoutItem._id, set._id)}
-                      />
-                      <Pencil
-                        onClick={() => {
-                          setIsDialogOpen(true);
-                          setToEdit({
-                            reps: set.reps.toString(),
-                            weight: set.weight.toString(),
-                            workoutSetId: workoutItem._id,
-                            eachWorkoutSetId: set._id,
-                          });
-                        }}
-                        color="#001adb"
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+    <div className="p-5 h-5/6 overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
+      <Table>
+        <TableHeader>
+          <tr>
+            <TableHead>Image</TableHead>
+            <TableHead>Workout Name</TableHead>
+            <TableHead>Target Muscle</TableHead>
+            <TableHead>Set</TableHead>
+            <TableHead>Reps</TableHead>
+            <TableHead>Weight</TableHead>
+            <TableHead>Edit</TableHead>
+            <TableHead>Delete</TableHead>
+            <TableHead>Add Set</TableHead>
+            <TableHead>Delete Workout</TableHead>
+          </tr>
+        </TableHeader>
+        <TableBody>
+          {workout &&
+            workout.map((workoutItem, index) => {
+              return workoutItem.workoutSet.map((set, setIndex) => (
+                <TableRow className="hover:bg-transparent" key={set._id}>
+                  {setIndex === 0 && (
+                    <>
+                      <TableCell rowSpan={workoutItem.workoutSet.length}>
+                        <div>
+                          <Image
+                            className="rounded-xl"
+                            src={workoutItem.workoutId.thumbnailUrl}
+                            width={100}
+                            height={100}
+                            alt="workoutImage"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell rowSpan={workoutItem.workoutSet.length}>
+                        <div>
+                          <h1>{workoutItem.workoutId.workoutName}</h1>
+                        </div>
+                      </TableCell>
+                      <TableCell rowSpan={workoutItem.workoutSet.length}>
+                        <div>
+                          {workoutItem.workoutId.targetMuscle
+                            .split(",")
+                            .map((muscle, index) => {
+                              return (
+                                <ul className="p-1 list-disc">
+                                  <li key={index}>{muscle}</li>
+                                </ul>
+                              );
+                            })}
+                        </div>
+                      </TableCell>
+                    </>
+                  )}
+                  <TableCell className="font-medium">{setIndex + 1}</TableCell>
+                  <TableCell>{set.reps}</TableCell>
+                  <TableCell>{set.weight}</TableCell>
+                  <TableCell className="hover:bg-slate-800">
+                    <Pencil
+                      onClick={() => {
+                        setIsDialogOpen(true);
+                        setToEdit({
+                          reps: set.reps.toString(),
+                          weight: set.weight.toString(),
+                          workoutSetId: workoutItem._id,
+                          eachWorkoutSetId: set._id,
+                        });
+                      }}
+                      color="#001adb"
+                    />
+                  </TableCell>
+                  <TableCell className="text-right hover:bg-slate-800">
+                    <Trash2
+                      color="#a02727"
+                      onClick={() => deleteSet(workoutItem._id, set._id)}
+                    />
+                  </TableCell>
+                  {setIndex === 0 && (
+                    <>
+                      <TableCell rowSpan={workoutItem.workoutSet.length}>
+                        <div>
+                          <Button
+                            variant={"ghost"}
+                            className="gap-2"
+                            onClick={() => {
+                              setAddSetDialog(true);
+                              setToEdit({
+                                reps: "",
+                                weight: "",
+                                workoutSetId: workoutItem._id,
+                                eachWorkoutSetId: "",
+                              });
+                            }}
+                          >
+                            Add <Plus color="#2ae549" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell rowSpan={workoutItem.workoutSet.length}>
+                        <div>
+                          <Button
+                            variant={"ghost"}
+                            className="gap-2"
+                            onClick={() => deleteWorkout(workoutItem._id)}
+                          >
+                            Delete
+                            <Trash2 color="#a02727" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </>
+                  )}
+                </TableRow>
+              ));
+            })}
+        </TableBody>
+      </Table>
 
       <Dialog
         open={isDialogOpen}

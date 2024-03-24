@@ -7,8 +7,13 @@ import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import { UserDataType } from "@/components/form/SignUpForm";
 import { Button } from "../ui/button";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
-const OtpForm = ({ data }: { data: UserDataType }) => {
+const OtpForm = ({ data }: { data?: UserDataType }) => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60);
   const [error, setError] = useState<string>("");
@@ -81,7 +86,7 @@ const OtpForm = ({ data }: { data: UserDataType }) => {
         <h1 className="text-red-600 text-center">{error && error}</h1>
         <label className="block mb-4">
           <span className="text-gray-700">OTP:</span>
-          <input
+          {/* <input
             type="number"
             value={otp}
             onChange={(e) => {
@@ -89,7 +94,21 @@ const OtpForm = ({ data }: { data: UserDataType }) => {
               setError("");
             }}
             className="mt-1 block w-full rounded-md text-black shadow-sm border-none outline-none text-center"
-          />
+          /> */}
+          <div className="flex justify-center text-black">
+            <InputOTP
+              maxLength={4}
+              value={otp}
+              onChange={(value) => setOtp(value)}
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
         </label>
         <button
           type="submit"

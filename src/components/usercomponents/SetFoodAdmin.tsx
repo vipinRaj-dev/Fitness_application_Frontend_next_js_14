@@ -200,7 +200,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
 
     if (!result.success) {
       const errorMap = result.error.formErrors.fieldErrors;
-      console.log("errorMap", errorMap);
+      // console.log("errorMap", errorMap);
 
       setError((prev) => {
         return {

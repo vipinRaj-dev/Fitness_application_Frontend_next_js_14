@@ -269,10 +269,15 @@ const Userpage = () => {
         </div>
       </div>
 
-      <h1>plan details</h1>
-
-      <div id="Workout" className="h-screen bg-slate-900 p-5">
-        <div className="h-2/6">dumbel image</div>
+      <div id="Workout" className="h-screen  p-5">
+        <div className="h-2/6 flex justify-center">
+          <Image
+            src={"/images/Dumbell_01 2.svg"}
+            width={400}
+            height={400}
+            alt="dumbel"
+          />
+        </div>
 
         <HomePageWorkout hasTrainer={hasTrainer} />
       </div>

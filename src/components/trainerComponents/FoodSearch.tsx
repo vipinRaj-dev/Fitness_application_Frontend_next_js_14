@@ -31,7 +31,7 @@ type FoodSearchProps = {
 };
 
 const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
-  console.log("clientId", clientId);
+  // console.log("clientId", clientId);
   const [foodList, setFoodList] = useState<Food[]>([]);
   const [addedFoodId, setAddedFoodId] = useState<string[]>([]);
 
@@ -42,7 +42,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    // console.log(clientId);
+    // console.log(clientId);  
     axiosInstance
       .get(`/food/allFood/${clientId}`, {
         params: {

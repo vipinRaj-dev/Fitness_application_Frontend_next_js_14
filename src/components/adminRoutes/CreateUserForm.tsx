@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import swal from "sweetalert";
 import { usePathname, useRouter } from "next/navigation";
 const CreateUser = () => {
-  const router = useRouter();
+  const router = useRouter();  
  
   let pageUrl = usePathname()
 

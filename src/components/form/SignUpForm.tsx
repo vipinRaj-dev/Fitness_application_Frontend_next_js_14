@@ -226,7 +226,7 @@ const SignUpForm = () => {
           </div>
         </div>
       </div>
-      {otp && <OtpForm data={userData} />}
+      {otp && userData && <OtpForm data={userData} />}
     </div>
   );
 };

@@ -12,9 +12,8 @@ const page = ({
   // console.log("this is the trainer id from the parmas ", userId);
 
   return (
-    <div> 
-      view trainer update page
-      <UpdateUser userId ={userId}/>
+    <div>
+      <UpdateUser userId={userId} />
     </div>
   );
 };

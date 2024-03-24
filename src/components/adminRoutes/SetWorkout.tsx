@@ -6,26 +6,29 @@ import { useEffect, useState } from "react";
 import ReactPlayer from "react-player/lazy";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
-
-import { CircularProgressbar } from "react-circular-progressbar";
+import { Toaster } from "@/components/ui/sonner";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import "react-circular-progressbar/dist/styles.css";
+import { toast } from "sonner";
 
 type FormType = {
   workoutName: string;
   targetMuscle: string;
   description: string;
-  video: File | string; 
+  video: File | string;
   videoUrl?: string;
 };
 
 const createSchema = (minLength: number, errorMessage: string) => {
-  return z.string().min(minLength, errorMessage)
-    .refine(value => !/,+/.test(value), "No consecutive commas allowed")
-    .refine(value => value.trim() === value, "No leading or trailing spaces allowed")
-    .refine(value => value === value.replace(/\s+/g, ' '), "No multiple spaces allowed")
-    .refine(value => /^[a-zA-Z, ]*$/.test(value), "Only Characters, Spaces, and Commas are allowed")
-    .refine(value => value === value.replace(/\s*,\s*/g, ','), "No multiple spaces or commas allowed");
-}
+  return z
+    .string()
+    .min(minLength, errorMessage)
+
+    .refine(
+      (value) => /^[a-zA-Z0-9 ,.-]*$/.test(value),
+      "Only alphanumeric characters and spaces are allowed"
+    );
+};
 const workoutNameSchema = createSchema(2, "Workout Name is required");
 const targetMuscleSchema = createSchema(2, "Target Muscle is required");
 const descriptionSchema = createSchema(2, "Description is required");
@@ -44,7 +47,7 @@ const schema = z.object({
 });
 
 const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
-  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormType>({
     workoutName: "",
     targetMuscle: "",
@@ -97,7 +100,15 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
     e.preventDefault();
     // console.log(formData);
 
-    const result = schema.safeParse(formData);
+    const trimmedForm = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => {
+        if (typeof value === "string") {
+          return [key, value.replace(/\s+/g, " ")];
+        }
+        return [key, value];
+      })
+    );
+    const result = schema.safeParse(trimmedForm);
 
     if (!result.success) {
       const errorMap = result.error.formErrors.fieldErrors;
@@ -112,27 +123,17 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         };
       });
     } else {
+      setLoading(true);
       setError({
         workoutName: "",
         targetMuscle: "",
         description: "",
         video: "",
       });
-      // Start the "fake" progress bar
-      const timer = setInterval(() => {
-        setProgress((oldProgress) => {
-          if (oldProgress === 100) {
-            clearInterval(timer);
-            return 100;
-          }
-          const newProgress = oldProgress + 2;
-          return newProgress > 100 ? 100 : newProgress;
-        });
-      }, 1000);
 
       const form = new FormData();
-      Object.keys(formData).forEach((key) => {
-        form.append(key, formData[key]);
+      Object.keys(trimmedForm).forEach((key) => {
+        form.append(key, trimmedForm[key]);
       });
 
       let url = workoutId
@@ -144,14 +145,18 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         },
       })
         .then((res) => {
-          // console.log(res);
+          console.log(res);
 
-          setProgress(100);
-          clearInterval(timer);
+          if (res.status === 200) {
+            setLoading(false);
+            console.log("success  ");
+            toast.success("Workout added successfully");
+          }
         })
         .catch((err) => {
           console.log(err.response);
           if (err.response.status === 400) {
+            setLoading(false);
             setError((prevError) => {
               return {
                 ...prevError,
@@ -159,73 +164,85 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
               };
             });
           }
-          setProgress(0);
-          clearInterval(timer);
         });
     }
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        {formData.videoUrl && (
-          <ReactPlayer
-            url={
-              typeof formData.videoUrl === "string"
-                ? formData.videoUrl
-                : URL.createObjectURL(formData.videoUrl)
-            }
-            controls
-            width="100%"
-            height="400px"
-          />
-        )}
-        <Label htmlFor="video">Workout Tutorial video</Label>
-        {typeof error.video === "string" && (
-          <p className="text-red-500">{error.video}</p>
-        )}
-        <Input type="file" name="video" onChange={handleFileChange} />
-        <Label htmlFor="workOutName">Workout Name</Label>
-        {typeof error.workoutName === "string" && (
-          <p className="text-red-500">{error.workoutName}</p>
-        )}
-        <Input
-          value={formData.workoutName}
-          placeholder="Workout Video name"
-          type="text"
-          name="workoutName"
-          onChange={handleInputChange}
-        />
+      <form
+        className="flex h-screen justify-evenly items-center"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex gap-10">
+          <div>
+            {formData.videoUrl && (
+              <ReactPlayer
+                url={
+                  typeof formData.videoUrl === "string"
+                    ? formData.videoUrl
+                    : URL.createObjectURL(formData.videoUrl)
+                }
+                controls
+              />
+            )}
+          </div>
+          <div className="space-y-3">
+            <Label htmlFor="video">Workout Tutorial video</Label>
+            {typeof error.video === "string" && (
+              <p className="text-red-500">{error.video}</p>
+            )}
+            <Input type="file" name="video" onChange={handleFileChange} />
+            <Label htmlFor="workOutName">Workout Name</Label>
+            {typeof error.workoutName === "string" && (
+              <p className="text-red-500">{error.workoutName}</p>
+            )}
+            <Input
+              value={formData.workoutName}
+              placeholder="Workout Video name"
+              type="text"
+              name="workoutName"
+              onChange={handleInputChange}
+            />
 
-        <Label className="targetMuscle">Target Muscle</Label>
-        {typeof error.targetMuscle === "string" && (
-          <p className="text-red-500">{error.targetMuscle}</p>
-        )}
-        <Input
-          value={formData.targetMuscle}
-          placeholder="Target Muscle"
-          type="text"
-          name="targetMuscle"
-          onChange={handleInputChange}
-        />
-        <Label htmlFor="description">Description</Label>
-        {typeof error.description === "string" && (
-          <p className="text-red-500">{error.description}</p>
-        )}
-        <Input
-          value={formData.description}
-          placeholder="Description"
-          type="text"
-          name="description"
-          onChange={handleInputChange}
-        />
-
-        <Button type="submit">Submit</Button>
+            <Label className="targetMuscle">Target Muscle</Label>
+            {typeof error.targetMuscle === "string" && (
+              <p className="text-red-500">{error.targetMuscle}</p>
+            )}
+            <Input
+              value={formData.targetMuscle}
+              placeholder="Target Muscle"
+              type="text"
+              name="targetMuscle"
+              onChange={handleInputChange}
+            />
+            <Label htmlFor="description">Description</Label>
+            {typeof error.description === "string" && (
+              <p className="text-red-500">{error.description}</p>
+            )}
+            <Input
+              value={formData.description}
+              placeholder="Description"
+              type="text"
+              name="description"
+              onChange={handleInputChange}
+            />
+            <div className="flex justify-center">
+              {loading ? (
+                <Button className="w-full" disabled>
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </Button>
+              ) : (
+                <Button className="w-full" type="submit">
+                  Submit
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
       </form>
-
-      <div className="w-32 h-32">
-        <CircularProgressbar value={progress} text={`${progress}%`} />
-      </div>
+      <Toaster />
     </div>
   );
 };

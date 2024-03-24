@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { WorkoutData } from "@/types/workoutTypes";
+import Image from "next/image";
 
 const HomePageWorkout = ({ hasTrainer }: { hasTrainer: boolean }) => {
   const [workoutList, setWorkoutList] = useState<WorkoutData[]>([]);
@@ -26,44 +27,80 @@ const HomePageWorkout = ({ hasTrainer }: { hasTrainer: boolean }) => {
     }
   }, []);
   return (
-    <div className="h-4/6 bg-gray-600 overflow-x-scroll">
-      <div>
-        <h1 className="text-5xl text-center text-white">Workout</h1>
-      </div>
-
-      <div>
-        <Link href={"/user/playlist"}>
-          <Button>Playlist</Button>
-        </Link>
-      </div>
-
-      {hasTrainer ? null : (
+    <div>
+      <div className="h-4/6 overflow-x-scroll rounded-xl scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
         <div>
-          <Link href={"/user/addWorkouts"}>
-            <Button>Add workouts</Button>
+          <h1 className="text-5xl font-semibold tracking-wide text-white ">
+            Workout
+          </h1>
+        </div>
+
+        <div className="flex gap-5 p-5 ">
+          {workoutList &&
+            workoutList.map((workout, index) => {
+              return (
+                <div key={index} className="bg-slate-900 px-3 p-3 rounded-lg hover:scale-105 duration-700 ">
+                  <div>
+                    <div>
+                      <ReactPlayer
+                        width={350}
+                        height={300}
+                        controls
+                        url={workout.workoutId.videoUrl}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex gap-1">
+                        <h1 className="text-3xl font-semibold text-white">
+                          {workout.workoutId.workoutName}
+                        </h1>
+                        <Image
+                          src={"/images/verified.svg"}
+                          width={15}
+                          height={15}
+                          alt="dot"
+                        />
+                      </div>
+                      {/* <p className=" text-white">
+                      {workout.workoutId.description}
+                    </p> */}
+                      <div >
+                        <h1 className="font-semibold">Muscle groups</h1>
+                        <ul className="px-5">
+                          {workout.workoutId.targetMuscle
+                            .split(",")
+                            .map((muscle, index) => {
+                              return (
+                                <li
+                                  key={index}
+                                  style={{ listStyleType: "circle" }}
+                                >
+                                  {muscle}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+      <div className="flex gap-2 justify-end p-5">
+        <div>
+          <Link href={"/user/playlist"}>
+            <Button>Playlist</Button>
           </Link>
         </div>
-      )}
-      <div className="flex ">
-        {workoutList &&
-          workoutList.map((workout, index) => {
-            return (
-              <div key={index} className="bg-gray-400 m-4 p-4">
-                <div>
-                  <h1 className="text-3xl text-center text-white">
-                    {workout.workoutId.workoutName}
-                  </h1>
-                  <p className="text-center text-white">
-                    {workout.workoutId.description}
-                  </p>
-                  <p className="text-center text-white">
-                    {workout.workoutId.targetMuscle}
-                  </p>
-                  <ReactPlayer controls url={workout.workoutId.videoUrl} />
-                </div>
-              </div>
-            );
-          })}
+        {hasTrainer ? null : (
+          <div>
+            <Link href={"/user/addWorkouts"}>
+              <Button>Add workouts</Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

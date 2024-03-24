@@ -487,7 +487,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           {latestDiet.map((food: any, index) => {
             return (
               <div
-                className="flex gap-2 mb-4 h-26 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
+                className="flex gap-2 mb-4 h-26 p-3 bg-slate-900 rounded-lg justify-between items-center"
                 key={food._id}
               >
                 <div className="flex items-center gap-3 h-full w-80">
@@ -637,16 +637,22 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
             </DialogContent>
           </Dialog>
         </div>
-      </div>
-
-      <div className="bg-gray-500 h-screen">
-        Workout Schedule
+        <div className="mt-20 h-screen">
         <div>
-          <Link href={`/trainer/addWorkout/${client_Id}`}>
-            <Button>Add workouts</Button>
-          </Link>
+            <h1 className="text-xl font-semibold tracking-wide">
+              Schedule Workout
+            </h1>
+          </div>
+          <div className="flex justify-end">
+            <Link href={`/trainer/addWorkout/${client_Id}`}>
+              <Button>Add workouts</Button>
+            </Link>
+          </div>
+          <div className="mt-5 mb-20 relative">
+            <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+          </div>
+          <EditAndListWorkouts client_Id={client_Id} />
         </div>
-        <EditAndListWorkouts client_Id={client_Id} />
       </div>
     </div>
   );

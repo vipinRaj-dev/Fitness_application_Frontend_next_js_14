@@ -11,10 +11,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger, 
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import Image from "next/image";
 
 type Workout = {
   description: string;
@@ -37,7 +48,7 @@ const WorkoutSearch = ({
   onSuccess,
 }: {
   clientId: string;
-  onSuccess?: ()=>void;
+  onSuccess?: () => void;
 }) => {
   const [workouts, setWorkouts] = useState<AllWorkouts>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -49,7 +60,7 @@ const WorkoutSearch = ({
   const [workoutSet, setWorkoutSet] = useState<WorkoutSet[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(4);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
@@ -94,15 +105,14 @@ const WorkoutSearch = ({
   };
 
   return (
-    <div>
-      <div>
-        <h1> Search</h1>
+    <div >
+      <div className="flex justify-end my-4">
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search here"
-          className=" text-black rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent mx-2"
+          placeholder="Search Workout or Target muscle"
+          className=" text-black w-96 h-10 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent mx-2"
         />
       </div>
       <div className="flex justify-end">
@@ -135,116 +145,156 @@ const WorkoutSearch = ({
       </div>
 
       <div>
-        {workouts &&
-          workouts.map((workout) => (
-            <div className="p-5" key={workout._id}>
-              <h1>{workout.workoutName}</h1>
-              <p>{workout.description}</p>
-
-              <Button
-                onClick={() => {
-                  setIsDialogOpen(true);
-                  setWorkoutSet([]);
-                  setWorkoutId(workout._id);
-                }}
-              >
-                Add Workout sets
-              </Button>
-
-              <div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button>View</Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-[700px]">
-                    <DialogHeader>
-                      <DialogTitle>
-                        <div className="flex justify-between p-5">
-                          <h1>{workout.workoutName}</h1>
-                          <h1>{workout.targetMuscle}</h1>
-                        </div>
-                      </DialogTitle>
-                      <ReactPlayer controls url={workout.videoUrl} />
-                      <DialogDescription className="p-5">
-                        {workout.description}
-                      </DialogDescription>
-                    </DialogHeader>
-                  </DialogContent>
-                  <DialogFooter></DialogFooter>
-                </Dialog>
-              </div>
-            </div>
-          ))}
-        <div>
-          <Dialog
-            open={isDialogOpen}
-            onOpenChange={(isOpen) => {
-              setIsDialogOpen(isOpen);
-            }}
-          >
-            <DialogTrigger asChild></DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Set Workout reps and Weight to the user
-                </DialogTitle>
-                <div className="flex justify-between items-center gap-2">
-                  <div>
-                    <Label htmlFor="reps">Reps</Label>
-                    <Input
-                      type="number"
-                      id="reps"
-                      onChange={(e) => setReps(e.target.value)}
-                      value={reps}
-                      placeholder="Enter Reps"
-                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+        <Table>
+          <TableHeader className="">
+            <TableRow>
+              <TableHead className="w-[100px]">Thumbnail</TableHead>
+              <TableHead>Workout Name</TableHead>
+              <TableHead>Target Muscle</TableHead>
+              <TableHead>Add Set</TableHead>
+              <TableHead>view Workout</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {workouts &&
+              workouts.map((workout) => (
+                <TableRow key={workout._id}>
+                  <TableCell className="h-32">
+                    <Image
+                      className="rounded-md"
+                      src={workout.thumbnailUrl}
+                      width={100}
+                      height={100}
+                      alt={"workoutimage"}
                     />
-                  </div>
-                  <div>
-                    <Label htmlFor="weight">Weight</Label>
-                    <Input
-                      type="number"
-                      id="weight"
-                      onChange={(e) => setWeight(e.target.value)}
-                      value={weight}
-                      placeholder="Enter Weight"
-                      className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
-                    />
-                  </div>
-                  <div className="mt-6">
+                  </TableCell>
+                  <TableCell><h1 className="text-xl font-semibold">{workout.workoutName}</h1></TableCell>
+                  <TableCell>
+                    <ul>
+                      {workout.targetMuscle.split(",").map((muscle, index) => {
+                        return (
+                          <li key={index} className="font-semibold" style={{ listStyleType: "circle"  }}>
+                            {muscle}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </TableCell>
+                  <TableCell>
                     <Button
                       onClick={() => {
-                        reps &&
-                          weight &&
-                          setWorkoutSet([
-                            ...workoutSet,
-                            {
-                              reps: parseInt(reps),
-                              weight: parseInt(weight),
-                            },
-                          ]);
-                        setReps("");
-                        setWeight("");
+                        setIsDialogOpen(true);
+                        setWorkoutSet([]);
+                        setWorkoutId(workout._id);
                       }}
                     >
-                      Set
+                      Add Workout sets
                     </Button>
-                  </div>
+                  </TableCell>
+                  <TableCell>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button>View</Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-[700px]">
+                        <DialogHeader>
+                          <DialogTitle>
+                            <div className="flex justify-between p-5">
+                              <h1>{workout.workoutName}</h1>
+                              <h1>{workout.targetMuscle}</h1>
+                            </div>
+                          </DialogTitle>
+                          <ReactPlayer controls url={workout.videoUrl} />
+                          <DialogDescription className="p-5">
+                            {workout.description}
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                      <DialogFooter></DialogFooter>
+                    </Dialog>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(isOpen) => {
+            setIsDialogOpen(isOpen);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Set Workout reps and Weight to the user</DialogTitle>
+              <div className="flex justify-between items-center gap-2">
+                <div className="space-y-2">
+                  <Label htmlFor="reps">Reps</Label>
+                  <Input
+                    type="number"
+                    id="reps"
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue >= "0") {
+                        setReps(newValue);
+                      }
+                    }}
+                    value={reps}
+                    placeholder="Enter Reps"
+                    className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                  />
                 </div>
-              </DialogHeader>
-              <div>
-                {workoutSet.map((set, index) => (
-                  <div key={index} className="flex gap-2 justify-evenly">
-                    <p>Set : {index + 1}</p>
-                    <p>Reps: {set.reps}</p>
-                    <p>Weight: {set.weight}</p>
-                  </div>
-                ))}
+                <div className="space-y-2">
+                  <Label htmlFor="weight">Weight</Label>
+                  <Input
+                    type="number"
+                    id="weight"
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue >= "0") {
+                        setWeight(newValue);
+                      }
+                    }}
+                    value={weight}
+                    placeholder="Enter Weight"
+                    className="w-full p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                  />
+                </div>
+                <div className="mt-8">
+                  <Button
+                    onClick={() => {
+                      reps &&
+                        weight &&
+                        setWorkoutSet([
+                          ...workoutSet,
+                          {
+                            reps: parseInt(reps),
+                            weight: parseInt(weight),
+                          },
+                        ]);
+                      setReps("");
+                      setWeight("");
+                    }}
+                  >
+                    Set
+                  </Button>
+                </div>
               </div>
-              <Button onClick={setWorkout}>Set Workout</Button>
-            </DialogContent>
-          </Dialog>
-        </div>
+            </DialogHeader>
+            <div>
+              {workoutSet.map((set, index) => (
+                <div key={index} className="flex gap-2 justify-evenly">
+                  <p>Set : {index + 1}</p>
+                  <p>Reps: {set.reps}</p>
+                  <p>Weight: {set.weight}</p>
+                </div>
+              ))}
+            </div>
+            <Button onClick={setWorkout}>Set Workout</Button>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

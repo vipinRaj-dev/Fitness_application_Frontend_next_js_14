@@ -19,12 +19,20 @@ const page = () => {
 
   return (
     <div>
-      {client_Id !== "empty" && (
-        <EditAndListWorkouts client_Id={client_Id} reRender={reRender} />
-      )}
-      <Button onClick={() => setShowWorkout(!showWorkout)}>Show work</Button>
+      <Button onClick={() => setShowWorkout(!showWorkout)}>
+        {showWorkout ? "close" : "Show work"}
+      </Button>
       {showWorkout && (
-        <WorkoutSearch clientId={client_Id} onSuccess={makeRerender} />
+        <div className="h-4/6">
+          <h1 className="text-2xl p-5 text-center">Search Workouts</h1>
+          <WorkoutSearch clientId={client_Id} onSuccess={makeRerender} />
+        </div>
+      )}
+      {client_Id !== "empty" && (
+        <div className="h-screen">
+          <h1 className="text-2xl p-5 text-center">Schedule Workout</h1>
+          <EditAndListWorkouts client_Id={client_Id} reRender={reRender} />
+        </div>
       )}
     </div>
   );

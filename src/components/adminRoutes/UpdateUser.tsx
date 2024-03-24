@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
+import { z } from "zod";
 
 interface User {
   _id: string;
@@ -12,6 +13,17 @@ interface User {
   name: string;
   role: string;
 }
+
+const FormSchema = z.object({
+  name: z
+    .string()
+    .min(1, "user name is required")
+    .refine(
+      (value) => /^[a-zA-Z, " "]*$/.test(value),
+      "Only Characters are allowed"
+    ),
+  email: z.string().email("Invalid email address"),
+});
 
 const UpdateUser = ({ userId }: { userId: string }) => {
   const [userDetails, setUserDetails] = useState<User>({
@@ -44,40 +56,58 @@ const UpdateUser = ({ userId }: { userId: string }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await axiosInstance
-      .put(`/admin/user/${userId}`, userDetails)
-      .then((res) => {
-        // console.log(res);
-        if (res.data) {
-          swal({
-            title: "success!",
-            text: "User updated successfully!",
-            icon: "success",
-            className: "bg-green-100",
-          }).then(() => {
-            router.back();
-          });
-        } else {
-          swal({
-            title: "warning!",
-            text: "User not updated!",
-            icon: "warning",
-            className: "bg-yellow-100",
-          }).then(() => {
-            router.back();
-          });
-        }
-      })
-      .catch((err) => {
+
+    const result = FormSchema.safeParse(userDetails);
+
+    if (!result.success) {
+      const errorMap = result.error.formErrors.fieldErrors;
+      console.log("errorMap", errorMap);
+
+      for (const [key, value] of Object.entries(errorMap)) {
         swal({
-          title: "error!",
-          text: err.response.data.message,
-          icon: "error",
-          className: "bg-red-100",
-        }).then(() => {
-          router.back();
+          title: "warning!",
+          text: value[0],
+          icon: "warning",
+          className: "bg-yellow-100",
         });
-      });
+        return;
+      }
+    } else {
+      await axiosInstance
+        .put(`/admin/user/${userId}`, userDetails)
+        .then((res) => {
+          // console.log(res);
+          if (res.data) {
+            swal({
+              title: "success!",
+              text: "User updated successfully!",
+              icon: "success",
+              className: "bg-green-100",
+            }).then(() => {
+              router.back();
+            });
+          } else {
+            swal({
+              title: "warning!",
+              text: "User not updated!",
+              icon: "warning",
+              className: "bg-yellow-100",
+            }).then(() => {
+              router.back();
+            });
+          }
+        })
+        .catch((err) => {
+          swal({
+            title: "error!",
+            text: err.response.data.message,
+            icon: "error",
+            className: "bg-red-100",
+          }).then(() => {
+            router.back();
+          });
+        });
+    }
   };
 
   return (

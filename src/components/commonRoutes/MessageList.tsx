@@ -116,6 +116,7 @@ const MessageList = ({
                   <p className=" text-sm text-right font-thin">
                     {moment(msg.time).format("hh:mm A")}
                   </p>
+                  <p>{msg.isSeen ? 'MsgSeen' : 'NotSeen'}</p>
                 </div>
               ) : (
                 <div  className="rounded-2xl p-2 bg-stone-600 max-w-72">

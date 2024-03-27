@@ -35,6 +35,8 @@ const TrainerChatReview = ({ trainer }: { trainer: Trainer }) => {
     message: "",
   });
 
+  const [pendingMsgCount, setPendingMsgCount] = useState(0);
+
   const [chatPageOpen, setChatPageOpen] = useState(false);
   useEffect(() => {
     if (newSocket) {
@@ -54,6 +56,21 @@ const TrainerChatReview = ({ trainer }: { trainer: Trainer }) => {
       console.log("newSocket is null");
     }
   }, [newSocket]);
+
+  useEffect(() => {
+    if (newSocket && !chatPageOpen) {
+      newSocket.on("messageRecieved", (data) => {
+        console.log("incrementing the pending count");
+        setPendingMsgCount((prev) => prev + 1);
+      });
+    }
+
+    return ()=>{
+      if(newSocket){
+        newSocket.off("messageRecieved")
+      }
+    }
+  }, []);
 
   const [rating, setRating] = useState({
     starRating: 0,
@@ -100,17 +117,15 @@ const TrainerChatReview = ({ trainer }: { trainer: Trainer }) => {
     }
   };
 
-  // const handleClick = (msg : string) => {
-  //   if (newSocket && msg !== "") {
-  //     newSocket.emit("sendMessage", {
-  //       from : "user",
-  //       text: msg,
-  //       senderId: userId,
-  //       receiverId: trainer._id,
-  //     });
-  //   }
-  // };
-
+  const makeMsgSeen = async () => {
+    // console.log("makeMsgSeen" , 'userId', userId, 'trainerId', trainer._id)
+    if (newSocket) {
+      newSocket.emit("makeMsgSeen", {
+        senderId: userId,
+        receiverId: trainer._id,
+      });
+    }
+  };
   return (
     <div className="flex justify-evenly">
       <img
@@ -181,9 +196,10 @@ const TrainerChatReview = ({ trainer }: { trainer: Trainer }) => {
           <Badge
             onClick={() => {
               setChatPageOpen(true);
+              makeMsgSeen();
             }}
           >
-            Msg
+            Msg : {pendingMsgCount}
           </Badge>
 
           <Badge>Call</Badge>

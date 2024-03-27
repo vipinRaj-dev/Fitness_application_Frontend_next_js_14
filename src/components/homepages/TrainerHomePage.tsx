@@ -232,6 +232,7 @@ const TrainerHomePage = () => {
   };
   return (
     <div>
+      
       <div className=" pb-72 md:pb-96">
         <div className="w-full relative ">
           <div className="md:flex md:justify-center">

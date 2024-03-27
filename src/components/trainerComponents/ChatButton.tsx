@@ -33,6 +33,7 @@ type Client = {
   name: string;
   profileImage?: string;
   _id: string;
+  pendingMessageCount: number;
 };
 
 const ChatButton = () => {
@@ -44,6 +45,8 @@ const ChatButton = () => {
   const [clients, setClients] = useState<Client[]>([]);
 
   const [trainerId, setTrainerId] = useState("");
+
+  const [totalPendingMessages, setTotalPendingMessages] = useState(0);
 
   const [SelectedUserDetails, setSelectedUserDetails] = useState({
     name: "",
@@ -60,8 +63,28 @@ const ChatButton = () => {
         .get("/trainer/getClients")
         .then((res) => {
           console.log(res.data);
-          setClients(res.data.clients);
+          const updatedClients = res.data.clients.map((client: Client) => {
+            const pendingMsgCountObj = res.data.pendingMessageCountPerUser.find(
+              (countObj: { _id: string; count: number }) =>
+                countObj._id === client._id
+            );
+            return {
+              ...client,
+              pendingMessageCount: pendingMsgCountObj
+                ? pendingMsgCountObj.count
+                : 0,
+            };
+          });
+          setClients(updatedClients);
           setTrainerId(res.data.trainerId);
+
+          // Calculate total pending messages
+          const totalPendingMessages = updatedClients.reduce(
+            (total: number, client: Client) =>
+              total + client.pendingMessageCount,
+            0
+          );
+          setTotalPendingMessages(totalPendingMessages);
         })
         .catch((err) => {
           console.log(err);
@@ -70,7 +93,6 @@ const ChatButton = () => {
       console.log(error);
     }
   }, []);
-
   useEffect(() => {
     if (userCookie) {
       connect("trainer");
@@ -124,21 +146,56 @@ const ChatButton = () => {
     }
   }, [newSocket]);
 
-  // const handleClick = (msg : string) => {
-  //   if (newSocket && msg !== "") {
-  //     newSocket.emit("sendMessage", {
-  //       from: "trainer",
-  //       text: msg,
-  //       senderId: trainerId,
-  //       receiverId: SelectedUserDetails._id,
-  //     });
-  //   }
-  // };
+  useEffect(() => {
+    if (newSocket) {
+      newSocket.on("messageRecieved", (data) => {
+        console.log("incrementing the pending count");
+        console.log(data);
+        setClients((prev) =>
+          prev.map((client) =>
+            client._id === data.senderId
+              ? {
+                  ...client,
+                  pendingMessageCount:
+                    (isNaN(client.pendingMessageCount)
+                      ? 0
+                      : client.pendingMessageCount) + 1,
+                }
+              : client
+          )
+        );
+        setTotalPendingMessages((prev) => prev + 1);
+      });
+    }
 
+    return () => {
+      if (newSocket) {
+        newSocket.off("messageRecieved");
+      }
+    };
+  }, [newSocket]);
+
+  const makeMsgSeen = async (receiverId: string) => {
+    // console.log(
+    //   "makeMsgSeen",
+    //   "SelectedUserDetails._id",
+    //   receiverId,
+    //   "trainerId",
+    //   trainerId
+    // );
+    if (newSocket) {
+      newSocket.emit("makeMsgSeen", {
+        senderId: trainerId,
+        receiverId: receiverId,
+      });
+    }
+  };
   return (
     <div>
       <Sheet>
-        <SheetTrigger>Chat</SheetTrigger>
+        <SheetTrigger>
+          Chat {totalPendingMessages > 0 && `(${totalPendingMessages})`}
+        </SheetTrigger>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Chat List</SheetTitle>
@@ -153,6 +210,17 @@ const ChatButton = () => {
                       isOnline: client.isOnline ?? false,
                     });
                     setChatPageOpen(true);
+                    makeMsgSeen(client._id);
+                    setClients((prev) =>
+                      prev.map((c) =>
+                        c._id === client._id
+                          ? { ...c, pendingMessageCount: 0 }
+                          : c
+                      )
+                    );
+                    setTotalPendingMessages(
+                      (prev) => prev - client.pendingMessageCount
+                    );
                   }}
                   key={client._id}
                   className="flex items-center bg-slate-800 p-3 rounded-2xl mt-3 justify-between"
@@ -168,6 +236,10 @@ const ChatButton = () => {
                       }`}
                     />
                     <p className="text-white ml-3">{client?.name}</p>
+                    <p className="text-red-400 p-3">
+                      {client.pendingMessageCount > 0 &&
+                        client.pendingMessageCount}
+                    </p>
                   </div>
                   {client.isOnline ? (
                     <p className="text-green-500 ml-3 ">Online</p>

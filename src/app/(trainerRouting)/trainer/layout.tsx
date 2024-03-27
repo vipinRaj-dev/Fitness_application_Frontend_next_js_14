@@ -132,7 +132,7 @@ export default function RootLayout({
         </div>
 
         <div>{children}</div>
-        <div className="fixed bottom-10 right-32">
+        <div className="fixed bottom-10 left-5">
           <ChatButton />
         </div>
 

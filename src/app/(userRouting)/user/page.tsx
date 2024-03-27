@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 import HomePageWorkout from "@/components/usercomponents/HomePageWorkout";
 
+
+
 import { BarChartData } from "@/components/recharts/BarChartPlot";
 import BarChartUser, {
   BarChartDataUser,
@@ -32,7 +34,18 @@ type graphOrder = {
   [key: string]: number;
 };
 
+
+
+
+
+
+// const [socket, setSocket] = useState<Socket | null>(null);
+
+
+
+
 const Userpage = () => {
+
   const [latestDiet, setLatestDiet] = useState<DietFood>([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
   const [hasTrainer, setHasTrainer] = useState(false);

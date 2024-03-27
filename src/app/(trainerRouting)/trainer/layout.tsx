@@ -25,6 +25,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import ChatButton from "@/components/trainerComponents/ChatButton";
 
 export const metadata = {
   title: "Next.js",
@@ -130,7 +131,10 @@ export default function RootLayout({
           </nav>
         </div>
 
-        <div className="">{children}</div>
+        <div>{children}</div>
+        <div className="fixed bottom-10 right-32">
+          <ChatButton />
+        </div>
 
         {/* <footer>
           <div className="bg-green-400">trainer footer</div>

@@ -1,10 +1,7 @@
 "use client";
 import axiosInstance from "@/axios/creatingInstance";
-import Dnaspinner from "@/components/loadingui/Dnaspinner";
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import swal from "sweetalert";
-import Link from "next/link";
 import { Badge } from "../ui/badge";
 
 import { Button } from "@/components/ui/button";
@@ -18,15 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 
 import {
   Popover,
@@ -35,27 +23,11 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
-import StarRatings from "react-star-ratings";
-
+import { Trainer } from "@/types/TrainerTypes";
 import { AttendanceData } from "@/types/DateWiseResponseData";
-
-type FormState = {
-  _id: string;
-  name: string;
-  email: string;
-  mobileNumber: number;
-  weight: number;
-  height: number;
-  profileImage: File | string;
-  BloodPressure: number;
-  Diabetes: number;
-  cholesterol: number;
-  HeartDisease: boolean;
-  KidneyDisease: boolean;
-  LiverDisease: boolean;
-  Thyroid: boolean;
-};
-
+import TrainerChatReview from "./TrainerChatReview";
+import UserProfileEdit from "./UserProfileEdit";
+import { FormState } from "@/types/UserTypes";
 const UserProfile = () => {
   const router = useRouter();
   const timePeriods = ["morning", "afternoon", "evening"];
@@ -65,16 +37,11 @@ const UserProfile = () => {
   );
   const [userCreatedDate, setUserCreatedDate] = useState<Date>();
 
-  const [trainer, setTrainer] = useState({
+  const [trainer, setTrainer] = useState<Trainer>({
     profilePicture: "",
     name: "",
     _id: "",
     trainerPaymentDueDate: "",
-  });
-
-  const [rating, setRating] = useState({
-    starRating: 0,
-    content: "",
   });
 
   const [attendanceData, setAttendanceData] = useState<AttendanceData>();
@@ -96,11 +63,6 @@ const UserProfile = () => {
     Thyroid: false,
   });
 
-  type error = {
-    mobileNumber?: string;
-    height?: string;
-    weight?: string;
-  };
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -158,428 +120,23 @@ const UserProfile = () => {
     }
   }, [date]);
 
-  const [errors, setErrors] = useState<error>({});
-  const [loading, setLoading] = useState(false);
-  const [openInput, setOpenInput] = useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setErrors((prevState) => ({
-      ...prevState,
-      [name]: "",
-    }));
-    if (type === "checkbox") {
-      setForm((prevState) => ({
-        ...prevState,
-        [name]: checked,
-      }));
-    } else if (name === "image") {
-      setForm((prevState) => ({
-        ...prevState,
-        [name]: e.target.files ? e.target.files[0] : prevState.profileImage,
-      }));
-    } else {
-      setForm((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // setLoading(true);
-
-    console.log(form);
-    if (
-      form.mobileNumber.toString().length < 10 ||
-      form.mobileNumber.toString().length > 10
-    ) {
-      setErrors((prevState) => ({
-        ...prevState,
-        mobileNumber: "Mobile Number should be 10 digit",
-      }));
-    } else if (
-      form.height.toString().length > 3 ||
-      form.height.toString().length < 1
-    ) {
-      setErrors((prevState) => ({
-        ...prevState,
-        height: "Height should be less than 3 digit",
-      }));
-    } else if (
-      form.weight.toString().length > 3 ||
-      form.weight.toString().length < 1
-    ) {
-      console.log("weight error");
-      setErrors((prevState) => ({
-        ...prevState,
-        weight: "Weight should be less than 3 digit",
-      }));
-    } else {
-      console.log("form send");
-      setLoading(true);
-      const formData = new FormData();
-      Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
-      });
-
-      await axiosInstance
-        .put("/user/profileUpdate", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setLoading(false);
-          if (res.status === 200) {
-            setForm((prevState) => ({
-              ...prevState,
-              profileImage: res.data?.imageData?.url,
-            }));
-            swal({
-              title: "seccess!",
-              text: "Updated succesfully",
-              icon: "success",
-            });
-          } else {
-            swal({
-              title: "Profile Not Updated",
-              text: "Your profile has not been updated",
-              icon: "error",
-            });
-          }
-        })
-        .catch((err: Error | any) => {
-          setLoading(false);
-          console.log(err.response.data);
-          swal({
-            title: "warning!",
-            text: err.response.data.msg,
-            icon: "warning",
-          });
-        });
-    }
-  };
-
-  const openHealthIssues = () => {
-    setOpenInput(true);
-  };
-
   const setDateToStart = (date: Date | number) => {
     let newDate = new Date(date);
     newDate.setHours(0, 0, 0, 0);
     return newDate;
   };
 
-  const applyReview = async () => {
-    console.log(rating);
-    if (rating.starRating === 0) {
-      swal({
-        title: "warning!",
-        text: "Please give a rating",
-        icon: "warning",
-        timer: 1500,
-        buttons: {},
-      });
-    } else {
-      await axiosInstance
-        .post("/user/rating", {
-          rating: rating.starRating,
-          content: rating.content,
-          trainerId: trainer._id,
-        })
-        .then((res) => {
-          console.log(res.data);
-          swal({
-            title: "seccess!",
-            text: "Rating Submitted",
-            icon: "success",
-            timer: 1500,
-            buttons: {},
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          swal({
-            title: "warning!",
-            text: "Rating not submitted",
-            icon: "warning",
-            timer: 1500,
-            buttons: {},
-          });
-        });
-    }
-  };
-
-  if (loading) {
-    return <Dnaspinner />;
-  }
-
   return (
     <div>
       <div className="md:flex w-full">
         <div className="md:w-2/6 p-1 ">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center justify-center min-h-96 py-2"
-          >
-            <div className="flex flex-col bg-slate-900 p-5 rounded-xl shadow-2xl w-full md:w-full border-2 border-slate-500  space-y-6">
-              <div className="flex justify-center ">
-                {form.profileImage && (
-                  <img
-                    className="rounded-3xl border-2 border-slate-500"
-                    src={
-                      typeof form.profileImage === "string"
-                        ? form.profileImage
-                        : "https://cdn-icons-png.flaticon.com/512/219/219970.png"
-                    }
-                    width={300}
-                    alt=""
-                  />
-                )}
-              </div>
+          <UserProfileEdit form={form} setForm={setForm} />
 
-              {/* <Image src='http://res.cloudinary.com/dxxbvjmz5/image/upload/v1707805602/user-Images/x74bkkb3btxdeexaeyol.png' alt="demoImage" width={100} height={100}></Image> */}
-              <label>
-                Image
-                <input
-                  name="image"
-                  type="file"
-                  onChange={handleInputChange}
-                  className="rounded px-3 py-2 w-full"
-                />
-              </label>
-              <h2 className="text-center text-xl font-extrabold">
-                User Profile
-              </h2>
-              <label>
-                Name
-                <input
-                  value={form.name}
-                  name="name"
-                  type="text"
-                  onChange={handleInputChange}
-                  placeholder="Name"
-                  className="rounded px-3 py-2 w-ful text-black"
-                />
-              </label>
-              <label>
-                Email
-                <input
-                  value={form.email}
-                  name="email"
-                  type="email"
-                  onChange={handleInputChange}
-                  placeholder="Email"
-                  className="rounded px-3 py-2 w-full  text-black"
-                />
-              </label>
-              <label>
-                Phone Number
-                <input
-                  value={form.mobileNumber}
-                  name="mobileNumber"
-                  type="number"
-                  onChange={handleInputChange}
-                  placeholder="Phone Number"
-                  className="rounded px-3 py-2 w-full  text-black"
-                />
-                {errors.mobileNumber && (
-                  <p className="text-red-600 text-xs">{errors.mobileNumber}</p>
-                )}
-              </label>
-              <label>
-                Weight
-                <input
-                  value={form.weight}
-                  name="weight"
-                  type="number"
-                  onChange={handleInputChange}
-                  placeholder="Weight"
-                  className="rounded px-3 py-2 w-full  text-black"
-                />
-                {errors.weight && (
-                  <p className="text-red-600 text-xs">{errors.weight}</p>
-                )}
-              </label>
-              <label>
-                Height
-                <input
-                  value={form.height}
-                  name="height"
-                  type="number"
-                  onChange={handleInputChange}
-                  placeholder="Height"
-                  className="rounded px-3 py-2 w-full  text-black"
-                />
-                {errors.height && (
-                  <p className="text-red-600 text-xs">{errors.height}</p>
-                )}
-              </label>
-
-              <label>
-                Do you have any health issues?{" "}
-                <Badge onClick={openHealthIssues} variant="secondary">
-                  Click to Add
-                </Badge>
-              </label>
-
-              {openInput && (
-                <>
-                  <label>
-                    Blood Pressure
-                    <input
-                      value={form.BloodPressure}
-                      name="BloodPressure"
-                      type="number"
-                      onChange={handleInputChange}
-                      placeholder="Blood Pressure"
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                  <label>
-                    Diabetes
-                    <input
-                      value={form.Diabetes}
-                      name="Diabetes"
-                      type="number"
-                      onChange={handleInputChange}
-                      placeholder="Diabetes"
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                  <label>
-                    cholesterol
-                    <input
-                      value={form.cholesterol}
-                      name="cholesterol"
-                      type="number"
-                      onChange={handleInputChange}
-                      placeholder="cholesterol"
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                  <label>
-                    Heart Disease
-                    <input
-                      checked={form.HeartDisease}
-                      name="HeartDisease"
-                      type="checkbox"
-                      onChange={handleInputChange}
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                  <label>
-                    Kidney Disease
-                    <input
-                      checked={form.KidneyDisease}
-                      name="KidneyDisease"
-                      type="checkbox"
-                      onChange={handleInputChange}
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                  <label>
-                    Liver Disease
-                    <input
-                      checked={form.LiverDisease}
-                      name="LiverDisease"
-                      type="checkbox"
-                      onChange={handleInputChange}
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                  <label>
-                    Thyroid
-                    <input
-                      checked={form.Thyroid}
-                      name="Thyroid"
-                      type="checkbox"
-                      onChange={handleInputChange}
-                      className="rounded px-3 py-2 w-full  text-black"
-                    />
-                  </label>
-                </>
-              )}
-
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-              >
-                Update
-              </button>
-
-              <div>
-                {trainer.profilePicture && (
-                  <div className="flex justify-evenly">
-                    <img
-                      src={trainer.profilePicture}
-                      alt="trainer"
-                      width={50}
-                      height={50}
-                      className="rounded-full"
-                    />
-                    <h1>{trainer.name}</h1>
-
-                    <Dialog>
-                      <DialogTrigger>
-                        <Badge>Rate</Badge>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>
-                            Do you want to Rate this Trainer
-                          </DialogTitle>
-                          <DialogDescription className="text-center">
-                            <StarRatings
-                              rating={rating.starRating}
-                              starRatedColor="yellow"
-                              starDimension="35px"
-                              starSpacing="2px"
-                              starHoverColor="yellow"
-                              starEmptyColor="white"
-                              changeRating={(rating) =>
-                                setRating((prev) => {
-                                  return {
-                                    ...prev,
-                                    starRating: rating,
-                                  };
-                                })
-                              }
-                              numberOfStars={5}
-                              name="rating"
-                            />
-                          </DialogDescription>
-                        </DialogHeader>
-                        <Textarea
-                          placeholder="Type you review here..."
-                          onChange={(e) => {
-                            setRating((prev) => {
-                              return {
-                                ...prev,
-                                content: e.target.value,
-                              };
-                            });
-                          }}
-                        />
-                        <Button onClick={applyReview}>Submit</Button>
-                      </DialogContent>
-                    </Dialog>
-                    {new Date(trainer.trainerPaymentDueDate) > new Date() ? (
-                      <>
-                        <Badge>Msg</Badge>
-                        <Badge>Call</Badge>
-                      </>
-                    ) : (
-                      <p className="text-sm text-red-500">Time Expired</p>
-                    )}
-                  </div>
-                )}
-              </div>
+          {trainer.profilePicture && (
+            <div>
+              <TrainerChatReview trainer={trainer} />
             </div>
-          </form>
+          )}
         </div>
 
         <div className=" h-screen md:w-4/6 p-5">
@@ -728,38 +285,38 @@ const UserProfile = () => {
                     key={index}
                     className="bg-slate-800 border-b-2 border-slate-600 "
                   >
-                    {workout.workoutSet.map((workoutSet, index) => (
+                    {workout?.workoutSet.map((workoutSet, index) => (
                       <TableRow key={index}>
                         {index === 0 && (
                           <>
                             <TableCell
                               className="font-medium"
-                              rowSpan={workout.workoutSet.length}
+                              rowSpan={workout?.workoutSet.length}
                             >
                               <Image
                                 className="rounded-xl"
-                                src={workout.workoutId.thumbnailUrl}
+                                src={workout?.workoutId?.thumbnailUrl}
                                 width={60}
                                 height={60}
                                 alt="workout image"
                               />
                             </TableCell>
-                            <TableCell rowSpan={workout.workoutSet.length}>
-                              {workout.workoutId.workoutName}
+                            <TableCell rowSpan={workout?.workoutSet?.length}>
+                              {workout?.workoutId?.workoutName}
                             </TableCell>
                             <TableCell rowSpan={workout.workoutSet.length}>
-                              {workout.workoutId.targetMuscle}
+                              {workout?.workoutId?.targetMuscle}
                             </TableCell>
                           </>
                         )}
                         <TableCell>
-                          <h1> {workoutSet.weight}</h1>
+                          <h1> {workoutSet?.weight}</h1>
                         </TableCell>
                         <TableCell>
-                          <h1> {workoutSet.reps}</h1>
+                          <h1> {workoutSet?.reps}</h1>
                         </TableCell>
                         <TableCell className="text-right">
-                          <p>{workoutSet.completedReps}</p>
+                          <p>{workoutSet?.completedReps}</p>
                         </TableCell>
                       </TableRow>
                     ))}

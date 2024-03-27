@@ -22,6 +22,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import SocketTest from "@/components/usercomponents/SocketTest";
 
 export const metadata = {
   title: "Next.js",
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <>
       <RoleAuthenticationCheckUser />
+      <SocketTest />  
       <div className="mt-6 max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 h-screen">
         <nav className="flex justify-between items-center">
           <Link href="/user">

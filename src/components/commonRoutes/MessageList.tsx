@@ -52,14 +52,17 @@ const MessageList = ({
 
   //   console.log(from, trainerId, userId);
   useEffect(() => {
+    console.log(
+      "from the message list ============================= re render"
+    );
     try {
       axiosInstance
         .get(`/chat/getMessages/${trainerId}/${userId}`)
         .then((res) => {
-          console.log(
-            "from the message list =============================",
-            res.data
-          );
+          // console.log(
+          //   "from the message list =============================",
+          //   res.data
+          // );
           setMessages(res.data.messages.message);
           setUserAndTrainerIds({
             userId: res.data.messages.userId,
@@ -77,11 +80,46 @@ const MessageList = ({
   useEffect(() => {
     if (newSocket) {
       newSocket.on("messageRecieved", (data) => {
-        // console.log("this is ===================the mesage recieved", data);
+        console.log("this is ===================the mesage recieved", data);
+        newSocket.emit("makeMsgSeen", {
+          senderId: data.receiverId,
+          receiverId:data.senderId,
+        });
+
+
         setMessages([...messages, data]);
       });
     }
+
+    return () => {
+      if (newSocket) {
+        newSocket.off("messageRecieved");
+      }
+    };
   }, [newSocket, messages]);
+
+  useEffect(() => {
+    if (newSocket) {
+      newSocket.on("msgSeen", (data) => {
+        console.log("message seen", data);
+        // setReRender(!reRender);
+        console.log('messages' , messages)
+       setMessages((prev) =>
+          prev.map((msg) =>
+            msg.senderId === data.senderId
+              ? { ...msg, isSeen: true }
+              : msg
+          )
+        );
+      });
+    }
+
+    return () => {
+      if (newSocket) {
+        newSocket.off("msgSeen");
+      }
+    };
+  }, [newSocket , messages]);
 
   const handleClick = (msg: string) => {
     if (newSocket && msg !== "") {
@@ -116,11 +154,11 @@ const MessageList = ({
                   <p className=" text-sm text-right font-thin">
                     {moment(msg.time).format("hh:mm A")}
                   </p>
-                  <p>{msg.isSeen ? 'MsgSeen' : 'NotSeen'}</p>
+                  <p>{msg.isSeen ? "MsgSeen" : "NotSeen"}</p>
                 </div>
               ) : (
-                <div  className="rounded-2xl p-2 bg-stone-600 max-w-72">
-                  <p >{msg.message}</p>
+                <div className="rounded-2xl p-2 bg-stone-600 max-w-72">
+                  <p>{msg.message}</p>
                   <p className="text-right text-sm font-thin">
                     {moment(msg.time).format("hh:mm A")}
                   </p>

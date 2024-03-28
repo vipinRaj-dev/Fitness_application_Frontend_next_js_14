@@ -22,8 +22,9 @@ import Image from "next/image";
 import MessageList from "../commonRoutes/MessageList";
 import { Input } from "../ui/input";
 import { userStore } from "@/store/user";
+import Link from "next/link";
 
-const TrainerChatReview = ({ trainer }: { trainer: Trainer }) => {
+const TrainerChatReview = ({ trainer , userName }: { trainer: Trainer; userName :string }) => {
   const [isTrainerOnline, setIsTrainerOnline] = useState(false);
   const newSocket = useSocketStore((state) => state.socket);
 
@@ -202,7 +203,7 @@ const TrainerChatReview = ({ trainer }: { trainer: Trainer }) => {
             Msg : {pendingMsgCount}
           </Badge>
 
-          <Badge>Call</Badge>
+         <Link href={`/room/${userId}`}>Meet</Link>
         </>
       ) : (
         <p className="text-sm text-red-500">Time Expired</p>

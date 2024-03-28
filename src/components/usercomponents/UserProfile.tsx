@@ -134,7 +134,7 @@ const UserProfile = () => {
 
           {trainer.profilePicture && (
             <div>
-              <TrainerChatReview trainer={trainer} />
+              <TrainerChatReview trainer={trainer} userName={form.name} />
             </div>
           )}
         </div>

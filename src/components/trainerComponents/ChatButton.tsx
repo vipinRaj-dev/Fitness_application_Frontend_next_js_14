@@ -27,6 +27,7 @@ import {
 import Image from "next/image";
 import { Input } from "../ui/input";
 import MessageList from "../commonRoutes/MessageList";
+import Link from "next/link";
 
 type Client = {
   isOnline?: boolean;
@@ -246,6 +247,9 @@ const ChatButton = () => {
                   ) : (
                     <p className="text-red-500 ml-3 ">Offline</p>
                   )}
+                  <div>
+                    <Link href={`/room/${client._id}`}>Meet</Link>
+                  </div>
                 </div>
               ))}
             </SheetDescription>

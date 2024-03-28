@@ -139,6 +139,38 @@ const MessageList = ({
       );
     }
   };
+
+  useEffect(() => {
+    if(newSocket){
+      console.log('allSeen')
+      newSocket.emit('allSeen' , {
+        from,
+        trainerId,
+        userId
+      })
+      newSocket.on('allSeen' , ()=>{
+        console.log('allSeen recieved')
+        setMessages((prev) => {
+          const updatedMessage =   prev.map((msg) =>
+              msg.senderId === (from == 'user' ? userId : trainerId)
+                ? { ...msg, isSeen: true }
+                : msg
+            )
+  
+          console.log(updatedMessage, from == "user" ? userId : trainerId)
+          return updatedMessage;
+
+        })
+          
+      })
+    }
+
+    return ()=>{
+      if(newSocket){
+        newSocket.off("allSeen")
+      }
+    }
+  } , [])
   return (
     <>
       <div className="h-5/6 flex flex-col bg-slate-700 overflow-y-scroll space-y-3 p-2 bg-[url('/images/chatImage2.jpg')]">

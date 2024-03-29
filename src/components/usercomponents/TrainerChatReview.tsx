@@ -24,7 +24,13 @@ import { Input } from "../ui/input";
 import { userStore } from "@/store/user";
 import Link from "next/link";
 
-const TrainerChatReview = ({ trainer , userName }: { trainer: Trainer; userName :string }) => {
+const TrainerChatReview = ({
+  trainer,
+  userName,
+}: {
+  trainer: Trainer;
+  userName: string;
+}) => {
   const [isTrainerOnline, setIsTrainerOnline] = useState(false);
   const newSocket = useSocketStore((state) => state.socket);
 
@@ -53,10 +59,34 @@ const TrainerChatReview = ({ trainer , userName }: { trainer: Trainer; userName 
         setIsTrainerOnline(false);
         console.log(data);
       });
+
+      return () => {
+        if (newSocket) {
+          newSocket.off("trainerOnline");
+          newSocket.off("trainerOffline");
+        }
+      };
     } else {
       console.log("newSocket is null");
     }
   }, [newSocket]);
+
+  useEffect(() => {
+    try {
+      axiosInstance
+        .get(`/user/getTrainerOnlineStatus/${trainer._id}/${userId}`)
+        .then((res) => {
+          console.log(res.data);
+          setIsTrainerOnline(res.data.onlineStatus);
+          setPendingMsgCount(res.data.pendingMessageCount);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log("error getting trainer online status", error);
+    }
+  }, []);
 
   useEffect(() => {
     if (newSocket && !chatPageOpen) {
@@ -66,11 +96,11 @@ const TrainerChatReview = ({ trainer , userName }: { trainer: Trainer; userName 
       });
     }
 
-    return ()=>{
-      if(newSocket){
-        newSocket.off("messageRecieved")
+    return () => {
+      if (newSocket) {
+        newSocket.off("messageRecieved");
       }
-    }
+    };
   }, []);
 
   const [rating, setRating] = useState({
@@ -203,7 +233,7 @@ const TrainerChatReview = ({ trainer , userName }: { trainer: Trainer; userName 
             Msg : {pendingMsgCount}
           </Badge>
 
-         <Link href={`/room/${userId}`}>Meet</Link>
+          <Link href={`/room/${userId}`}>Meet</Link>
         </>
       ) : (
         <p className="text-sm text-red-500">Time Expired</p>
@@ -215,6 +245,7 @@ const TrainerChatReview = ({ trainer , userName }: { trainer: Trainer; userName 
           onOpenChange={(open) => {
             if (!open) {
               setChatPageOpen(false);
+              setPendingMsgCount(0);
             }
           }}
         >

@@ -55,4 +55,5 @@ export type AttendanceData = {
   isPresent: boolean;
   userId: string;
   workOutLogs: WorkOutLogs;
+  notCompleteReason?: string;
 };

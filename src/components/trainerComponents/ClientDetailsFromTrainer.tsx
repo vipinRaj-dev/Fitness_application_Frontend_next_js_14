@@ -361,6 +361,11 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
               <div className="w-1/4 bg-slate-600 rounded-lg p-5">box</div> */}
               </div>
             </div>
+            {attendanceData && attendanceData.notCompleteReason && (
+              <div className="bg-red-500 p-5 m-5 rounded-2xl">
+                <h1>{attendanceData.notCompleteReason}</h1>
+              </div>
+            )}
 
             <div className=" rounded-lg h-2/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
               <Table>
@@ -638,7 +643,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           </Dialog>
         </div>
         <div className="mt-20 h-screen">
-        <div>
+          <div>
             <h1 className="text-xl font-semibold tracking-wide">
               Schedule Workout
             </h1>

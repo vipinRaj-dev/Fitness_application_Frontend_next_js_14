@@ -18,13 +18,22 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/axios/creatingInstance";
 import HomePageWorkout from "@/components/usercomponents/HomePageWorkout";
-
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 import { BarChartData } from "@/components/recharts/BarChartPlot";
 import BarChartUser, {
   BarChartDataUser,
 } from "@/components/recharts/BarChartUser";
+import swal from "sweetalert";
+import { Label } from "@/components/ui/label";
 
 type DietFood = {
   time: string;
@@ -34,22 +43,21 @@ type graphOrder = {
   [key: string]: number;
 };
 
-
-
-
-
-
 // const [socket, setSocket] = useState<Socket | null>(null);
 
-
-
-
 const Userpage = () => {
-
   const [latestDiet, setLatestDiet] = useState<DietFood>([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
   const [hasTrainer, setHasTrainer] = useState(false);
   const [attendanceId, setAttendanceId] = useState<string>("");
+  
+  const [allTasksCompleted, setAllTasksCompleted] = useState<boolean>(true);
+
+  const [yesterdayAttendanceId, setYesterdayAttendanceId] = useState("");
+
+  const [reason, setReason] = useState<string>("");
+
+  const [openModal, setOpenModal] = useState(false);
 
   const [AttandanceGraph, setAttandanceGraph] = useState<BarChartData[] | null>(
     null
@@ -112,13 +120,15 @@ const Userpage = () => {
       axiosInstance
         .get("/user/homePage")
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data.allTasksCompleted);
           if (res.status === 200) {
             setLatestDiet(res.data.dietFood);
             setAddedFoodDocIds(res.data.addedFoodDocIds);
             setHasTrainer(res.data.hasTrainer);
             setAttendanceId(res.data.attendanceDocId);
             getAllGraphData();
+            setAllTasksCompleted(res.data.allTasksCompleted);
+            setYesterdayAttendanceId(res.data.yesterdayAttendanceId);
           }
         })
         .catch((err) => {
@@ -132,6 +142,31 @@ const Userpage = () => {
     };
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (!allTasksCompleted) {
+      setOpenModal(true);
+    }
+  }, [allTasksCompleted]);
+
+  const sendReason = async (agree : boolean) => {
+    try {
+      axiosInstance
+        .post("/user/applyReason", {
+          reason,
+          yesterdayAttendanceId,
+          agree
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="">
@@ -149,6 +184,39 @@ const Userpage = () => {
             <BarChartUser data={foodStatus ? foodStatus : []} />
           </div>
         </div>
+      </div>
+
+      <div>
+        <Dialog open={openModal} onOpenChange={()=>{
+          setOpenModal(false)
+          sendReason(false)
+        }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Reason</DialogTitle>
+              <DialogDescription>
+                <div className="grid w-full gap-5">
+                  <Label htmlFor="message-2">Your Message</Label>
+                  <Textarea
+                    onChange={(e) => {
+                      setReason(e.target.value);
+                    }}
+                    placeholder="Type your message here."
+                  />
+                  <Button
+                    onClick={() => {
+                      console.log(reason);
+                      sendReason(true);
+                      setOpenModal(false);
+                    }}
+                  >
+                    Post
+                  </Button>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className=" w-full h-screen p-1 mt-10 md:mt-36">

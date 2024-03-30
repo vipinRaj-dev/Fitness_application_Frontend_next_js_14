@@ -355,10 +355,10 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                       <h1>Fat : {totalNutrition && totalNutrition.fat}</h1>
                     </div>
                   );
-                })}
+                })}   
 
-                {/* <div className="w-1/4 bg-slate-600 rounded-lg p-5">box</div>
-              <div className="w-1/4 bg-slate-600 rounded-lg p-5">box</div> */}
+
+
               </div>
             </div>
             {attendanceData && attendanceData.notCompleteReason && (

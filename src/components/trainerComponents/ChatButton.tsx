@@ -28,6 +28,7 @@ import Image from "next/image";
 import { Input } from "../ui/input";
 import MessageList from "../commonRoutes/MessageList";
 import Link from "next/link";
+import { Video } from "lucide-react";
 
 type Client = {
   isOnline?: boolean;
@@ -105,7 +106,7 @@ const ChatButton = () => {
     // Call connect when the component mounts
     useSocketStore.getState().connect("trainer");
 
-    console.log("Socket connecting==========================================")
+    console.log("Socket connecting==========================================");
     const newSocket = useSocketStore.getState().socket;
 
     if (newSocket) {
@@ -169,7 +170,9 @@ const ChatButton = () => {
 
     // Call disconnect when the component unmounts
     return () => {
-      console.log("Socket disconnecting==========================================");
+      console.log(
+        "Socket disconnecting=========================================="
+      );
       if (newSocket) {
         newSocket.off("messageRecieved");
         newSocket.off("clientOnline");
@@ -177,18 +180,18 @@ const ChatButton = () => {
       }
       useSocketStore.getState().disconnect();
     };
-  }, [chatPageOpen, SelectedUserDetails]); 
- 
-  const makeMsgSeen = async (receiverId: string) => {
-    const newSocket = useSocketStore.getState().socket;
+  }, [chatPageOpen, SelectedUserDetails]);
 
-    if (newSocket) {
-      newSocket.emit("makeMsgSeen", {
-        senderId: trainerId,
-        receiverId: receiverId,
-      });
-    }
-  };
+  // const makeMsgSeen = async (receiverId: string) => {
+  //   const newSocket = useSocketStore.getState().socket;
+
+  //   if (newSocket) {
+  //     newSocket.emit("makeMsgSeen", {
+  //       senderId: trainerId,
+  //       receiverId: receiverId,
+  //     });
+  //   }
+  // };
   return (
     <div>
       <Sheet>
@@ -209,7 +212,7 @@ const ChatButton = () => {
                       isOnline: client.isOnline ?? false,
                     });
                     setChatPageOpen(true);
-                    makeMsgSeen(client._id);
+                    // makeMsgSeen(client._id);
                     setClients((prev) =>
                       prev.map((c) =>
                         c._id === client._id
@@ -245,9 +248,7 @@ const ChatButton = () => {
                   ) : (
                     <p className="text-red-500 ml-3 ">Offline</p>
                   )}
-                  <div>
-                    <Link href={`/room/${client._id}`}>Meet</Link>
-                  </div>
+                  
                 </div>
               ))}
             </SheetDescription>
@@ -264,22 +265,32 @@ const ChatButton = () => {
             }
           }}
         >
-          <DialogContent>
-            <div className="h-screen bg-slate-600 p-5">
-              <div className="">
-                <Image
-                  src={
-                    (SelectedUserDetails.profileImage &&
-                      SelectedUserDetails.profileImage) ||
-                    "/images/profileImage.avif"
-                  }
-                  width={50}
-                  height={50}
-                  alt="profilePicture"
-                />
-                <h1>{SelectedUserDetails && SelectedUserDetails.name}</h1>
-
-                <h1>{SelectedUserDetails.isOnline ? "Online" : "Offline"}</h1>
+          <DialogContent className="h-screen bg-transparent border-none">
+            <div className="h-screen flex flex-col p-5 pb-10">
+              <div className="flex items-center justify-between bg-gray-900 p-2 rounded-t-xl">
+                <div className="flex items-center">
+                  <Image
+                    className={`rounded-full w-10 h-10 border-2 ${
+                      SelectedUserDetails.isOnline
+                        ? "border-green-500"
+                        : "border-red-500"
+                    }`}
+                    src={
+                      (SelectedUserDetails.profileImage &&
+                        SelectedUserDetails.profileImage) ||
+                      "/images/profileImage.avif"
+                    }
+                    width={50}
+                    height={50}
+                    alt="profilePicture"
+                  />
+                  <h1 className="ml-3">
+                    {SelectedUserDetails && SelectedUserDetails.name}
+                  </h1>
+                </div>
+                <div className="">
+                <Link href={`/room/${SelectedUserDetails._id}`}><Video /></Link>
+                </div>
               </div>
               <>
                 <MessageList

@@ -1,11 +1,12 @@
 "use client";
 
 import axiosInstance from "@/axios/creatingInstance";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useSocketStore } from "@/store/socket";
 import moment from "moment";
+import { Ghost, SendHorizontal } from "lucide-react";
 type Message = {
   isSeen: boolean;
   message: string;
@@ -66,9 +67,9 @@ const MessageList = ({
 
   //   console.log(from, trainerId, userId);
   useEffect(() => {
-    console.log(
-      "from the message list ============================= re render"
-    );
+    // console.log(
+    //   "from the message list ============================= re render"
+    // );
     try {
       axiosInstance
         .get(`/chat/getMessages/${trainerId}/${userId}`)
@@ -93,15 +94,25 @@ const MessageList = ({
 
   useEffect(() => {
     if (newSocket) {
+      newSocket.emit("makeMsgSeen", {
+        senderId,
+        receiverId,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (newSocket) {
       newSocket.on("messageRecieved", (data) => {
-        console.log(
-          "this is ===================the mesage recieved Message list",
-          data
-        );
+        // console.log("Message recieved ==============================", data);
+
+        // Emit by the sender
         newSocket.emit("makeMsgSeen", {
-          senderId: data.receiverId,
-          receiverId: data.senderId,
+          senderId,
+          receiverId,
         });
+
+        // newSocket.emit("updateLiveMsg", { receiverId });
 
         if (from === "trainer" && userId === data.senderId) {
           setMessages([...messages, data]);
@@ -110,20 +121,28 @@ const MessageList = ({
         }
       });
     }
-
-    // return () => {
-    //   if (newSocket) {
-    //     newSocket.off("messageRecieved");
-    //   }
-    // };
   }, [newSocket, messages]);
+
+  // useEffect(() => {
+  //   if (newSocket) {
+  //     // recieve by the reciever
+  //     newSocket.on("toReciever", (data) => {
+  //       console.log(
+  //         "toReciever incomming data ===================",
+  //         data,
+  //         "sender id ==",
+  //         senderId
+  //       );
+  //     });
+  //   }
+  // }, [messages, newSocket]);
 
   useEffect(() => {
     if (newSocket) {
       newSocket.on("msgSeen", (data) => {
-        console.log("message seen", data);
+        // console.log("message seen", data);
         // setReRender(!reRender);
-        console.log("messages", messages);
+        // console.log("messages", messages);
         setMessages((prev) =>
           prev.map((msg) =>
             msg.senderId === data.senderId ? { ...msg, isSeen: true } : msg
@@ -139,35 +158,16 @@ const MessageList = ({
     };
   }, [newSocket, messages]);
 
-  const handleClick = (msg: string) => {
-    if (newSocket && msg !== "") {
-      newSocket.emit(
-        "sendMessage",
-        {
-          from: from,
-          text: msg,
-          senderId,
-          receiverId,
-        },
-        (response: any) => {
-          console.log("server response", response);
-          setMsg("");
-          setReRender(!reRender); // logs: 'Message received!'
-        }
-      );
-    }
-  };
-
   useEffect(() => {
     if (newSocket) {
-      console.log("allSeen");
+      // console.log("allSeen");
       newSocket.emit("allSeen", {
         from,
         trainerId,
         userId,
       });
       newSocket.on("allSeen", () => {
-        console.log("allSeen recieved");
+        // console.log("allSeen recieved");
         setMessages((prev) => {
           const updatedMessage = prev.map((msg) =>
             msg.senderId === (from == "user" ? userId : trainerId)
@@ -175,7 +175,7 @@ const MessageList = ({
               : msg
           );
 
-          console.log(updatedMessage, from == "user" ? userId : trainerId);
+          // console.log(updatedMessage, from == "user" ? userId : trainerId);
           return updatedMessage;
         });
       });
@@ -187,9 +187,29 @@ const MessageList = ({
       }
     };
   }, []);
+
+  const handleClick = (msg: string) => {
+    if (newSocket && msg !== "") {
+      newSocket.emit(
+        "sendMessage",
+        {
+          from: from,
+          text: msg,
+          senderId,
+          receiverId,
+        },
+        (response: any) => {
+          // console.log("server response", response);
+          setMsg("");
+          setReRender(!reRender);
+        }
+      );
+    }
+  };
+
   return (
     <>
-      <div className="h-5/6 flex flex-col bg-slate-700 overflow-y-scroll space-y-3 p-2 bg-[url('/images/chatImage2.jpg')]">
+      <div className="h-5/6 flex flex-col bg-slate-700 space-y-3 p-2 bg-[url('/images/chatImage2.jpg')] overflow-y-scroll scrollbar-none">
         {messages.map((msg: Message, index) => {
           return (
             <div
@@ -217,20 +237,28 @@ const MessageList = ({
         })}
         <div ref={endOfMessagesRef} />
       </div>
-      <div className="bg-slate-800 flex gap-2">
+      <div className="bg-slate-800 flex">
         <Input
+          className="bg-transparent border-none focus-visible:none outline-none"
           value={msg}
           onChange={(e) => {
             setMsg(e.target.value);
           }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleClick(msg);
+            }
+          }}
           placeholder="Type a message"
         />
         <Button
+        variant={'ghost'}
+        className="rounded-r-none"
           onClick={() => {
             handleClick(msg);
           }}
         >
-          Send
+         <SendHorizontal color="#ffffff" />
         </Button>
       </div>
     </>

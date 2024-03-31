@@ -4,24 +4,25 @@ import axiosInstance from "@/axios/creatingInstance";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const page = ({
   params,
 }: {
   params: {
-    userName: string;
     roomId: string;
   };
 }) => {
   const roomId = params.roomId;
 
+  const [userEmail , setUserEmail] = useState("");  
   useEffect(() => {
     try {
       axiosInstance
-        .get(`/user/getUser/${roomId}`)
+        .get(`/user/getUser`)
         .then((res) => {
           console.log(res);
+          setUserEmail(res.data.email); 
         })
         .catch((error) => {
           console.log(error);
@@ -42,7 +43,7 @@ const page = ({
       serverSecret,
       roomId,
       Date.now().toString(),
-      "Enter your name"
+      userEmail
     );
 
     const zc = ZegoUIKitPrebuilt.create(KitToken);
@@ -63,7 +64,6 @@ const page = ({
   };
   return (
     <div>
-      video call room {params.roomId}
       <div ref={myMeeting} />
     </div>
   );

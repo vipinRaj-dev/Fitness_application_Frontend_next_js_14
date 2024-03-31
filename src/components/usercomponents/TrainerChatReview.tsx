@@ -148,15 +148,15 @@ const TrainerChatReview = ({
     }
   };
 
-  const makeMsgSeen = async () => {
-    // console.log("makeMsgSeen" , 'userId', userId, 'trainerId', trainer._id)
-    if (newSocket) {
-      newSocket.emit("makeMsgSeen", {
-        senderId: userId,
-        receiverId: trainer._id,
-      });
-    }
-  };
+  // const makeMsgSeen = async () => {
+  //   // console.log("makeMsgSeen" , 'userId', userId, 'trainerId', trainer._id)
+  //   if (newSocket) {
+  //     newSocket.emit("makeMsgSeen", {
+  //       senderId: userId,
+  //       receiverId: trainer._id,
+  //     });
+  //   }
+  // };
   return (
     <div className="flex justify-evenly">
       <img
@@ -227,7 +227,7 @@ const TrainerChatReview = ({
           <Badge
             onClick={() => {
               setChatPageOpen(true);
-              makeMsgSeen();
+              // makeMsgSeen();
             }}
           >
             Msg : {pendingMsgCount}
@@ -249,10 +249,13 @@ const TrainerChatReview = ({
             }
           }}
         >
-          <DialogContent>
-            <div className="h-screen bg-slate-600 p-5">
-              <div className="">
+          <DialogContent className="h-screen bg-transparent border-none">
+            <div className="h-screen flex flex-col p-5 pb-10">
+              <div className="flex items-center bg-gray-900 p-2 rounded-t-xl">
                 <Image
+                  className={`rounded-full w-10 h-10 border-2 ${
+                    isTrainerOnline ? "border-green-500" : "border-red-500"
+                  }`}
                   src={
                     (trainer.profilePicture && trainer.profilePicture) ||
                     "/images/profileImage.avif"
@@ -261,9 +264,7 @@ const TrainerChatReview = ({
                   height={100}
                   alt="profilePicture"
                 />
-                <h1>{trainer && trainer.name}</h1> 
-
-                <h1>{isTrainerOnline ? "Online" : "Offline"}</h1>
+                <h1 className="ml-3">{trainer && trainer.name}</h1>
               </div>
               <>
                 <MessageList

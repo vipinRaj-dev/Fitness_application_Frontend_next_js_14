@@ -40,10 +40,17 @@ type Client = {
 const ChatButton = () => {
   const userCookie = Cookies.get("jwttoken");
 
-  const newSocket = useSocketStore((state) => state.socket);
+  // const newSocket = useSocketStore((state) => state.socket);
 
   const { connect, disconnect } = useSocketStore();
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Client[]>([
+    {
+      name: "",
+      profileImage: "",
+      _id: "",
+      pendingMessageCount: 0,
+    },
+  ]);
 
   const [trainerId, setTrainerId] = useState("");
 
@@ -95,17 +102,12 @@ const ChatButton = () => {
     }
   }, []);
   useEffect(() => {
-    if (userCookie) {
-      connect("trainer");
+    // Call connect when the component mounts
+    useSocketStore.getState().connect("trainer");
 
-      return () => {
-        console.log("disconnecting...");
-        disconnect();
-      };
-    }
-  }, [userCookie]);
+    console.log("Socket connecting==========================================")
+    const newSocket = useSocketStore.getState().socket;
 
-  useEffect(() => {
     if (newSocket) {
       newSocket.on("clientOnline", (data) => {
         console.log("clientOnline");
@@ -142,48 +144,44 @@ const ChatButton = () => {
           return prev;
         });
       });
-    } else {
-      console.log("newSocket is null trainer");
-    }
-  }, [newSocket]);
-
-  useEffect(() => {
-    if (newSocket) {
       newSocket.on("messageRecieved", (data) => {
-        console.log("incrementing the pending count");
-        console.log(data);
         setClients((prev) =>
           prev.map((client) =>
             client._id === data.senderId
               ? {
                   ...client,
                   pendingMessageCount:
-                    (isNaN(client.pendingMessageCount)
-                      ? 0
-                      : client.pendingMessageCount) + 1,
+                    chatPageOpen && SelectedUserDetails._id === data.senderId
+                      ? client.pendingMessageCount
+                      : (isNaN(client.pendingMessageCount)
+                          ? 0
+                          : client.pendingMessageCount) + 1,
                 }
               : client
           )
         );
-        setTotalPendingMessages((prev) => prev + 1);
+
+        if (!(chatPageOpen && SelectedUserDetails._id === data.senderId)) {
+          setTotalPendingMessages((prev) => prev + 1);
+        }
       });
     }
 
+    // Call disconnect when the component unmounts
     return () => {
+      console.log("Socket disconnecting==========================================");
       if (newSocket) {
         newSocket.off("messageRecieved");
+        newSocket.off("clientOnline");
+        newSocket.off("clientOffline");
       }
+      useSocketStore.getState().disconnect();
     };
-  }, [newSocket]);
-
+  }, [chatPageOpen, SelectedUserDetails]); 
+ 
   const makeMsgSeen = async (receiverId: string) => {
-    // console.log(
-    //   "makeMsgSeen",
-    //   "SelectedUserDetails._id",
-    //   receiverId,
-    //   "trainerId",
-    //   trainerId
-    // );
+    const newSocket = useSocketStore.getState().socket;
+
     if (newSocket) {
       newSocket.emit("makeMsgSeen", {
         senderId: trainerId,

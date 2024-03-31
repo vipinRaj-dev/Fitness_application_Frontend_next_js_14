@@ -261,7 +261,7 @@ const TrainerChatReview = ({
                   height={100}
                   alt="profilePicture"
                 />
-                <h1>{trainer && trainer.name}</h1>
+                <h1>{trainer && trainer.name}</h1> 
 
                 <h1>{isTrainerOnline ? "Online" : "Offline"}</h1>
               </div>

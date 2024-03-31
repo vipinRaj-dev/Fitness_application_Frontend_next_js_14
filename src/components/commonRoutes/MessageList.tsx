@@ -1,7 +1,7 @@
 "use client";
 
 import axiosInstance from "@/axios/creatingInstance";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useSocketStore } from "@/store/socket";
@@ -34,6 +34,7 @@ const MessageList = ({
     userId: "",
     trainerId: "",
   });
+  const endOfMessagesRef = useRef<null | HTMLDivElement>(null);
 
   const [reRender, setReRender] = useState(false);
 
@@ -49,6 +50,19 @@ const MessageList = ({
     senderId = userId;
     receiverId = trainerId;
   }
+
+  // ...
+
+  useEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView();
+    }
+  }, []);
+  useEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView();
+    }
+  }, [messages]);
 
   //   console.log(from, trainerId, userId);
   useEffect(() => {
@@ -80,22 +94,28 @@ const MessageList = ({
   useEffect(() => {
     if (newSocket) {
       newSocket.on("messageRecieved", (data) => {
-        console.log("this is ===================the mesage recieved", data);
+        console.log(
+          "this is ===================the mesage recieved Message list",
+          data
+        );
         newSocket.emit("makeMsgSeen", {
           senderId: data.receiverId,
-          receiverId:data.senderId,
+          receiverId: data.senderId,
         });
 
-
-        setMessages([...messages, data]);
+        if (from === "trainer" && userId === data.senderId) {
+          setMessages([...messages, data]);
+        } else if (from === "user" && trainerId === data.senderId) {
+          setMessages([...messages, data]);
+        }
       });
     }
 
-    return () => {
-      if (newSocket) {
-        newSocket.off("messageRecieved");
-      }
-    };
+    // return () => {
+    //   if (newSocket) {
+    //     newSocket.off("messageRecieved");
+    //   }
+    // };
   }, [newSocket, messages]);
 
   useEffect(() => {
@@ -103,12 +123,10 @@ const MessageList = ({
       newSocket.on("msgSeen", (data) => {
         console.log("message seen", data);
         // setReRender(!reRender);
-        console.log('messages' , messages)
-       setMessages((prev) =>
+        console.log("messages", messages);
+        setMessages((prev) =>
           prev.map((msg) =>
-            msg.senderId === data.senderId
-              ? { ...msg, isSeen: true }
-              : msg
+            msg.senderId === data.senderId ? { ...msg, isSeen: true } : msg
           )
         );
       });
@@ -119,7 +137,7 @@ const MessageList = ({
         newSocket.off("msgSeen");
       }
     };
-  }, [newSocket , messages]);
+  }, [newSocket, messages]);
 
   const handleClick = (msg: string) => {
     if (newSocket && msg !== "") {
@@ -141,36 +159,34 @@ const MessageList = ({
   };
 
   useEffect(() => {
-    if(newSocket){
-      console.log('allSeen')
-      newSocket.emit('allSeen' , {
+    if (newSocket) {
+      console.log("allSeen");
+      newSocket.emit("allSeen", {
         from,
         trainerId,
-        userId
-      })
-      newSocket.on('allSeen' , ()=>{
-        console.log('allSeen recieved')
+        userId,
+      });
+      newSocket.on("allSeen", () => {
+        console.log("allSeen recieved");
         setMessages((prev) => {
-          const updatedMessage =   prev.map((msg) =>
-              msg.senderId === (from == 'user' ? userId : trainerId)
-                ? { ...msg, isSeen: true }
-                : msg
-            )
-  
-          console.log(updatedMessage, from == "user" ? userId : trainerId)
+          const updatedMessage = prev.map((msg) =>
+            msg.senderId === (from == "user" ? userId : trainerId)
+              ? { ...msg, isSeen: true }
+              : msg
+          );
+
+          console.log(updatedMessage, from == "user" ? userId : trainerId);
           return updatedMessage;
-
-        })
-          
-      })
+        });
+      });
     }
 
-    return ()=>{
-      if(newSocket){
-        newSocket.off("allSeen")
+    return () => {
+      if (newSocket) {
+        newSocket.off("allSeen");
       }
-    }
-  } , [])
+    };
+  }, []);
   return (
     <>
       <div className="h-5/6 flex flex-col bg-slate-700 overflow-y-scroll space-y-3 p-2 bg-[url('/images/chatImage2.jpg')]">
@@ -199,6 +215,7 @@ const MessageList = ({
             </div>
           );
         })}
+        <div ref={endOfMessagesRef} />
       </div>
       <div className="bg-slate-800 flex gap-2">
         <Input

@@ -60,7 +60,7 @@ const FoodCard = ({
   // const [change, setChange] = useState(false);
 
   useEffect(() => {
-    setAddedFoodDocIdsList(addedFoodDocIds);
+    setAddedFoodDocIdsList(addedFoodDocIds); 
   }, [addedFoodDocIds]);
 
   const handleSubmit = async ({ time, foodDocId }: HandleSubmitParams) => {

@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "../ui/badge";
 import StarRatings from "react-star-ratings";
 import { Button } from "../ui/button";
-import { Radio } from "lucide-react";
+import { MessageSquareMore, Radio } from "lucide-react";
 import { useSocketStore } from "@/store/socket";
 import Image from "next/image";
 import MessageList from "../commonRoutes/MessageList";
@@ -225,15 +225,28 @@ const TrainerChatReview = ({
       {new Date(trainer.trainerPaymentDueDate) > new Date() ? (
         <>
           <Badge
+            className={`${
+              pendingMsgCount > 0 ? "animate-bounce" : ""
+            } relative`}
             onClick={() => {
               setChatPageOpen(true);
               // makeMsgSeen();
             }}
           >
-            Msg : {pendingMsgCount}
+            <MessageSquareMore />
+            <div className="bg-red-600 absolute top-0 right-1 w-4 text-center rounded-full">
+              {pendingMsgCount > 0 && <p>{pendingMsgCount}</p>}
+            </div>
+            {/* Msg : {pendingMsgCount} */}
           </Badge>
 
-          <Link href={`/room/${userId}`}>Meet</Link>
+          {isTrainerOnline ? (
+            <Button>
+              <Link href={`/room/${userId}`}>Meet</Link>
+            </Button>
+          ) : (
+            <Button disabled>Meet</Button>
+          )}
         </>
       ) : (
         <p className="text-sm text-red-500">Time Expired</p>

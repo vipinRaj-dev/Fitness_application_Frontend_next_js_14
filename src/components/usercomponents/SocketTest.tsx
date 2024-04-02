@@ -38,7 +38,7 @@ const SocketTest = () => {
     }
   }, [newSocket]);
 
-  return <div>SocketTest</div>;
+  return <div></div>;
 };
 
 export default SocketTest;

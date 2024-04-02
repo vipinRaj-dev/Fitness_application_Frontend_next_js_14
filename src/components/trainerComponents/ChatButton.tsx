@@ -28,7 +28,7 @@ import Image from "next/image";
 import { Input } from "../ui/input";
 import MessageList from "../commonRoutes/MessageList";
 import Link from "next/link";
-import { Video } from "lucide-react";
+import { MessageSquareMore, Video } from "lucide-react";
 
 type Client = {
   isOnline?: boolean;
@@ -196,7 +196,19 @@ const ChatButton = () => {
     <div>
       <Sheet>
         <SheetTrigger>
-          Chat {totalPendingMessages > 0 && `(${totalPendingMessages})`}
+          <div
+            className={`relative ${
+              totalPendingMessages > 0 ? "animate-bounce" : ""
+            }`}
+          >
+            <MessageSquareMore size={48} />
+            {totalPendingMessages > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white w-5 rounded-full">
+                {totalPendingMessages}
+              </div>
+            )}
+          </div>
+          {/* Chat {totalPendingMessages > 0 && `(${totalPendingMessages})`} */}
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
@@ -248,7 +260,6 @@ const ChatButton = () => {
                   ) : (
                     <p className="text-red-500 ml-3 ">Offline</p>
                   )}
-                  
                 </div>
               ))}
             </SheetDescription>
@@ -289,7 +300,9 @@ const ChatButton = () => {
                   </h1>
                 </div>
                 <div className="">
-                <Link href={`/room/${SelectedUserDetails._id}`}><Video /></Link>
+                  <Link href={`/room/${SelectedUserDetails._id}`}>
+                    <Video />
+                  </Link>
                 </div>
               </div>
               <>

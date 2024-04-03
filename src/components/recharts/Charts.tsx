@@ -11,16 +11,18 @@ import { LineChartData } from "./LIneChartPlot";
 import { AreaChartData } from "./AreaChartPlot";
 import { pieChartData } from "./PieChartPlot";
 
-type numericResponse = {
-  totalRevenue: number;
-  premiumUsers: number;
-  trialUsers: number;
-  trialExpired: number;
-  totalTrainers: number;
-} | null;
+import { AdminDashResponseData } from "@/types/DateWiseResponseData";
+
+// type numericResponse = {
+//   totalRevenue: number;
+//   premiumUsers: number;
+//   trialUsers: number;
+//   trialExpired: number;
+//   totalTrainers: number;
+// } | null;
 
 const Charts = () => {
-  const [numericalData, setNumericalData] = useState<numericResponse>(null);
+  const [numericalData, setNumericalData] = useState<AdminDashResponseData>();
 
   const [lineChartData, setLineChartData] = useState<LineChartData[] | null>(
     null
@@ -34,8 +36,8 @@ const Charts = () => {
 
   const [BarChartData, setBarChartData] = useState<BarChartData[] | null>(null);
 
-  const setAllDataToStates = (res: any) => {
-    setNumericalData(res.data);
+  const setAllDataToStates = (data: AdminDashResponseData) => {
+    setNumericalData(data);
     const months = [
       "Jan",
       "Feb",
@@ -50,24 +52,24 @@ const Charts = () => {
       "Nov",
       "Dec",
     ];
-    const mappedData = res.data.userCountPerMonth.map((item: any) => ({
+    const mappedData = data.userCountPerMonth.map((item) => ({
       month: months[item._id - 1],
       usercount: item.count,
     }));
     setLineChartData(mappedData);
 
-    const areaData = res.data.monthlyPayments.map((item: any) => ({
+    const areaData = data.monthlyPayments.map((item) => ({
       month: months[item._id - 1],
       totalAmount: item.totalAmount,
     }));
     setAreaChartData(areaData);
 
-    const pieData = res.data.foodCountWithFoodtype.map((item: any) => ({
+    const pieData = data.foodCountWithFoodtype.map((item) => ({
       type: item._id,
       count: item.count,
     }));
     setPieChartData(pieData);
-    const barData = res.data.trainerWiseClientCount.map((item: any) => ({
+    const barData = data.trainerWiseClientCount.map((item) => ({
       name: item.name,
       clientCount: item.clientCount,
     }));
@@ -79,8 +81,8 @@ const Charts = () => {
       axiosInstance
         .get("/admin/graph")
         .then((res) => {
-          console.log(res.data);
-          setAllDataToStates(res);
+          // console.log("res.data.chats =========", res.data);
+          setAllDataToStates(res.data);
         })
         .catch((error) => {
           console.log(error);

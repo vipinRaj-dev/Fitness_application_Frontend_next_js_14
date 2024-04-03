@@ -22,6 +22,7 @@ import { Button } from "../ui/button";
 import axiosInstance from "@/axios/creatingInstance";
 import swal from "sweetalert";
 import Dnaspinner from "../loadingui/Dnaspinner";
+import { AxiosError } from "@/types/ErrorType";
 
 // import { usePathname } from "next/navigation";
 
@@ -272,9 +273,9 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
             });
           }
         })
-        .catch((err: Error | any) => {
+        .catch((err: AxiosError) => {
           setLoading(false);
-          // console.log(err.response.data);
+          console.log(err);
 
           if (err.response.status === 401) {
             swal({

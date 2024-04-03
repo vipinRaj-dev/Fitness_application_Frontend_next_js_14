@@ -4,27 +4,27 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Input } from "../ui/input";
-
-type Food = {
-  _id: string;
-  createdAt: string;
-  description: string;
-  foodname: string;  
-  foodtype: string;
-  ingredients: string[];
-  nutrition: {
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    _id: string;
-  };
-  photoUrl: string;
-  publicId: string;
-  quantity: number;
-  unit: string;
-  added?: boolean;
-};
+import { FoodType } from "@/types/FoodTypes";
+// type Food = {
+//   _id: string;
+//   createdAt: string;
+//   description: string;
+//   foodname: string;  
+//   foodtype: string;
+//   ingredients: string[];
+//   nutrition: {
+//     calories: number;
+//     protein: number;
+//     carbs: number;
+//     fat: number;
+//     _id: string;
+//   };
+//   photoUrl: string;
+//   publicId: string;
+//   quantity: number;
+//   unit: string;
+//   added?: boolean;
+// };
 type FoodSearchProps = {
   clientId: string;
   updateParent?: () => void;
@@ -32,7 +32,7 @@ type FoodSearchProps = {
 
 const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
   // console.log("clientId", clientId);
-  const [foodList, setFoodList] = useState<Food[]>([]);
+  const [foodList, setFoodList] = useState<FoodType[]>([]);
   const [addedFoodId, setAddedFoodId] = useState<string[]>([]);
 
   const [page, setPage] = useState(1);
@@ -187,7 +187,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
             Next
           </Button>
         </div>
-        {foodList.map((food: any) => (
+        {foodList.map((food) => (
           <div
             className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center scale-95 transition duration-700 ease-in-out transform  hover:scale-100 overflow-x-auto "
             key={food._id}
@@ -197,7 +197,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
                 <img
                   className="w-full h-full object-contain "
                   src={food.photoUrl}
-                  alt={food.name}
+                  alt={food.foodname}
                 />
               </div>
               <div className=" h-full overflow-auto scrollbar-none">
@@ -211,7 +211,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
                 </div>
                 <div className="flex gap-2 text-green-300 font-extralight">
                   <p>Ingredients : </p>
-                  {food.ingredients.map((ingredient: any, index: number) => {
+                  {food.ingredients.map((ingredient, index) => {
                     return <p key={index}>{ingredient}</p>;
                   })}
                 </div>

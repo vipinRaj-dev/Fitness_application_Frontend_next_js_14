@@ -95,7 +95,7 @@ const SignUpForm = () => {
           // setLoading(false);
         }
       })
-      .catch((error: Error | any) => {
+      .catch((error) => {
         if (error.response && error.response.status === 409) {
           // setLoading(false);
           setError("Email already exists");

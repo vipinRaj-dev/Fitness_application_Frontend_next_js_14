@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
-import { Trainer } from "@/types/TrainerTypes";
+import { TrainerMinDetails } from "@/types/TrainerTypes";
 import { AttendanceData } from "@/types/DateWiseResponseData";
 import TrainerChatReview from "./TrainerChatReview";
 import UserProfileEdit from "./UserProfileEdit";
@@ -37,7 +37,7 @@ const UserProfile = () => {
   );
   const [userCreatedDate, setUserCreatedDate] = useState<Date>();
 
-  const [trainer, setTrainer] = useState<Trainer>({
+  const [trainer, setTrainer] = useState<TrainerMinDetails>({
     profilePicture: "",
     name: "",
     _id: "",

@@ -1,7 +1,7 @@
 "use client";
 
 import axiosInstance from "@/axios/creatingInstance";
-import { WorkoutData } from "@/types/workoutTypes";
+import { WorkoutData } from "@/types/WorkoutTypes";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { Button } from "../ui/button";

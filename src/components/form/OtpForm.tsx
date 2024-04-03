@@ -19,7 +19,7 @@ const OtpForm = ({ data }: { data?: UserDataType }) => {
   const [error, setError] = useState<string>("");
   const router = useRouter();
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (otp.length !== 4) {
       setError("Invalid otp");

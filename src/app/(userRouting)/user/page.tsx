@@ -1,15 +1,7 @@
 "use client";
 
-import { baseUrl } from "@/Utils/PortDetails";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import Cookies from "js-cookie";
-import { loadStripe } from "@stripe/stripe-js";
-import AreaChartPlot from "@/components/recharts/AreaChartPlot";
-import PieChartPlot from "@/components/recharts/PieChartPlot";
 import BarChartPlot from "@/components/recharts/BarChartPlot";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Image from "next/image";
 import FoodCard from "@/components/usercomponents/FoodCard";
@@ -24,7 +16,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -32,12 +23,10 @@ import { BarChartData } from "@/components/recharts/BarChartPlot";
 import BarChartUser, {
   BarChartDataUser,
 } from "@/components/recharts/BarChartUser";
-import swal from "sweetalert";
 import { Label } from "@/components/ui/label";
 
-type DietFood = {
-  time: string;
-}[];
+
+import { DietFoodType } from "@/types/FoodTypes";
 
 type graphOrder = {
   [key: string]: number;
@@ -46,11 +35,11 @@ type graphOrder = {
 // const [socket, setSocket] = useState<Socket | null>(null);
 
 const Userpage = () => {
-  const [latestDiet, setLatestDiet] = useState<DietFood>([]);
+  const [latestDiet, setLatestDiet] = useState<DietFoodType[]>([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
   const [hasTrainer, setHasTrainer] = useState(false);
   const [attendanceId, setAttendanceId] = useState<string>("");
-  
+
   const [allTasksCompleted, setAllTasksCompleted] = useState<boolean>(true);
 
   const [yesterdayAttendanceId, setYesterdayAttendanceId] = useState("");
@@ -84,14 +73,14 @@ const Userpage = () => {
     await axiosInstance
       .get("/user/getGraphs")
       .then((res) => {
-        console.log(res.data);
+        // console.log("res.data graphs : ", res.data);
 
         const barData = res.data.attendancePerDay
           .sort(
             (a: { day: string }, b: { day: string }) =>
               orderOfWeek[a.day] - orderOfWeek[b.day]
           )
-          .map((item: any) => ({
+          .map((item: { day: string; NoOfDays: number }) => ({
             day: item.day,
             NoOfDays: item.NoOfDays,
           }));
@@ -103,11 +92,17 @@ const Userpage = () => {
             (a: { _id: string }, b: { _id: string }) =>
               orderOfFood[a._id] - orderOfFood[b._id]
           )
-          .map((item: any) => ({
-            name: item._id,
-            FoodCount: item.totalFood,
-            ConsumedFood: item.completedCount,
-          }));
+          .map(
+            (item: {
+              _id: string;
+              totalFood: number;
+              completedCount: number;
+            }) => ({
+              name: item._id,
+              FoodCount: item.totalFood,
+              ConsumedFood: item.completedCount,
+            })
+          );
         setFoodStatus(foodStatus);
       })
       .catch((err) => {
@@ -120,7 +115,7 @@ const Userpage = () => {
       axiosInstance
         .get("/user/homePage")
         .then((res) => {
-          console.log(res.data.allTasksCompleted);
+          // console.log('res.data', res.data);
           if (res.status === 200) {
             setLatestDiet(res.data.dietFood);
             setAddedFoodDocIds(res.data.addedFoodDocIds);
@@ -149,13 +144,13 @@ const Userpage = () => {
     }
   }, [allTasksCompleted]);
 
-  const sendReason = async (agree : boolean) => {
+  const sendReason = async (agree: boolean) => {
     try {
       axiosInstance
         .post("/user/applyReason", {
           reason,
           yesterdayAttendanceId,
-          agree
+          agree,
         })
         .then((res) => {
           console.log(res.data);
@@ -187,10 +182,13 @@ const Userpage = () => {
       </div>
 
       <div>
-        <Dialog open={openModal} onOpenChange={()=>{
-          setOpenModal(false)
-          sendReason(false)
-        }}>
+        <Dialog
+          open={openModal}
+          onOpenChange={() => {
+            setOpenModal(false);
+            sendReason(false);
+          }}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Reason</DialogTitle>
@@ -286,7 +284,7 @@ const Userpage = () => {
                       Number(b.time.replace(":", "."))
                     );
                   })
-                  .map((food: any) => {
+                  .map((food) => {
                     if (food.timePeriod === "morning")
                       return (
                         <FoodCard
@@ -310,7 +308,7 @@ const Userpage = () => {
                       Number(b.time.replace(":", "."))
                     );
                   })
-                  .map((food: any) => {
+                  .map((food) => {
                     if (food.timePeriod === "afternoon")
                       return (
                         <FoodCard
@@ -334,7 +332,7 @@ const Userpage = () => {
                       Number(b.time.replace(":", "."))
                     );
                   })
-                  .map((food: any) => {
+                  .map((food) => {
                     if (food.timePeriod === "evening")
                       return (
                         <FoodCard

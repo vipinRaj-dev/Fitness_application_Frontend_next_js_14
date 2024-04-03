@@ -13,7 +13,7 @@ interface SocketState {
 
 export const useSocketStore = create<SocketState>((set) => ({
   socket: null,
-  setSocket: (socket: any) => set({ socket }),
+  setSocket: (socket) => set({ socket }),
   connect: (role : string) =>
     set((state) => {
       if (state.socket == null) {

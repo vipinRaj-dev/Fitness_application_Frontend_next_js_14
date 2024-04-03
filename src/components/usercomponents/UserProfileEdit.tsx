@@ -5,6 +5,7 @@ import { useState } from "react";
 import swal from "sweetalert";
 import { Badge } from "../ui/badge";
 import Dnaspinner from "../loadingui/Dnaspinner";
+import { AxiosError } from "@/types/ErrorType";
 
 type error = {
   mobileNumber?: string;
@@ -12,11 +13,16 @@ type error = {
   weight?: string;
 };
 
-const UserProfileEdit = ({ form  , setForm}: { form: FormState; setForm : any}) => {
+const UserProfileEdit = ({
+  form,
+  setForm,
+}: {
+  form: FormState;
+  setForm: React.Dispatch<React.SetStateAction<FormState>>;
+}) => {
   const [errors, setErrors] = useState<error>({});
   const [openInput, setOpenInput] = useState(false);
   const [loading, setLoading] = useState(false);
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -25,17 +31,17 @@ const UserProfileEdit = ({ form  , setForm}: { form: FormState; setForm : any}) 
       [name]: "",
     }));
     if (type === "checkbox") {
-      setForm((prevState : FormState) => ({
+      setForm((prevState: FormState) => ({
         ...prevState,
         [name]: checked,
       }));
     } else if (name === "image") {
-      setForm((prevState : FormState) => ({
+      setForm((prevState: FormState) => ({
         ...prevState,
         [name]: e.target.files ? e.target.files[0] : prevState.profileImage,
       }));
     } else {
-      setForm((prevState : FormState) => ({
+      setForm((prevState: FormState) => ({
         ...prevState,
         [name]: value,
       }));
@@ -90,7 +96,7 @@ const UserProfileEdit = ({ form  , setForm}: { form: FormState; setForm : any}) 
           // console.log(res.data);
           setLoading(false);
           if (res.status === 200) {
-            setForm((prevState : FormState) => ({
+            setForm((prevState: FormState) => ({
               ...prevState,
               profileImage: res.data?.imageData?.url,
             }));
@@ -107,7 +113,7 @@ const UserProfileEdit = ({ form  , setForm}: { form: FormState; setForm : any}) 
             });
           }
         })
-        .catch((err: Error | any) => {
+        .catch((err) => {
           setLoading(false);
           console.log(err.response.data);
           swal({
@@ -122,7 +128,6 @@ const UserProfileEdit = ({ form  , setForm}: { form: FormState; setForm : any}) 
   const openHealthIssues = () => {
     setOpenInput(true);
   };
-
 
   if (loading) {
     return <Dnaspinner />;

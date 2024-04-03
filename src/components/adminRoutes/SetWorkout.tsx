@@ -80,7 +80,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
     }
   }, [workoutId]);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -88,15 +88,17 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
     }));
   };
 
-  const handleFileChange = (e: any) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: files[0],
-    }));
+    if (files && files.length > 0) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(formData);
 

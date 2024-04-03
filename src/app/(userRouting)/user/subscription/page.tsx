@@ -38,7 +38,7 @@ const page = () => {
     });
     const session = await response.json();
     if (stripe) {
-      const result: any = await stripe.redirectToCheckout({
+      const result = await stripe.redirectToCheckout({
         sessionId: session.id,
       });
       if (result.error) {

@@ -6,39 +6,9 @@ import { Button } from "../ui/button";
 import swal from "sweetalert";
 import { useEffect, useState } from "react";
 
-interface Nutrition {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  _id: string;
-}
+import { DietFoodType } from "@/types/FoodTypes";
 
-interface Food {
-  createdAt: string;
-  description: string;
-  foodname: string;
-  foodtype: string;
-  ingredients: string[];
-  nutrition: Nutrition;
-  photoUrl: string;
-  publicId: string;
-  quantity: number;
-  unit: string;
-  __v: number;
-  _id: string;
-}
 
-interface Diet {
-  date: string;
-  foodId: Food;
-  quantity: number;
-  time: string;
-  timePeriod: string;
-  _id: string;
-}
-
-type LatestDiet = Diet;
 
 interface HandleSubmitParams {
   time: string;
@@ -50,7 +20,7 @@ const FoodCard = ({
   addedFoodDocIds,
   attendanceId
 }: {
-  details: LatestDiet;
+  details: DietFoodType;
   addedFoodDocIds: string[];
   attendanceId : string
 }) => {

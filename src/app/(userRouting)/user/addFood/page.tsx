@@ -11,21 +11,22 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 import { useEffect, useState } from "react";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
 
+
+import { DietFoodType } from "@/types/FoodTypes";
+
 const page = () => {
   const user = userStore((state) => state.user);
   const client_Id = user.UserId;
-  const [latestDiet, setLatestDiet] = useState<any[]>([]);
+  const [latestDiet, setLatestDiet] = useState<DietFoodType[]>([]);
   const [listOpen, setListOpen] = useState(false);
 
   const [done, setDone] = useState(false);
@@ -34,7 +35,7 @@ const page = () => {
   const [schedule, setSchedule] = useState({
     foodId: "",
     timePeriod: "morning",
-    quantity: 1,
+    quantity: "1",
     time: "10:00",
   });
 
@@ -50,8 +51,8 @@ const page = () => {
         // console.log("res.data.latestDiet", res.data.latestDiet);
         setLatestDiet(res.data.latestDiet);
       })
-      .catch((err: Error | any) => {
-        console.log(err.response.data);
+      .catch((err: Error) => {
+        console.log(err);
       });
   }, [client_Id, done]);
 
@@ -142,7 +143,7 @@ const page = () => {
           Note :"It would reflect in your next diet plan"
         </p>
         <div className=" p-5 h-4/6 rounded-2xl shadow-2xl shadow-slate-800 overflow-y-scroll scrollbar-none scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-          {latestDiet.map((food: any, index) => {
+          {latestDiet.map((food) => {
             return (
               <div
                 className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center"
@@ -153,7 +154,7 @@ const page = () => {
                     <img
                       className="w-full h-full object-contain "
                       src={food.foodId.photoUrl}
-                      alt={food.foodId.name}
+                      alt={food.foodId.foodname}
                     />
                   </div>
                   <div className="flex items-center">

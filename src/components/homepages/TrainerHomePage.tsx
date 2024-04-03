@@ -45,49 +45,7 @@ import swal from "sweetalert";
 import StarRatings from "react-star-ratings";
 import { Link as ScrollLink } from "react-scroll";
 
-interface Trainer {
-  avgRating: number;
-  transformationClientsCount: number;
-  certificationsCount: number;
-  description: string;
-  email: string;
-  experience: number;
-  isBlocked: boolean;
-  mobileNumber: number;
-  name: string;
-  price: number;
-  profilePicture: string;
-  publicId: string;
-  specializedIn: string;
-  _id: string;
-  certifications: {
-    _id: string;
-    name: string;
-    content: string;
-    photoUrl: string;
-    publicId: string;
-  }[];
-
-  transformationClients: {
-    _id: string;
-    name: string;
-    content: string;
-    photoUrl: string;
-    publicId: string;
-  }[];
-}
-
-type TrainerReviews = {
-  _id: string;
-  createdAt: string;
-  content: string;
-  rating: number;
-  userId: {
-    _id: string;
-    name: string;
-    profileImage: string;
-  };
-};
+import { TrainerReviews, Trainer } from "@/types/TrainerTypes";
 
 const TrainerHomePage = () => {
   const [trainerData, setTrainerData] = useState<Trainer | null>(null);
@@ -232,7 +190,6 @@ const TrainerHomePage = () => {
   };
   return (
     <div>
-      
       <div className=" pb-72 md:pb-96">
         <div className="w-full relative ">
           <div className="md:flex md:justify-center">

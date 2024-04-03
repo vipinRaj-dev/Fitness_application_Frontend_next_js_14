@@ -17,7 +17,7 @@ const OtpFormForgotPassword = () => {
     return <Spinner />;
   }
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically send a request to your backend to verify the OTP
     axios

@@ -6,8 +6,10 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Input } from "../ui/input";
 
+import { FoodType } from "@/types/FoodTypes";
+
 const ListFood = () => { 
-  const [foodList, setFoodList] = useState([]);
+  const [foodList, setFoodList] = useState<FoodType[]>([]);
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -16,7 +18,7 @@ const ListFood = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    console.log("ListFood");
+    // console.log("ListFood");
     axiosInstance
       .get("/admin/food", {
         params: {
@@ -27,7 +29,7 @@ const ListFood = () => {
         },
       })
       .then((res) => {
-        // console.log(res.data);
+        // console.log("res.data foodlist" , res.data);
         setFoodList(res.data.allFood);
         if (search !== "") {
           setPage(1);
@@ -57,7 +59,7 @@ const ListFood = () => {
     axiosInstance
       .delete(`/admin/deleteFood/${foodId}`)
       .then((res) => {
-        // console.log(res.data);
+        // console.log("res.data foodlist" , res.data);
         setFoodList((prevFoodList) =>
           prevFoodList.filter((food: { _id: string }) => food._id !== foodId)
         );
@@ -138,7 +140,7 @@ const ListFood = () => {
             </Button>
           </div>
         </div>
-        {foodList.map((food: any) => (
+        {foodList.map((food) => (
           <div
             className="flex gap-2 mb-4 h-36 p-3 bg-[#2C2C2E] rounded-lg justify-between items-center scale-95 transition duration-700 ease-in-out transform  hover:scale-100"
             key={food._id}
@@ -148,7 +150,7 @@ const ListFood = () => {
                 <img
                   className="w-full h-full object-contain "
                   src={food.photoUrl}
-                  alt={food.name}
+                  alt={food.foodname}
                 />
               </div>
               <div className=" h-full overflow-auto scrollbar-none">
@@ -163,7 +165,7 @@ const ListFood = () => {
 
                 <div className="flex gap-2 text-green-300 font-extralight">
                   <p>Ingredients : </p>
-                  {food.ingredients.map((ingredient: any, index: number) => {
+                  {food.ingredients.map((ingredient, index) => {
                     return <p key={index}>{ingredient}</p>;
                   })}
                 </div>

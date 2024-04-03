@@ -198,7 +198,7 @@ const MessageList = ({
           senderId,
           receiverId,
         },
-        (response: any) => {
+        (response: { status: string }) => {
           // console.log("server response", response);
           setMsg("");
           setReRender(!reRender);
@@ -252,13 +252,13 @@ const MessageList = ({
           placeholder="Type a message"
         />
         <Button
-        variant={'ghost'}
-        className="rounded-r-none"
+          variant={"ghost"}
+          className="rounded-r-none"
           onClick={() => {
             handleClick(msg);
           }}
         >
-         <SendHorizontal color="#ffffff" />
+          <SendHorizontal color="#ffffff" />
         </Button>
       </div>
     </>

@@ -57,3 +57,39 @@ export type AttendanceData = {
   workOutLogs: WorkOutLogs;
   notCompleteReason?: string;
 };
+
+// admin side graph data response data types
+type UserCountPerMonth = {
+  _id: number;
+  count: number;
+};
+
+type MonthlyPayment = {
+  _id: number;
+  totalAmount: number;
+  latestDate: string;
+};
+
+type FoodCountWithFoodType = {
+  _id: string;
+  count: number;
+};
+
+type TrainerWiseClientCount = {
+  name: string;
+  clientCount: number;
+};
+
+export type AdminDashResponseData = {
+  userCountPerMonth: UserCountPerMonth[];
+  monthlyPayments: MonthlyPayment[];
+  foodCountWithFoodtype: FoodCountWithFoodType[];
+  trainerWiseClientCount: TrainerWiseClientCount[];
+  premiumUsers: number;
+  totalRevenue: number;
+  totalTrainers: number;
+  trialExpired: number;
+  trialUsers: number;
+};
+
+

@@ -6,17 +6,8 @@ import swal from "sweetalert";
 import { z } from "zod";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-type FormState = {
-  description: string;
-  email: string;
-  experience: number | string;
-  mobileNumber: number | string;
-  name: string;
-  price: number | string;
-  profilePicture: string;
-  specializedIn: string;
-  _id?: string;
-};
+import { AxiosError } from "@/types/ErrorType";
+import {TrainerProfileFormState} from "@/types/TrainerTypes";
 
 const createSchema = (minLength: number, errorMessage: string) => {
   return z
@@ -83,7 +74,7 @@ const schema = z.object({
 
 const TrainerProfile = () => {
   const router = useRouter();
-  const [form, setForm] = useState<FormState>({
+  const [form, setForm] = useState<TrainerProfileFormState>({
     _id: "",
     name: "",
     email: "",
@@ -106,9 +97,9 @@ const TrainerProfile = () => {
           ...prevState,
           ...res.data.trainer,
         }));
-      } catch (error: Error | any) {
+      } catch (error) {
         console.log(error);
-        if (error.response.status === 404) {
+        if ((error as AxiosError).response?.status === 404) {
           Cookies.remove("jwttoken");
           router.replace("/sign-in");
         }
@@ -117,7 +108,7 @@ const TrainerProfile = () => {
     fetchUser();
   }, []);
 
-  const [errors, setErrors] = useState<FormState>({
+  const [errors, setErrors] = useState<TrainerProfileFormState>({
     name: "",
     email: "",
     mobileNumber: "",
@@ -233,7 +224,7 @@ const TrainerProfile = () => {
             });
           }
         })
-        .catch((err: Error | any) => {
+        .catch((err) => {
           setLoading(false);
           // console.log(err);
           swal({

@@ -18,10 +18,10 @@ const ForgotPasswordForm = () => {
 
   const router = useRouter();
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // Here you would typically send a request to your backend to initiate the password reset process
+   
     try {
       axios
         .post(`${baseUrl}/auth/forgot-password`, {

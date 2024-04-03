@@ -77,6 +77,8 @@ const page = ({
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
     );
 
+    // console.log('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY' , process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
     const body = {
       amount: amount.amount,
       plan: "Trainer purchase",
@@ -94,7 +96,7 @@ const page = ({
     });
     const session = await response.json();
     if (stripe) {
-      const result: any = await stripe.redirectToCheckout({
+      const result = await stripe.redirectToCheckout({
         sessionId: session.id,
       });
       if (result.error) {

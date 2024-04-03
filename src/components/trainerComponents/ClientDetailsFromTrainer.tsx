@@ -31,15 +31,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DialogClose } from "@radix-ui/react-dialog";
 
-import { WorkoutData } from "@/types/workoutTypes";
+import { WorkoutData } from "@/types/WorkoutTypes";
 import { AttendanceData } from "@/types/DateWiseResponseData";
 import EditAndListWorkouts from "../commonRoutes/EditAndListWorkouts";
+import { DietFoodType } from "@/types/FoodTypes";
+import { AxiosError } from "@/types/ErrorType";
 
 type User = {
   admissionNumber: number;
@@ -72,7 +72,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const timePeriods = ["morning", "afternoon", "evening"];
 
   const [clientDetails, setClientDetails] = useState<User | null>(null);
-  const [latestDiet, setLatestDiet] = useState<any[]>([]);
+  const [latestDiet, setLatestDiet] = useState<DietFoodType[]>([]);
 
   const [done, setDone] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -89,7 +89,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
   const [schedule, setSchedule] = useState({
     foodId: "",
     timePeriod: "morning",
-    quantity: 1,
+    quantity: "1",
     time: "10:00",
   });
 
@@ -111,12 +111,13 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         userCreated.setHours(0, 0, 0, 0);
         setUserCreatedDate(userCreated);
       })
-      .catch((err: Error | any) => {
-        console.log(err.response.data);
-        if (err.response.status === 404) {
-          Cookies.remove("jwttoken");
-          router.replace("/sign-in");
-        }
+      .catch((err) => {
+        console.log(err);
+
+        // if (err.response.status === 404) {
+        //   Cookies.remove("jwttoken");
+        //   router.replace("/sign-in");
+        // }
       });
   }, [client_Id, done]);
   //  console.log(clientDetails);
@@ -355,10 +356,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                       <h1>Fat : {totalNutrition && totalNutrition.fat}</h1>
                     </div>
                   );
-                })}   
-
-
-
+                })}
               </div>
             </div>
             {attendanceData && attendanceData.notCompleteReason && (
@@ -489,7 +487,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
         </div>
         <div className=" p-5 h-5/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
-          {latestDiet.map((food: any, index) => {
+          {latestDiet.map((food) => {
             return (
               <div
                 className="flex gap-2 mb-4 h-26 p-3 bg-slate-900 rounded-lg justify-between items-center"
@@ -500,7 +498,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                     <img
                       className="w-full h-full object-contain "
                       src={food.foodId.photoUrl}
-                      alt={food.foodId.name}
+                      alt={food.foodId.foodname}
                     />
                   </div>
                   <div className="flex items-center">

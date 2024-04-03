@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { WorkoutData } from "@/types/workoutTypes";
+import { WorkoutData } from "@/types/WorkoutTypes";
 import Image from "next/image";
 
 const HomePageWorkout = ({ hasTrainer }: { hasTrainer: boolean }) => {

@@ -15,14 +15,14 @@ const page = ({
 }) => {
   const roomId = params.roomId;
 
-  const [userEmail , setUserEmail] = useState("");  
+  const [userEmail, setUserEmail] = useState("");
   useEffect(() => {
     try {
       axiosInstance
         .get(`/user/getUser`)
         .then((res) => {
           console.log(res);
-          setUserEmail(res.data.email); 
+          setUserEmail(res.data.email);
         })
         .catch((error) => {
           console.log(error);
@@ -34,10 +34,13 @@ const page = ({
 
   const router = useRouter();
 
-  const myMeeting = async (element: any) => {
-    const appID = 647511603;
-    const serverSecret = "c55d687bb503f34aea67cb0b6e2952d6";
+  const myMeeting = (element: HTMLDivElement | null) => {
+    const appID = Number(process.env.NEXT_PUBLIC_ZEGO_APP_ID ?? 0);
+    const serverSecret =
+      process.env.NEXT_PUBLIC_ZEGO_SERVER_SECRET ?? ("" as string);
 
+    // console.log("appID", appID);
+    // console.log("serverSecret", serverSecret);
     const KitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,

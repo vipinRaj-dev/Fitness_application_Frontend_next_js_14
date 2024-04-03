@@ -15,19 +15,11 @@ import AreaChartPlot from "../recharts/AreaChartPlot";
 import LIneChartPlot from "../recharts/LIneChartPlot";
 import { LineChartData } from "../recharts/LIneChartPlot";
 import { AreaChartData } from "../recharts/AreaChartPlot";
-type Payment = {
-  amount: number;
-  clientDetails: {
-    _id: string;
-    name: string;
-    profileImage: string;
-  };
-  transactionId: string;
-  _id: string;
-};
+import { ResponseDataTrainerPayments  , PaymentClientType} from "@/types/TrainerTypes";
+
 
 const PaymentComponent = () => {
-  const [payments, setPayments] = useState<Payment[]>([]);
+  const [payments, setPayments] = useState<PaymentClientType[]>([]);
   const [lineChartData, setLineChartData] = useState<LineChartData[] | null>(
     null
   );
@@ -35,7 +27,7 @@ const PaymentComponent = () => {
     null
   );
 
-  const setAllDataToStates = (res: any) => {
+  const setAllDataToStates = (data: ResponseDataTrainerPayments) => {
     const months = [
       "Jan",
       "Feb",
@@ -50,12 +42,12 @@ const PaymentComponent = () => {
       "Nov",
       "Dec",
     ];
-    const mappedData = res.data.userCountPerMonth.map((item: any) => ({
+    const mappedData = data.userCountPerMonth.map((item) => ({
       month: months[item._id - 1],
       usercount: item.clientCount,
     }));
     setLineChartData(mappedData);
-    const areaData = res.data.monthlyPayments.map((item: any) => ({
+    const areaData = data.monthlyPayments.map((item) => ({
       month: months[item._id - 1],
       totalAmount: item.totalAmount,
     }));
@@ -67,9 +59,9 @@ const PaymentComponent = () => {
     axiosInstance
       .get("/trainer/payments")
       .then((res) => {
-        console.log(res.data);
+        console.log("res.data.trainer payments", res.data);
         setPayments(res.data.payments);
-        setAllDataToStates(res);
+        setAllDataToStates(res.data);
       })
       .catch((err) => {
         console.log(err);

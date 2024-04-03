@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { WorkoutData } from "@/types/workoutTypes";
+import { WorkoutData } from "@/types/WorkoutTypes";
 import { Ghost, Pencil, Plus, Trash2 } from "lucide-react";
 import axiosInstance from "@/axios/creatingInstance";
 import {

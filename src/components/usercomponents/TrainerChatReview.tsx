@@ -3,7 +3,7 @@
 import axiosInstance from "@/axios/creatingInstance";
 import { useEffect, useState } from "react";
 import swal from "sweetalert";
-import { Trainer } from "@/types/TrainerTypes";
+import { TrainerMinDetails } from "@/types/TrainerTypes";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +28,7 @@ const TrainerChatReview = ({
   trainer,
   userName,
 }: {
-  trainer: Trainer;
+  trainer: TrainerMinDetails;
   userName: string;
 }) => {
   const [isTrainerOnline, setIsTrainerOnline] = useState(false);

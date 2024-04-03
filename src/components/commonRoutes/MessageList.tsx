@@ -6,9 +6,15 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useSocketStore } from "@/store/socket";
 import moment from "moment";
-import { Ghost, SendHorizontal } from "lucide-react";
-
-import { Message } from "@/types/UserTypes";
+import { Check, CheckCheck, Ghost, SendHorizontal } from "lucide-react";
+type Message = {
+  isSeen: boolean;
+  message: string;
+  receiverId: string;
+  senderId: string;
+  time: string;
+  _id: string;
+};
 
 const MessageList = ({
   from,
@@ -216,7 +222,15 @@ const MessageList = ({
                   <p className=" text-sm text-right font-thin">
                     {moment(msg.time).format("hh:mm A")}
                   </p>
-                  <p>{msg.isSeen ? "MsgSeen" : "NotSeen"}</p>
+                  <div className="flex justify-end">
+                    <p>
+                      {msg.isSeen ? (
+                        <CheckCheck size={18} color="#00ff11" strokeWidth={3} />
+                      ) : (
+                        <Check width={18} color="#828282" strokeWidth={3} />
+                      )}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="rounded-2xl p-2 bg-stone-600 max-w-72">

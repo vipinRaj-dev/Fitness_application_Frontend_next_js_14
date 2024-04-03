@@ -39,15 +39,15 @@ const RoleAuthenticationCheckUser = () => {
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            console.log("user is blocked");
-            swal({
-              title: "Error!",
-              text: "User blocked contact admin",
-              icon: "error",
-            }).then(() => {
-              Cookies.remove("jwttoken");
-              router.replace("/");
-            });
+            // console.log("user is blocked");
+            // swal({
+            //   title: "Error!",
+            //   text: "User blocked contact admin",
+            //   icon: "error",
+            // }).then(() => {
+            //   Cookies.remove("jwttoken");
+            //   router.replace("/");
+            // });
           }
           console.log("error inside the roleAuthenticationCheckuser", error);
         });

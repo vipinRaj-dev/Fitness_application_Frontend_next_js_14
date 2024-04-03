@@ -53,7 +53,7 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        } else if (res.status === HttpStatusCode.FORBIDDEN) {
+        } else if (res.status === HttpStatusCode.BAD_REQUEST) {
           swal({
             title: "Oops",
             text: "You are not reached the time to eat this food",

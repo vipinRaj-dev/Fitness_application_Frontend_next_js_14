@@ -8,4 +8,4 @@ export enum HttpStatusCode {
     NOT_FOUND = 404,
     INTERNAL_SERVER = 500,
     // Add more status codes as needed
-}
+}  

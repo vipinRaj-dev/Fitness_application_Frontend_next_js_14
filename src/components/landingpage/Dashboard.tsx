@@ -26,7 +26,7 @@ const Dashboard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    let myCookie = Cookies.get("jwttoken");
+    const myCookie = Cookies.get("jwttoken");
     if (myCookie) {
       axios
         .get(`${baseUrl}/auth/role`, {

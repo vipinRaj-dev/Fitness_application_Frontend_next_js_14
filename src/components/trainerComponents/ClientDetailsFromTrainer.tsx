@@ -36,10 +36,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { WorkoutData } from "@/types/WorkoutTypes";
-import { AttendanceData } from "@/types/DateWiseResponseData";
+import { AttendanceData } from "@/types/DateWiseResponseTypes";
 import EditAndListWorkouts from "../commonRoutes/EditAndListWorkouts";
 import { DietFoodType } from "@/types/FoodTypes";
 import { AxiosError } from "@/types/ErrorType";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 type User = {
   admissionNumber: number;
@@ -180,7 +181,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           .put(`/food/addTimeDetails/${client_Id}/${schedule.foodId}`, schedule)
           .then((res) => {
             console.log(res.data);
-            if (res.status === 200) {
+            if (res.status === HttpStatusCode.OK) {
               setDone(!done);
               setIsOpen(false);
             }
@@ -200,7 +201,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       axiosInstance
         .delete(`/food/deletePerFood/${client_Id}/${schedule.foodId}`)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
             // console.log(res.data);
             setDone(!done);
             // setLatestDiet(latestDiet.filter(food => food._id !== foodId));

@@ -10,14 +10,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import "react-circular-progressbar/dist/styles.css";
 import { toast } from "sonner";
-
-type FormType = {
-  workoutName: string;
-  targetMuscle: string;
-  description: string;
-  video: File | string;
-  videoUrl?: string;
-};
+import { WorkoutFormType } from "@/types/WorkoutTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 const createSchema = (minLength: number, errorMessage: string) => {
   return z
@@ -48,14 +42,14 @@ const schema = z.object({
 
 const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<FormType>({
+  const [formData, setFormData] = useState<WorkoutFormType>({
     workoutName: "",
     targetMuscle: "",
     description: "",
     video: "",
     videoUrl: "",
   });
-  const [error, setError] = useState<FormType>({
+  const [error, setError] = useState<WorkoutFormType>({
     workoutName: "",
     targetMuscle: "",
     description: "",
@@ -138,7 +132,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         form.append(key, trimmedForm[key]);
       });
 
-      let url = workoutId
+      const url = workoutId
         ? `/admin/editWorkout/${workoutId}`
         : "/admin/addWorkout";
       await axiosInstance[workoutId ? "put" : "post"](url, form, {
@@ -149,7 +143,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         .then((res) => {
           console.log(res);
 
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
             setLoading(false);
             console.log("success  ");
             toast.success("Workout added successfully");

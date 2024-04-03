@@ -7,14 +7,8 @@ import { Button } from "../ui/button";
 import { useSocketStore } from "@/store/socket";
 import moment from "moment";
 import { Ghost, SendHorizontal } from "lucide-react";
-type Message = {
-  isSeen: boolean;
-  message: string;
-  receiverId: string;
-  senderId: string;
-  time: string;
-  _id: string;
-};
+
+import { Message } from "@/types/UserTypes";
 
 const MessageList = ({
   from,

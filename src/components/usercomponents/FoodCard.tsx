@@ -7,6 +7,7 @@ import swal from "sweetalert";
 import { useEffect, useState } from "react";
 
 import { DietFoodType } from "@/types/FoodTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 
 
@@ -42,7 +43,7 @@ const FoodCard = ({
       })
       .then((res) => {
         // console.log(res);
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           setAddedFoodDocIdsList([...addedFoodDocIdsList, foodDocId]);
           // setChange(!change);
           swal({
@@ -52,7 +53,7 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        } else if (res.status === 201) {
+        } else if (res.status === HttpStatusCode.FORBIDDEN) {
           swal({
             title: "Oops",
             text: "You are not reached the time to eat this food",
@@ -60,7 +61,7 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        }else if (res.status === 400) {
+        }else if (res.status === HttpStatusCode.BAD_REQUEST) {
           swal({
             title: "Oops",
             text: "You can't eat this food now, You are Late",

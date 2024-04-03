@@ -14,3 +14,21 @@ export type FormState = {
   LiverDisease: boolean;
   Thyroid: boolean;
 };
+
+export type User = {
+  _id: string;
+  email: string;
+  name: string;
+  role: string;
+  userBlocked: boolean;
+  isPremiumUser: boolean;
+};
+
+export type Message = {
+  isSeen: boolean;
+  message: string;
+  receiverId: string;
+  senderId: string;
+  time: string;
+  _id: string;
+};

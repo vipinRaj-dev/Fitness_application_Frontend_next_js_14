@@ -46,6 +46,7 @@ import StarRatings from "react-star-ratings";
 import { Link as ScrollLink } from "react-scroll";
 
 import { TrainerReviews, Trainer } from "@/types/TrainerTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 const TrainerHomePage = () => {
   const [trainerData, setTrainerData] = useState<Trainer | null>(null);
@@ -175,7 +176,7 @@ const TrainerHomePage = () => {
       })
       .then((res) => {
         // console.log("res", res.data);
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           setRender(!render);
           swal({
             title: "Success",

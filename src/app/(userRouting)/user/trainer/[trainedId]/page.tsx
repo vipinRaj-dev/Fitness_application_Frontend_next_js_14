@@ -28,38 +28,8 @@ import { Link as ScrollLink } from "react-scroll";
 import { useRouter } from "next/navigation";
 import StarRatings from "react-star-ratings";
 
-type ClientsAndCertificate = {
-  _id: string;
-  name: String;
-  content: String;
-  photoUrl: String;
-  publicId: String;
-};
-
-type Trainer = {
-  avgRating: number;
-  _id: number;
-  name: string;
-  email: string;
-  experience: number;
-  specializedIn: string;
-  description: string;
-  profilePicture: string;
-  price: number;
-  transformationClients: ClientsAndCertificate[];
-  certifications: ClientsAndCertificate[];
-};
-type TrainerReviews = {
-  _id: string;
-  createdAt: string;
-  content: string;
-  rating: number;
-  userId: {
-    _id: string;
-    name: string;
-    profileImage: string;
-  };
-};
+import { Trainer } from "@/types/TrainerTypes";
+import { TrainerReviews } from "@/types/TrainerTypes";
 
 const page = ({
   params,

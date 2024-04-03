@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { FoodType } from "@/types/FoodTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 // type Food = {
 //   _id: string;
 //   createdAt: string;
@@ -85,7 +86,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
       .then((res) => {
         // console.log(res.data);
 
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           setAddedFoodId((prev) => [...prev, res.data.foodId]);
           updateParent && updateParent();
         }
@@ -98,7 +99,7 @@ const FoodSearch = ({ clientId, updateParent }: FoodSearchProps) => {
     axiosInstance
       .delete(`/food/deleteFood/${clientId}/${foodId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           // console.log(res.data);
           setAddedFoodId((prev) => {
             const index = prev.findIndex((id) => id === foodId);

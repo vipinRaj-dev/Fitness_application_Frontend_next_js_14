@@ -8,6 +8,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "@/types/ErrorType";
 import {TrainerProfileFormState} from "@/types/TrainerTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
+
 
 const createSchema = (minLength: number, errorMessage: string) => {
   return z
@@ -203,7 +205,8 @@ const TrainerProfile = () => {
         .then((res) => {
           // console.log(res.data);
           setLoading(false);
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
+            
             // console.log(res.data);
             if (res.data?.data?.url) {
               setForm((prevState) => ({

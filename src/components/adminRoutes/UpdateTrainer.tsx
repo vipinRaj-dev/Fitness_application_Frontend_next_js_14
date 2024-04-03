@@ -6,15 +6,8 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 
-interface trainer {
-  _id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
 const UpdateTrainer = ({ trainerId }: { trainerId: string }) => {
-  const [trainerDetails, setTrainerDetails] = useState<trainer>({
+  const [trainerDetails, setTrainerDetails] = useState({
     _id: "",
     email: "",
     name: "",

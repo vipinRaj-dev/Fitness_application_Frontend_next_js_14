@@ -16,5 +16,22 @@ export type WorkoutData = {
   _id: string;
 };
 
+export type WorkoutListType = {
+  createdAt: string;
+  description: string;
+  publicId: string;
+  targetMuscle: string;
+  thumbnailUrl: string;
+  videoUrl: string;
+  workoutName: string;
+  __v: number;
+  _id: string;
+};
 
-// export type WorkoutId = WorkoutData[0]['workoutId'];
+export type WorkoutFormType = {
+  workoutName: string;
+  targetMuscle: string;
+  description: string;
+  video: File | string;
+  videoUrl?: string;
+};

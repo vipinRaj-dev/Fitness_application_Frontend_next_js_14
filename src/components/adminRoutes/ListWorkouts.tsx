@@ -18,23 +18,11 @@ import {
 import Dnaspinner from "../loadingui/Dnaspinner";
 import { Pencil, Trash2 } from "lucide-react";
 
-type Workout = {
-  createdAt: string;
-  description: string;
-  publicId: string;
-  targetMuscle: string;
-  thumbnailUrl: string;
-  videoUrl: string;
-  workoutName: string;
-  __v: number;
-  _id: string;
-};
-
-type AllWorkout = Workout[];
+import { WorkoutListType } from "@/types/WorkoutTypes";
 
 const ListWorkouts = () => {
   const [loading, setLoading] = useState(false);
-  const [workoutsList, setWorkoutsList] = useState<AllWorkout>([]);
+  const [workoutsList, setWorkoutsList] = useState<WorkoutListType[]>([]);
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");

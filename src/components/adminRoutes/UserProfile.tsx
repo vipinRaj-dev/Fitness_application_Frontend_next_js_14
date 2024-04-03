@@ -3,16 +3,14 @@
 import axiosInstance from "@/axios/creatingInstance";
 import { useEffect, useState } from "react";
 
-interface User {
-  _id: string;
-  email: string;
-  name: string; 
-  role: string;
-  planSelected: string;
-}
-
 const UserProfile = ({ userId }: { userId: string }) => {
-  const [userData, setUserData] = useState<User>({} as User);
+  const [userData, setUserData] = useState({
+    _id: "",
+    email: "",
+    name: "",
+    role: "",
+    planSelected: "",
+  });
   useEffect(() => {
     // console.log("this is the user id from the parmas ", userId);
     const fetchData = async () => {
@@ -36,7 +34,6 @@ const UserProfile = ({ userId }: { userId: string }) => {
     <div className="flex ">
       <div className="flex flex-col">
         <div className="bg-white p-6 rounded shadow-md max-w-lg my-2 ">
-          
           <h1 className="text-2xl mb-4">User Profile</h1>
           <div className="space-y-2">
             <h3 className="text-lg font-medium text-gray-700">
@@ -56,9 +53,7 @@ const UserProfile = ({ userId }: { userId: string }) => {
         </div>
         <div className=" bg-slate-300 max-w-lg h-80 ">calender</div>
       </div>
-      <div className="bg-slate-300 rounded-md m-2 w-full">
-        user Details
-      </div>
+      <div className="bg-slate-300 rounded-md m-2 w-full">user Details</div>
     </div>
   );
 };

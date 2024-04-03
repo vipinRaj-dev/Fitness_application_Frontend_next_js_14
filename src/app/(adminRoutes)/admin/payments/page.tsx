@@ -5,33 +5,17 @@ import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
+  TableCaption,  
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-type Payment = {
-  clientDetails: {
-    _id: string;
-    name: string;
-    email: string;
-    dueDate: string;
-    profileImage: string;
-  };
-  amount: number;
-  createdAt: string;
-  planSelected: string;
-  receiptUrl: string;
-  transactionId: string;
-  _id: string;
-};
-
-type PaymentsResponse = Payment[];
+import { PaymentsResponse } from "@/types/PaymentTypes";
 
 const page = () => {
-  const [payments, setPayments] = useState<PaymentsResponse>([]);
+  const [payments, setPayments] = useState<PaymentsResponse[]>([]);
 
   useEffect(() => {
     try {

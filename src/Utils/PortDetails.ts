@@ -1,4 +1,4 @@
-let port = 4000;
-let host = "localhost";
-let protocol = "http";
-export let baseUrl = `${protocol}://${host}:${port}`;
+const port = 4000;
+const host = "localhost";
+const protocol = "http";
+export const baseUrl = `${protocol}://${host}:${port}`;

@@ -18,6 +18,7 @@ export type Trainer = {
   description: string;
   email: string;
   experience: number;
+  role?: string;
   isBlocked: boolean;
   mobileNumber: number;
   name: string;
@@ -90,3 +91,4 @@ export type TrainerProfileFormState = {
   specializedIn: string;
   _id?: string;
 };
+

@@ -22,6 +22,7 @@ import "react-clock/dist/Clock.css";
 
 
 import { DietFoodType } from "@/types/FoodTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 const page = () => {
   const user = userStore((state) => state.user);
@@ -100,7 +101,7 @@ const page = () => {
           .put(`/food/addTimeDetails/${client_Id}/${schedule.foodId}`, schedule)
           .then((res) => {
             console.log(res.data);
-            if (res.status === 200) {
+            if (res.status === HttpStatusCode.OK) {
               setDone(!done);
               setIsOpen(false);
             }
@@ -120,7 +121,7 @@ const page = () => {
       axiosInstance
         .delete(`/food/deletePerFood/${client_Id}/${schedule.foodId}`)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
             // console.log(res.data);
             setDone(!done);
             // setLatestDiet(latestDiet.filter(food => food._id !== foodId));

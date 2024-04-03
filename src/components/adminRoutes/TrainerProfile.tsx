@@ -3,15 +3,13 @@
 import axiosInstance from "@/axios/creatingInstance";
 import { useEffect, useState } from "react";
 
-interface Trainer {
-  _id: string;
-  email: string;
-  name: string; 
-  role: string;
-}
-
 const TrainerProfile = ({ trainerId }: { trainerId: string }) => {
-  const [trainerData, setTrainerData] = useState<Trainer>({} as Trainer);
+  const [trainerData, setTrainerData] = useState({
+    _id: "",
+    email: "",
+    name: "",
+    role: "",
+  });
   useEffect(() => {
     // console.log("this is the Trainer id from the parmas ", trainerId);
     const fetchData = async () => {
@@ -35,7 +33,6 @@ const TrainerProfile = ({ trainerId }: { trainerId: string }) => {
     <div className="flex ">
       <div className="flex flex-col">
         <div className="bg-white p-6 rounded shadow-md max-w-lg my-2 ">
-          
           <h1 className="text-2xl mb-4">Trainer Profile</h1>
           <div className="space-y-2">
             <h3 className="text-lg font-medium text-gray-700">
@@ -47,14 +44,11 @@ const TrainerProfile = ({ trainerId }: { trainerId: string }) => {
             <h3 className="text-lg font-medium text-gray-700">
               Role : <span className="font-normal">{trainerData.role}</span>
             </h3>
-           
           </div>
         </div>
         <div className=" bg-slate-300 max-w-lg h-80 ">calender</div>
       </div>
-      <div className="bg-slate-300 rounded-md m-2 w-full">
-        Trainer Details
-      </div>
+      <div className="bg-slate-300 rounded-md m-2 w-full">Trainer Details</div>
     </div>
   );
 };

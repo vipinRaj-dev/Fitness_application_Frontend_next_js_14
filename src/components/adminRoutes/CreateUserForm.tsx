@@ -7,11 +7,11 @@ import { usePathname, useRouter } from "next/navigation";
 const CreateUser = () => {
   const router = useRouter();  
  
-  let pageUrl = usePathname()
+  const pageUrl = usePathname()
 
   console.log("pathname" , pageUrl)
 
-  let url = pageUrl === "/admin/users/create" ? "/admin/createUser" : "/admin/createTrainer"
+  const url = pageUrl === "/admin/users/create" ? "/admin/createUser" : "/admin/createTrainer"
   const handleCreateUserSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {

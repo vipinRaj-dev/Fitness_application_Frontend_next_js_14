@@ -7,12 +7,6 @@ import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import { z } from "zod";
 
-interface User {
-  _id: string;
-  email: string;
-  name: string;
-  role: string;
-}
 
 const FormSchema = z.object({
   name: z
@@ -26,10 +20,11 @@ const FormSchema = z.object({
 });
 
 const UpdateUser = ({ userId }: { userId: string }) => {
-  const [userDetails, setUserDetails] = useState<User>({
+  const [userDetails, setUserDetails] = useState({
     _id: "",
     email: "",
     name: "",
+    
     role: "",
   });
 

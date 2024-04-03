@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import OtpForm from "./OtpForm";
-// import Spinner from "../loadingui/Spinner";
+import Spinner from "../loadingui/Spinner";
 
 export type UserDataType = {
   name: string;
@@ -37,22 +37,31 @@ const FormSchema = z
     email: z.string().min(1, "Email is required").email("Invalid email"),
     password: z
       .string()
-      .min(1, "Password is required")
-      .min(4, "Password must have than 8 characters"),
+      .min(8, "Password must have at least 8 characters")
+      .refine(password => /[a-z]/.test(password), {
+        message: "Password must include at least one lowercase letter",
+      })
+      .refine(password => /[A-Z]/.test(password), {
+        message: "Password must include at least one uppercase letter",
+      })
+      .refine(password => /\d/.test(password), {
+        message: "Password must include at least one number",
+      })
+      .refine(password => /[@$!%*?&]/.test(password), {
+        message: "Password must include at least one special character",
+      }),
     confirmPassword: z
       .string()
-      .min(1, "Confirm password is required")
-      .min(4, "Password must have than 8 characters"),
+      .min(8, "Confirm password must have at least 8 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
 const SignUpForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string>("");
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [otp, setOtp] = useState(false);
   const [userData, setUserData] = useState<UserDataType | null>(null);
 
@@ -66,23 +75,23 @@ const SignUpForm = () => {
     },
   });
 
-  let myCookie = Cookies.get("jwttoken");
+  const myCookie = Cookies.get("jwttoken");
 
   useEffect(() => {
     if (myCookie) {
       router.push("/");
     }
-    // setLoading(false);
+    setLoading(false);
   }, [myCookie]);
 
-  // if (loading) {
-  //   return <Spinner />;
-  // }
+  if (loading) {
+    return <Spinner />;
+  }
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     // console.log(data);
 
-    // setLoading(true);
+    setLoading(true);
     axios
       .post(`${baseUrl}/auth/sendOtp`, data)
       .then((response) => {
@@ -92,12 +101,12 @@ const SignUpForm = () => {
           setUserData(data);
           setOtp(true);
           // router.replace("/otp-verification");
-          // setLoading(false);
+          setLoading(false);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 409) {
-          // setLoading(false);
+          setLoading(false);
           setError("Email already exists");
         } else {
           console.error(error);

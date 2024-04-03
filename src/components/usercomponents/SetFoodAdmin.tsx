@@ -23,6 +23,7 @@ import axiosInstance from "@/axios/creatingInstance";
 import swal from "sweetalert";
 import Dnaspinner from "../loadingui/Dnaspinner";
 import { AxiosError } from "@/types/ErrorType";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 // import { usePathname } from "next/navigation";
 
@@ -238,7 +239,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
       Object.keys(trimmedForm).forEach((key) => {
         formData.append(key, trimmedForm[key]);
       });
-      let url = foodId ? `/admin/editFood/${foodId}` : "/admin/addFood";
+      const url = foodId ? `/admin/editFood/${foodId}` : "/admin/addFood";
 
       await axiosInstance[foodId ? "put" : "post"](url, formData, {
         headers: {
@@ -248,7 +249,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
         .then((res) => {
           setLoading(false);
           // console.log(res.data);
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
             // make all the fields empty
             setForm({
               image: "",
@@ -312,9 +313,9 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
   // console.log("QuantityUnit", QuantityUnit);
   // console.log("foodType", foodType);
 
-  let units = ["kg", "gm", "ml", "cup", "tbsp", "tsp", "mg", "nos"];
+  const units = ["kg", "gm", "ml", "cup", "tbsp", "tsp", "mg", "nos"];
 
-  let types = ["Fruit", "Vegetable", "Meat", "Fish", "Dairy", "Nuts", "Sweets"];
+  const types = ["Fruit", "Vegetable", "Meat", "Fish", "Dairy", "Nuts", "Sweets"];
   // console.log("form", form);
   // console.log("quantityunit", QuantityUnit);
   // console.log("foodtype", foodType);

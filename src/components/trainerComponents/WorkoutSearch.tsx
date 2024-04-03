@@ -26,6 +26,7 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import Image from "next/image";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 type Workout = {
   description: string;
@@ -94,7 +95,7 @@ const WorkoutSearch = ({
       })
       .then((res) => {
         // console.log(res.data);
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           setIsDialogOpen(false);
           onSuccess && onSuccess();
         }

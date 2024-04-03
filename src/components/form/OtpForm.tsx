@@ -12,6 +12,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 const OtpForm = ({ data }: { data?: UserDataType }) => {
   const [otp, setOtp] = useState("");
@@ -28,7 +29,7 @@ const OtpForm = ({ data }: { data?: UserDataType }) => {
     axios
       .post(`${baseUrl}/auth/registerUser`, { otp, data })
       .then((res) => {
-        if (res.status === 201) {
+        if (res.status === HttpStatusCode.CREATED) {
           console.log("User created");
           router.replace("/sign-in");
         } else {
@@ -54,7 +55,7 @@ const OtpForm = ({ data }: { data?: UserDataType }) => {
     axios
       .post(`${baseUrl}/auth/sendOtp`, data)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           console.log("Otp sent");
         }
       })

@@ -178,8 +178,8 @@ const EditAndListWorkouts = ({
                             .split(",")
                             .map((muscle, index) => {
                               return (
-                                <ul className="p-1 list-disc">
-                                  <li key={index}>{muscle}</li>
+                                <ul key={index} className="p-1 list-disc">
+                                  <li>{muscle}</li>
                                 </ul>
                               );
                             })}

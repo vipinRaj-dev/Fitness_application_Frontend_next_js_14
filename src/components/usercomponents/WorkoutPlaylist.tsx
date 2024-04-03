@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { Input } from "../ui/input";
 import { Play } from "lucide-react";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 const WorkoutPlaylist = () => {
   const [workoutList, setWorkoutList] = useState<WorkoutData[]>([]);
@@ -46,7 +47,7 @@ const WorkoutPlaylist = () => {
       })
       .then((res) => {
         // console.log(res.data);
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           const newDisabledButtons = [...disabledButtons];
           newDisabledButtons[index] = true;
           setDisabledButtons(newDisabledButtons);

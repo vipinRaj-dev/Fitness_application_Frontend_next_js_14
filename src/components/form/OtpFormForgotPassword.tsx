@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "../loadingui/Spinner";
 import swal from "sweetalert";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 const OtpFormForgotPassword = () => {
   const [otp, setOtp] = useState("");
@@ -25,7 +26,7 @@ const OtpFormForgotPassword = () => {
       .then((res) => {
         setLoading(true);
         // console.log(res);
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           setLoading(false);
           console.log("User created");
           swal({
@@ -34,7 +35,7 @@ const OtpFormForgotPassword = () => {
             icon: "success",
           });
           router.replace("/sign-in");
-        } else if (res.status === 404) {
+        } else if (res.status === HttpStatusCode.NOT_FOUND) {
           swal({
             title: "Error",
             text: "User not found",

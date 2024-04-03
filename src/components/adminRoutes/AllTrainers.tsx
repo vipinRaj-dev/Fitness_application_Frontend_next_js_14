@@ -9,13 +9,15 @@ import Link from "next/link";
 import axiosInstance from "@/axios/creatingInstance";
 import swal from "sweetalert";
 
-interface Trainer {
-  _id: string;
-  email: string;
-  name: string;
-  role: string;
-  isBlocked: boolean;
-}
+
+import { Trainer } from "@/types/TrainerTypes";
+// interface Trainer {
+//   _id: string;
+//   email: string;
+//   name: string;
+//   role: string;
+//   isBlocked: boolean;
+// }
 
 const AllTrainer = () => {
   const [trainer, setTrainer] = useState<Trainer[]>([]);

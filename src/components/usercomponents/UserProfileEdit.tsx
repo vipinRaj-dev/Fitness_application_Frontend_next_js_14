@@ -6,6 +6,7 @@ import swal from "sweetalert";
 import { Badge } from "../ui/badge";
 import Dnaspinner from "../loadingui/Dnaspinner";
 import { AxiosError } from "@/types/ErrorType";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 type error = {
   mobileNumber?: string;
@@ -95,7 +96,7 @@ const UserProfileEdit = ({
         .then((res) => {
           // console.log(res.data);
           setLoading(false);
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
             setForm((prevState: FormState) => ({
               ...prevState,
               profileImage: res.data?.imageData?.url,

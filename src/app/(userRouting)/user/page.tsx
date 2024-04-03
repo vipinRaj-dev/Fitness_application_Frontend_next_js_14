@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 
 
 import { DietFoodType } from "@/types/FoodTypes";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 type graphOrder = {
   [key: string]: number;
@@ -116,7 +117,7 @@ const Userpage = () => {
         .get("/user/homePage")
         .then((res) => {
           // console.log('res.data', res.data);
-          if (res.status === 200) {
+          if (res.status === HttpStatusCode.OK) {
             setLatestDiet(res.data.dietFood);
             setAddedFoodDocIds(res.data.addedFoodDocIds);
             setHasTrainer(res.data.hasTrainer);

@@ -24,7 +24,7 @@ import {
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
 import { TrainerMinDetails } from "@/types/TrainerTypes";
-import { AttendanceData } from "@/types/DateWiseResponseData";
+import { AttendanceData } from "@/types/DateWiseResponseTypes";
 import TrainerChatReview from "./TrainerChatReview";
 import UserProfileEdit from "./UserProfileEdit";
 import { FormState } from "@/types/UserTypes";

@@ -11,7 +11,7 @@ import { LineChartData } from "./LIneChartPlot";
 import { AreaChartData } from "./AreaChartPlot";
 import { pieChartData } from "./PieChartPlot";
 
-import { AdminDashResponseData } from "@/types/DateWiseResponseData";
+import { AdminDashResponseData } from "@/types/DateWiseResponseTypes";
 
 // type numericResponse = {
 //   totalRevenue: number;

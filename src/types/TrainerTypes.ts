@@ -77,7 +77,7 @@ export type TrainerMinDetails = {
   profilePicture: string;
   name: string;
   _id: string;
-  trainerPaymentDueDate: string;
+  trainerPaymentDueDate: string;  
 };
 
 export type TrainerProfileFormState = {

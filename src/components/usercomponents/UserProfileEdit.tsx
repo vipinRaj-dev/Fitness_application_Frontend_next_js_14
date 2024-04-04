@@ -84,9 +84,8 @@ const UserProfileEdit = ({
       setLoading(true);
       const formData = new FormData();
       Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
+        formData.append(key, form[key as keyof FormState].toString());
       });
-
       await axiosInstance
         .put("/user/profileUpdate", formData, {
           headers: {

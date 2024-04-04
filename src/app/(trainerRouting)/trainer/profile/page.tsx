@@ -193,9 +193,11 @@ const TrainerProfile = () => {
 
       const formData = new FormData();
       Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
+        const value = form[key as keyof TrainerProfileFormState];
+        if (value !== undefined) {
+          formData.append(key, value.toString());
+        }
       });
-
       await axiosInstance
         .put("/trainer/profileUpdate", formData, {
           headers: {

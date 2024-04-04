@@ -6,7 +6,7 @@ const page = () => {
     <div>
         <SetFoodAdmin />    
     </div>
-  )
+  )   
 }
 
 export default page

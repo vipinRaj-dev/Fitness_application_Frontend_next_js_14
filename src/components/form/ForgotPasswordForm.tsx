@@ -11,12 +11,12 @@ const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   if (loading) {
     return <Spinner />;
   }
 
-  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

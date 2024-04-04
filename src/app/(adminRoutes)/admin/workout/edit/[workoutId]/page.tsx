@@ -1,6 +1,6 @@
 import SetWorkout from "@/components/adminRoutes/SetWorkout"
 
-const page = ({
+const Page= ({
     params,
   }: {
     params: {

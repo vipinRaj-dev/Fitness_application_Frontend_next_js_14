@@ -31,7 +31,7 @@ import StarRatings from "react-star-ratings";
 import { Trainer } from "@/types/TrainerTypes";
 import { TrainerReviews } from "@/types/TrainerTypes";
 
-const page = ({
+const Page= ({
   params,
 }: {
   params: {
@@ -440,4 +440,4 @@ const page = ({
   );
 };
 
-export default page;
+export default Page;

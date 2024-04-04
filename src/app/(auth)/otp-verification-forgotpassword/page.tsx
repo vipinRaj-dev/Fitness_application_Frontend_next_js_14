@@ -1,6 +1,6 @@
 import OtpFormForgotPassword from "@/components/form/OtpFormForgotPassword"
 
-const page = () => {
+const Page= () => {
   return (
     <OtpFormForgotPassword />
   )

@@ -117,7 +117,7 @@ const SignInForm = () => {
             SignIn
           </Button>
           <p className="text-center mt-4 block">
-            Don't have an account?
+            Don&apos;t have an account
             <Link className="hover:underline mx-2" href="/sign-up">
               Sign Up
             </Link>

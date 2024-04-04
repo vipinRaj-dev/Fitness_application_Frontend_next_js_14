@@ -1,6 +1,6 @@
 import TrainerProfile from "@/components/adminRoutes/TrainerProfile";
 
-const page = ({
+const Page= ({
   params,
 }: {
   params: {
@@ -18,4 +18,4 @@ const page = ({
   );
 };
 
-export default page;
+export default Page;

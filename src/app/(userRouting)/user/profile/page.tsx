@@ -1,6 +1,6 @@
 import UserProfile from "@/components/usercomponents/UserProfile"
 
-const page = () => {
+const Page= () => {
   return (
     <>
     <UserProfile />

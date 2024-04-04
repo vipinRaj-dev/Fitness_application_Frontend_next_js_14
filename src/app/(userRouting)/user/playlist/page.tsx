@@ -1,6 +1,6 @@
 import WorkoutPlaylist from "@/components/usercomponents/WorkoutPlaylist";
 
-const page = () => {
+const Page= () => {
   return (
     <div>
       <WorkoutPlaylist />
@@ -8,5 +8,5 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
  

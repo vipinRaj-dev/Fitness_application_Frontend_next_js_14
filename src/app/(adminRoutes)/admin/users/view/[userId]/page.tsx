@@ -1,6 +1,6 @@
 import UserProfile from "@/components/adminRoutes/UserProfile";
 
-const page = ({
+const Page= ({
   params,
 }: {
   params: {
@@ -18,4 +18,4 @@ const page = ({
   );
 };
 
-export default page;
+export default Page;

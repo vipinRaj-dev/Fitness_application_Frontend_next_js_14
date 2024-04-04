@@ -1,6 +1,6 @@
 import SetFoodAdmin from "@/components/usercomponents/SetFoodAdmin";
 
-const page = ({
+const Page= ({
   params,
 }: {
   params: {
@@ -14,4 +14,4 @@ const page = ({
   );
 };
 
-export default page;
+export default Page;

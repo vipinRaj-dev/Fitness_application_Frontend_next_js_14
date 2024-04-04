@@ -2,7 +2,7 @@ import ListWorkouts from "@/components/adminRoutes/ListWorkouts";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const page = () => {
+const Page= () => {
   return (
     <div>
       <div className="flex h-32 justify-center items-center">
@@ -18,4 +18,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

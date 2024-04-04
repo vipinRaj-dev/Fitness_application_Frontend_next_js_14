@@ -3,7 +3,7 @@
 import CreateUserForm from "@/components/adminRoutes/CreateUserForm"
 
 
-const page = () => {
+const Page= () => {
 
   return (
     <div>

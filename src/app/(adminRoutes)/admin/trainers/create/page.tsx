@@ -1,7 +1,7 @@
 import CreateUser from '@/components/adminRoutes/CreateUserForm'
 import React from 'react'
 
-const page = () => {
+const Page= () => {
   return (
     <div><CreateUser/></div>
   )

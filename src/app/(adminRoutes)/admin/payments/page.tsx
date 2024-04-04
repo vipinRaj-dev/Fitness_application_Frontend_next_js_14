@@ -14,7 +14,7 @@ import {
 
 import { PaymentsResponse } from "@/types/PaymentTypes";
 
-const page = () => {
+const Page= () => {
   const [payments, setPayments] = useState<PaymentsResponse[]>([]);
 
   useEffect(() => {
@@ -80,4 +80,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

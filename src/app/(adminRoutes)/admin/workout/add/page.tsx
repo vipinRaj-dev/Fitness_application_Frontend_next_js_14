@@ -1,6 +1,6 @@
 import SetWorkout from "@/components/adminRoutes/SetWorkout";
 
-const page = () => {
+const Page= () => {
   return (
     <>
       <SetWorkout />
@@ -8,4 +8,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

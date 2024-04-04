@@ -1,6 +1,6 @@
 import PaymentComponent from "@/components/trainerComponents/PaymentComponent";
 
-const page = () => {
+const Page= () => {
   return (
     <div>
       <PaymentComponent />
@@ -8,4 +8,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

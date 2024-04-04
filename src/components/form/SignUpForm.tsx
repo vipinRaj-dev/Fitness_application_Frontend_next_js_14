@@ -222,7 +222,7 @@ const SignUpForm = () => {
                   Sign Up
                 </Button>
                 <p className="text-center mt-4">
-                  Don't have an account?
+                  Don&apos;t have an account?
                   <Link
                     className="hover:underline ms-2 text-blue-500"
                     href="/sign-in"

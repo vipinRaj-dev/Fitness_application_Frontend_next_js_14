@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { userStore } from "@/store/user";
 import { useState } from "react";
 
-const page = () => {
+const Page= () => {
   const user = userStore((state) => state.user);
   const client_Id = user.UserId;
 
@@ -38,4 +38,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

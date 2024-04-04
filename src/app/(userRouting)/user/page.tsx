@@ -228,7 +228,7 @@ const Userpage = () => {
 
           <div className="p-2 mt-3 flex md:flex-col md:items-center md:justify-center md:space-y-9 ">
             <div className="text-sm font-semibold md:font-bold md:text-4xl">
-              The hard days are the best <br /> because that's when <br />
+              The hard days are the best <br /> because that&apos;s when <br />
               champions are made
             </div>
 

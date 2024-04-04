@@ -1,6 +1,6 @@
 import OtpForm from "@/components/form/OtpForm"
 
-const page = () => {
+const Page= () => {
   return (
     <OtpForm />
   )

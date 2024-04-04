@@ -1,6 +1,6 @@
 import ListFood from "@/components/adminRoutes/ListFood";
 
-const page = () => {
+const Page= () => {
   return (
     <div>
       <ListFood />
@@ -8,4 +8,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

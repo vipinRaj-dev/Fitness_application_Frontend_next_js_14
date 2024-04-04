@@ -2,7 +2,7 @@ import Link from "next/link";
 import AllUsers from "@/components/adminRoutes/AllUsers";
 import { Button } from "@/components/ui/button";
 
-const page = () => {
+const Page= () => {
   return (
     <div>
       
@@ -12,4 +12,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

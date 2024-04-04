@@ -1,6 +1,6 @@
 import ClientDetailsFromTrainer from "@/components/trainerComponents/ClientDetailsFromTrainer";
 
-const page = ({ params }: { params: { client_Id: string } }) => {
+const Page= ({ params }: { params: { client_Id: string } }) => {
   return (
     <div>
       <ClientDetailsFromTrainer client_Id={params.client_Id} />
@@ -8,4 +8,4 @@ const page = ({ params }: { params: { client_Id: string } }) => {
   );
 };
 
-export default page;
+export default Page;

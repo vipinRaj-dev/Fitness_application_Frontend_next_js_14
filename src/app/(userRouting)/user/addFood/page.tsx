@@ -24,7 +24,7 @@ import "react-clock/dist/Clock.css";
 import { DietFoodType } from "@/types/FoodTypes";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 
-const page = () => {
+const Page= () => {
   const user = userStore((state) => state.user);
   const client_Id = user.UserId;
   const [latestDiet, setLatestDiet] = useState<DietFoodType[]>([]);
@@ -141,7 +141,7 @@ const page = () => {
           Edit next diet plan
         </h1>
         <p className="text-center font-thin pb-3 italic">
-          Note :"It would reflect in your next diet plan"
+          Note &quot;It would reflect in your next diet plan&quot;
         </p>
         <div className=" p-5 h-4/6 rounded-2xl shadow-2xl shadow-slate-800 overflow-y-scroll scrollbar-none scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestDiet.map((food) => {
@@ -315,4 +315,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

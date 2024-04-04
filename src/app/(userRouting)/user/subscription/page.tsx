@@ -6,7 +6,7 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { baseUrl } from "@/Utils/PortDetails";
 
-const page = () => {
+const Page= () => {
 
 
   const makePayment = async ({
@@ -211,4 +211,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

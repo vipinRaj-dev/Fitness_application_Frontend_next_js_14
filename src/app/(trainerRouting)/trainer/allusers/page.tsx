@@ -15,7 +15,7 @@ type User = {
   _id: string;
 };
 
-const page = () => {
+const Page= () => {
   const [allUsers, setAllUsers] = useState([]); // all users data
 
   const [page, setPage] = useState(1);
@@ -160,4 +160,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

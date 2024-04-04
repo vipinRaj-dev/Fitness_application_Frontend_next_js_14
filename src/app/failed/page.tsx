@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import swal from "sweetalert";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page= () => {
   const router = useRouter();
   useEffect(() => {
     swal({
@@ -19,4 +19,4 @@ const page = () => {
   return <></>;
 };
 
-export default page;
+export default Page;

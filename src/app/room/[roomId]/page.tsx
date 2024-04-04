@@ -6,7 +6,7 @@ import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const page = ({
+const Page= ({
   params,
 }: {
   params: {
@@ -72,4 +72,4 @@ const page = ({
   );
 };
 
-export default page;
+export default Page;

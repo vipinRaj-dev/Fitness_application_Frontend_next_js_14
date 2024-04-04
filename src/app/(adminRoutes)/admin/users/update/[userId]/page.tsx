@@ -1,7 +1,7 @@
 import UpdateTrainer from "@/components/adminRoutes/UpdateTrainer";
 import UpdateUser from "@/components/adminRoutes/UpdateUser";
 
-const page = ({
+const Page= ({
   params,
 }: {
   params: {
@@ -18,4 +18,4 @@ const page = ({
   );
 };
 
-export default page;
+export default Page;

@@ -17,7 +17,7 @@ export const useSocketStore = create<SocketState>((set) => ({
   connect: (role : string) =>
     set((state) => {
       if (state.socket == null) {
-        const newSocket = io("http://localhost:4000");
+        const newSocket = io("https://api.vipinvj.xyz");
         newSocket.emit("userConnection", { userCookie, role: role });
         return { socket: newSocket };  // Return the new state
       }

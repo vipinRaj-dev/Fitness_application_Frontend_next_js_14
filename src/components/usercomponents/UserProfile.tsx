@@ -53,7 +53,7 @@ const UserProfile = () => {
     mobileNumber: 0,
     weight: 0,
     height: 0,
-    profileImage: "",
+    profileImage: "",   
     BloodPressure: 0,
     Diabetes: 0,
     cholesterol: 0,

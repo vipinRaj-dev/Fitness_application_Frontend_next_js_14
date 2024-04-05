@@ -80,7 +80,7 @@ const SignInForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Email address</FormLabel>
                 <FormControl>
                   <Input placeholder="example@gmail.com" {...field} />
                 </FormControl>

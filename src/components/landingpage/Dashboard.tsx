@@ -27,7 +27,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     const myCookie = Cookies.get("jwttoken");
+    console.log('cookie printiing     ' , myCookie)
     if (myCookie) {
+      console.log('yes cookie is there ', myCookie)
       axios
         .get(`${baseUrl}/auth/role`, {
           headers: {

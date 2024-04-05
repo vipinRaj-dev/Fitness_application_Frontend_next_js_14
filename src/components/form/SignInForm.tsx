@@ -61,6 +61,7 @@ const SignInForm = () => {
       .post(`${baseUrl}/auth/login`, data, { withCredentials: true })
       .then((res) => {
         if (res.status === HttpStatusCode.OK) {
+          Cookies.set('jwttoken' , res.data.token)
           router.replace("/");
         }
       })

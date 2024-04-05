@@ -24,6 +24,7 @@ const token = Cookies.get("jwttoken");
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
+  withCredentials: true
 });
 
 // Add a request interceptor
@@ -40,6 +41,8 @@ axiosInstance.interceptors.request.use(
 );
 axiosInstance.interceptors.response.use(
   (response) => {
+    console.log('all response data : ' ,response )
+
     return response;
   },
   (error) => {

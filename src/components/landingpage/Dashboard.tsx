@@ -49,6 +49,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!loading) {
+      console.log('yes i am getting the role page' , role)
       switch (role) {
         case "admin":
           router.push("/admin");
@@ -66,7 +67,6 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div>
-        Loading... from Dashboard
         <Dnaspinner />
       </div>
     ); // Replace this with your loading component or any placeholder content

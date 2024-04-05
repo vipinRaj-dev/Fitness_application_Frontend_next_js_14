@@ -51,7 +51,7 @@ const Page= () => {
   return (
     <div className="">
       <div className=" p-10">
-        <div className="flex flex-wrap h-screen items-center justify-center max-w-4xl mx-auto gap-10 sm:gap-0">
+        <div className="flex flex-wrap h-screen items-center justify-center max-w-6xl mx-auto gap-1">
           <div className="w-full p-6 bg-black border border-gray-700 rounded-lg sm:w-1/2 bg-opacity-20 sm:rounded-r-none sm:p-8">
             <div className="mb-6">
               <h3 className="text-2xl font-semibold jakarta text-gray-100 sm:text-4xl">
@@ -110,7 +110,7 @@ const Page= () => {
                 <span className="">Basic Settings</span>
               </li>
             </ul>
-            <Link href="/user/trainer">
+            <Link href="">
               <Button onClick={() => makePayment({ plan: 'Monthly plan', amount: 300 })} className="block px-8 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base">
                 Subscribe for one month
               </Button>
@@ -199,7 +199,7 @@ const Page= () => {
                 <span className="">Priority Support</span>
               </li>
             </ul>
-            <Link href="/user/trainer">
+            <Link href="">
               <Button onClick={() => makePayment({ plan: '6-month plan', amount: 1500 })} className="block px-8 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base">
                 Subscribe
               </Button>

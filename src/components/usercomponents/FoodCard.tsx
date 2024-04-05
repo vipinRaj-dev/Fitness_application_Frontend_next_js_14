@@ -9,8 +9,6 @@ import { useEffect, useState } from "react";
 import { DietFoodType } from "@/types/FoodTypes";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 
-
-
 interface HandleSubmitParams {
   time: string;
   foodDocId: string;
@@ -19,11 +17,11 @@ interface HandleSubmitParams {
 const FoodCard = ({
   details,
   addedFoodDocIds,
-  attendanceId
+  attendanceId,
 }: {
   details: DietFoodType;
   addedFoodDocIds: string[];
-  attendanceId : string
+  attendanceId: string;
 }) => {
   // console.log("details", details);
 
@@ -31,7 +29,7 @@ const FoodCard = ({
   // const [change, setChange] = useState(false);
 
   useEffect(() => {
-    setAddedFoodDocIdsList(addedFoodDocIds); 
+    setAddedFoodDocIdsList(addedFoodDocIds);
   }, [addedFoodDocIds]);
 
   const handleSubmit = async ({ time, foodDocId }: HandleSubmitParams) => {
@@ -39,7 +37,7 @@ const FoodCard = ({
       .put("/user/addFoodLog", {
         time,
         foodDocId,
-        attendanceId
+        attendanceId,
       })
       .then((res) => {
         // console.log(res);
@@ -53,7 +51,11 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        } else if (res.status === HttpStatusCode.BAD_REQUEST) {
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === HttpStatusCode.UNAUTHORIZED) {
           swal({
             title: "Oops",
             text: "You are not reached the time to eat this food",
@@ -61,7 +63,7 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        }else if (res.status === HttpStatusCode.BAD_REQUEST) {
+        } else if (err.response.status === HttpStatusCode.BAD_REQUEST) {
           swal({
             title: "Oops",
             text: "You can't eat this food now, You are Late",
@@ -69,31 +71,20 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        }
-         else {
+        } else {
           swal({
             title: "Oops",
             text: "Something went wrong",
             icon: "error",
-            timer: 1500,
-            buttons: {},
           });
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        swal({
-          title: "Oops",
-          text: "Something went wrong",
-          icon: "error",
-        });
       });
   };
 
   const formatTime = (time24: string) => {
     const [hours, minutes] = time24.split(":");
     const hrs = Number(hours);
-    const period = hrs >= 12 ? "PM" : "AM"; 
+    const period = hrs >= 12 ? "PM" : "AM";
     const hrs12 = hrs > 12 ? hrs - 12 : hrs;
 
     return `${hrs12 === 0 ? 12 : hrs12}:${minutes} ${period}`;

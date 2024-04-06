@@ -123,7 +123,7 @@ export default function RootLayout({
               </div>
               <Avatar className="hidden lg:block">
                 <Link href="/trainer/profile">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src="images/profileImage.avif" />
                 </Link>
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>

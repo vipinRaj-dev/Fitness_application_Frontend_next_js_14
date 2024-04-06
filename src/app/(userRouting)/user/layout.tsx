@@ -56,7 +56,7 @@ export default function RootLayout({
             <li>
               <Link
                 className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800 rounded-3xl   p-2"
-                href="#Workout"
+                href="/user#Workout"
               >
                 <Dumbbell />
                 Workout
@@ -65,7 +65,7 @@ export default function RootLayout({
             <li>
               <Link
                 className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800 rounded-3xl  p-2"
-                href="#diet"
+                href="/user#diet"
               >
                 <Carrot />
                 Diet
@@ -83,7 +83,7 @@ export default function RootLayout({
             <li>
               <Link
                 className="flex border-2 bg-slate-100 px-6 gap-1 border-none text-slate-800  rounded-3xl p-2 "
-                href="#purchasePlan"
+                href="/user/#purchasePlan"
               >
                 <IndianRupee />
                 Plan

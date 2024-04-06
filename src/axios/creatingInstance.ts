@@ -41,7 +41,7 @@ axiosInstance.interceptors.request.use(
 );
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log('all response data form the response inteceptor: ' ,response )
+    // console.log('all response data form the response inteceptor: ' ,response )
 
     return response;
   },

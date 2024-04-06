@@ -53,7 +53,7 @@ const UserProfileEdit = ({
     e.preventDefault();
     // setLoading(true);
 
-    console.log(form);
+    // console.log(form);
     if (
       form.mobileNumber.toString().length < 10 ||
       form.mobileNumber.toString().length > 10
@@ -81,10 +81,16 @@ const UserProfileEdit = ({
       }));
     } else {
       console.log("form send");
+      // console.log('form data' , form)
       setLoading(true);
       const formData = new FormData();
-      Object.keys(form).forEach((key) => {
-        formData.append(key, form[key as keyof FormState].toString());
+      Object.keys(form).forEach((key: string) => {
+        const value = form[key as keyof typeof form];
+        if (typeof value === 'boolean' || typeof value === 'number') {
+          formData.append(key, value.toString());
+        } else {
+          formData.append(key, value as string | Blob);
+        }
       });
       await axiosInstance
         .put("/user/profileUpdate", formData, {

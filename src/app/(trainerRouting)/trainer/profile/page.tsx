@@ -43,7 +43,7 @@ const schema = z.object({
       return true;
     }
     console.log(file);
-    return file.type === "image/avif" || file.type === "image/png";
+    return file.type === "image/avif" || file.type === "image/png"|| file.type === "image/jpeg";
   }, "Invalid image file"),
   name: z
     .string()
@@ -192,10 +192,12 @@ const TrainerProfile = () => {
       // console.log(form);
 
       const formData = new FormData();
-      Object.keys(form).forEach((key) => {
-        const value = form[key as keyof TrainerProfileFormState];
-        if (value !== undefined) {
+      Object.keys(form).forEach((key: string) => {
+        const value = form[key as keyof typeof form];
+        if (typeof value === 'boolean' || typeof value === 'number') {
           formData.append(key, value.toString());
+        }else {
+          formData.append(key, value as string | Blob);
         }
       });
       await axiosInstance

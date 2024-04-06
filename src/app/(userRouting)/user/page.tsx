@@ -116,7 +116,7 @@ const Userpage = () => {
       axiosInstance
         .get("/user/homePage")
         .then((res) => {
-          console.log('res.data from the user home page', res.data);
+          // console.log('res.data from the user home page', res.data);
           if (res.status === HttpStatusCode.OK) {
             setLatestDiet(res.data.dietFood);
             setAddedFoodDocIds(res.data.addedFoodDocIds);

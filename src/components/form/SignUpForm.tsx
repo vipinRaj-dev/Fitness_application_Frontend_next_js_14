@@ -142,14 +142,14 @@ const SignUpForm = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="block text-gray-700 text-sm font-bold mb-2">
+                      <FormLabel className="block text-slate-300 text-sm font-bold mb-2">
                         Username
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="John Jacob"
                           {...field}
-                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-300 leading-tight focus:outline-none focus:shadow-outline"
                         />
                       </FormControl>
                       <FormMessage />
@@ -161,14 +161,14 @@ const SignUpForm = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="block text-gray-700 text-sm font-bold mb-2">
+                      <FormLabel className="block text-slate-300 text-sm font-bold mb-2">
                         E-mail
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="example@gmail.com"
                           {...field}
-                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-300 leading-tight focus:outline-none focus:shadow-outline"
                         />
                       </FormControl>
                       <FormMessage />
@@ -180,7 +180,7 @@ const SignUpForm = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="block text-gray-700 text-sm font-bold mb-2">
+                      <FormLabel className="block text-slate-300 text-sm font-bold mb-2">
                         Password
                       </FormLabel>
                       <FormControl>
@@ -188,7 +188,7 @@ const SignUpForm = () => {
                           type="password"
                           placeholder="Enter password"
                           {...field}
-                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-300 leading-tight focus:outline-none focus:shadow-outline"
                         />
                       </FormControl>
                       <FormMessage />
@@ -200,7 +200,7 @@ const SignUpForm = () => {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem className="mb-4">
-                      <FormLabel className="block text-gray-700 text-sm font-bold mb-2">
+                      <FormLabel className="block text-slate-300 text-sm font-bold mb-2">
                         Confirm password
                       </FormLabel>
                       <FormControl>
@@ -208,7 +208,7 @@ const SignUpForm = () => {
                           type="password"
                           placeholder="Enter Confirm password"
                           {...field}
-                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-300 leading-tight focus:outline-none focus:shadow-outline"
                         />
                       </FormControl>
                       <FormMessage />

@@ -33,6 +33,9 @@ const FoodCard = ({
   }, [addedFoodDocIds]);
 
   const handleSubmit = async ({ time, foodDocId }: HandleSubmitParams) => {
+
+    const currenttime =  new Date()
+    console.log('client sideile current time , ee timeum serverile time correct aano check chay' , currenttime)
     axiosInstance
       .put("/user/addFoodLog", {
         time,
@@ -41,7 +44,7 @@ const FoodCard = ({
       })
       .then((res) => {
         // console.log(res);
-        if (res.status === HttpStatusCode.OK) {
+        if (res.status === 200) {
           setAddedFoodDocIdsList([...addedFoodDocIdsList, foodDocId]);
           // setChange(!change);
           swal({
@@ -55,7 +58,7 @@ const FoodCard = ({
       }) 
       .catch((err) => {
         // console.log(err);
-        if (err?.response?.status === HttpStatusCode.UNAUTHORIZED) {
+        if (err?.response?.status === 401) {
           swal({
             title: "Oops",
             text: "You are not reached the time to eat this food",
@@ -63,7 +66,7 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        } else if (err?.response?.status === HttpStatusCode.BAD_REQUEST) {
+        } else if (err?.response?.status === 400) {
           swal({
             title: "Oops",
             text: "You can't eat this food now, You are Late",

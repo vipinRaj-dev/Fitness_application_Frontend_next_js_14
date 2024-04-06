@@ -128,7 +128,7 @@ const AllTrainer = () => {
               <th className="text-left p-3 px-5">Role</th>
               <th className="text-left p-3 px-5">Update</th>
               <th className="text-left p-3 px-5">Block</th>
-              <th className="text-left p-3 px-5">View</th>
+              {/* <th className="text-left p-3 px-5">View</th> */}
             </tr>
           </thead>
           <tbody>
@@ -159,13 +159,13 @@ const AllTrainer = () => {
                     {trainer.isBlocked ? "Unblock" : "Block"}
                   </Button>
                 </td>
-                <td className="p-3 px-5">
+                {/* <td className="p-3 px-5">
                   <Link href={`/admin/trainers/view/${trainer._id}`}>
                     <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                       View
                     </Button>
                   </Link>
-                </td>
+                </td> */}
               </tr>
             ))}
 

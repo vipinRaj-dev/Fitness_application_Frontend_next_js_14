@@ -105,8 +105,8 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (date) {
-      console.log("date", date);
-      console.log("userCreatedDate", userCreatedDate);
+      // console.log("date", date);
+      // console.log("userCreatedDate", userCreatedDate);
 
       axiosInstance
         .get(`user/getDate/${date}`)

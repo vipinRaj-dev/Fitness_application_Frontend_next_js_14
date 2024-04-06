@@ -45,7 +45,7 @@ const FoodFormStateSchema = z.object({
     .string()
     .min(1, "Food name is required")
     .refine(
-      (value) => /^[a-zA-Z, " "]*$/.test(value),
+      (value) => /^[a-zA-Z,]*$/.test(value),
       "Only Characters are allowed"
     ),
   quantity: z
@@ -90,7 +90,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
     unit: "",
     description: "",
     ingredients: "",
-    protein: "",
+    protein: "",  
     fat: "",
     carbohydrate: "",
     calories: "",

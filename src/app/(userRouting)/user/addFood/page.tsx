@@ -20,11 +20,10 @@ import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
 
-
 import { DietFoodType } from "@/types/FoodTypes";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 
-const Page= () => {
+const Page = () => {
   const user = userStore((state) => state.user);
   const client_Id = user.UserId;
   const [latestDiet, setLatestDiet] = useState<DietFoodType[]>([]);
@@ -134,15 +133,36 @@ const Page= () => {
       console.log(error);
     }
   };
+
+  const UpdateExistingDiet = () => {
+    try {
+      axiosInstance
+        .put("/food/updateExisting")
+        .then((res) => {
+          console.log("response form the update existing diet==========", res);
+        })
+        .catch((err) => {
+          console.log("error in updating existing diet", err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <div className=" p-5 h-screen ">
         <h1 className="text-center font-semibold pt-5 text-2xl">
           Edit next diet plan
         </h1>
+
         <p className="text-center font-thin pb-3 italic">
           Note &quot;It would reflect in your next diet plan&quot;
         </p>
+        <div className="flex justify-end">
+          <Button onClick={UpdateExistingDiet} variant={"ghost"}>
+            Update Existing Diet
+          </Button>
+        </div>
         <div className=" p-5 h-4/6 rounded-2xl shadow-2xl shadow-slate-800 overflow-y-scroll scrollbar-none scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestDiet.map((food) => {
             return (

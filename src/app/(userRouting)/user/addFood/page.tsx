@@ -137,7 +137,9 @@ const Page = () => {
   const UpdateExistingDiet = () => {
     try {
       axiosInstance
-        .put("/food/updateExisting")
+        .put("/food/updateExisting", {
+          client_Id,
+        })
         .then((res) => {
           console.log("response form the update existing diet==========", res);
         })

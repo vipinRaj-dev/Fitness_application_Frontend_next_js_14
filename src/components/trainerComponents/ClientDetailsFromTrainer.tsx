@@ -131,7 +131,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       axiosInstance
         .get(`/food/getFoodAndWorkouts/${client_Id}/${date}`)
         .then((res) => {
-          // console.log(res.data);
+          console.log('check for thee workout data============================', res.data);
           setAttendanceData(res.data.attandanceData);
           setWorkoutDataPerDay(res.data.attandanceData.workOutLogs.workOuts);
         })
@@ -209,6 +209,23 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         })
         .catch((err) => {
           console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const UpdateExistingDiet = () => {
+    try {
+      axiosInstance
+        .put("/food/updateExisting", {
+          client_Id,
+        })
+        .then((res) => {
+          console.log("response form the update existing diet==========", res);
+        })
+        .catch((err) => {
+          console.log("error in updating existing diet", err);
         });
     } catch (error) {
       console.log(error);
@@ -484,8 +501,12 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
             </Link>
           </div>
         </div>
+      
         <div className="mt-5 mb-20 relative">
           <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
+        </div>
+        <div className="flex justify-end pb-6">
+          <Button onClick={UpdateExistingDiet}>Edit Existing diet</Button>
         </div>
         <div className=" p-5 h-5/6 overflow-y-scroll  scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
           {latestDiet.map((food) => {

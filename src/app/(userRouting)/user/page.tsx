@@ -25,9 +25,10 @@ import BarChartUser, {
 } from "@/components/recharts/BarChartUser";
 import { Label } from "@/components/ui/label";
 
-
 import { DietFoodType } from "@/types/FoodTypes";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
+import { boolean } from "zod";
+import axios from "axios";
 
 type graphOrder = {
   [key: string]: number;
@@ -36,6 +37,8 @@ type graphOrder = {
 // const [socket, setSocket] = useState<Socket | null>(null);
 
 const Userpage = () => {
+  const [attendanceCreated, setAttendanceCreated] = useState(false);
+
   const [latestDiet, setLatestDiet] = useState<DietFoodType[]>([]);
   const [addedFoodDocIds, setAddedFoodDocIds] = useState<string[]>([]);
   const [hasTrainer, setHasTrainer] = useState(false);
@@ -55,6 +58,21 @@ const Userpage = () => {
 
   const [foodStatus, setFoodStatus] = useState<BarChartDataUser[] | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    console.log('attendance useeffect running .......................................')
+    try {
+      axiosInstance.get("/user/setAttendance").then((res) => {
+        console.log('getAttendanance response======================================' , res)
+        if (res.status === HttpStatusCode.OK) {
+          setAttendanceCreated(true);
+        }
+      });
+    } catch (error) {
+      console.log("errro inside the attendance create", error);
+    }
+  }, []);
+
 
   const getAllGraphData = async () => {
     const orderOfWeek: graphOrder = {
@@ -111,12 +129,13 @@ const Userpage = () => {
       });
   };
 
+
   useEffect(() => {
     const fetchUser = async () => {
       axiosInstance
         .get("/user/homePage")
         .then((res) => {
-          console.log('res.data from the user home page', res.data);
+          console.log("res.data from the user home page", res.data);
           if (res.status === HttpStatusCode.OK) {
             setLatestDiet(res.data.dietFood);
             setAddedFoodDocIds(res.data.addedFoodDocIds);
@@ -136,8 +155,10 @@ const Userpage = () => {
           }
         });
     };
+   if(attendanceCreated){
     fetchUser();
-  }, []);
+   }
+  }, [attendanceCreated]);
 
   useEffect(() => {
     if (!allTasksCompleted) {
@@ -433,7 +454,7 @@ const Userpage = () => {
               <div className="flex flex-col items-start justify-between gap-4 mb-6 lg:flex-row">
                 <div>
                   <h3 className="text-2xl font-semibold text-white jakarta sm:text-4xl">
-                   Select Trainers
+                    Select Trainers
                   </h3>
                 </div>
                 <span className="order-first inline-block px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase bg-black rounded-full lg:order-none bg-opacity-20">
@@ -441,7 +462,9 @@ const Userpage = () => {
                 </span>
               </div>
               <div className="mb-4 space-x-2">
-                <span className="text-4xl font-bold text-white">Strating from $15/mo</span>
+                <span className="text-4xl font-bold text-white">
+                  Strating from $15/mo
+                </span>
                 <span className="text-2xl text-indigo-100 line-through">
                   $39/mo
                 </span>

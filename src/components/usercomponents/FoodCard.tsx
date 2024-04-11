@@ -44,7 +44,7 @@ const FoodCard = ({
       })
       .then((res) => {
         // console.log(res);
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.OK) {
           setAddedFoodDocIdsList([...addedFoodDocIdsList, foodDocId]);
           // setChange(!change);
           swal({
@@ -58,7 +58,7 @@ const FoodCard = ({
       }) 
       .catch((err) => {
         // console.log(err);
-        if (err?.response?.status === 401) {
+        if (err?.response?.status === HttpStatusCode.UNAUTHORIZED) {
           swal({
             title: "Oops",
             text: "You are not reached the time to eat this food",
@@ -66,7 +66,7 @@ const FoodCard = ({
             timer: 1500,
             buttons: {},
           });
-        } else if (err?.response?.status === 400) {
+        } else if (err?.response?.status === HttpStatusCode.BAD_REQUEST) {
           swal({
             title: "Oops",
             text: "You can't eat this food now, You are Late",

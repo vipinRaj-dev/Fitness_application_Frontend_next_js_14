@@ -53,7 +53,7 @@ const UserProfile = () => {
     mobileNumber: 0,
     weight: 0,
     height: 0,
-    profileImage: "",   
+    profileImage: "",
     BloodPressure: 0,
     Diabetes: 0,
     cholesterol: 0,
@@ -105,7 +105,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (date) {
-      // console.log("date", date);
+      // console.log("requested date", date);
       // console.log("userCreatedDate", userCreatedDate);
 
       axiosInstance

@@ -13,7 +13,7 @@ const TrainerProfile = ({ trainerId }: { trainerId: string }) => {
   useEffect(() => {
     // console.log("this is the Trainer id from the parmas ", trainerId);
     const fetchData = async () => {
-      console.log("fetchData");
+      // console.log("fetchData");
       await axiosInstance
         .get(`/admin/trainer/${trainerId}`)
         .then((response) => {

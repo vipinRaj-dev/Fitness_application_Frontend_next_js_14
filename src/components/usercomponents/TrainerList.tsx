@@ -38,7 +38,7 @@ const TrainerList = () => {
   const [rating, setRating] = useState('');
 
   useEffect(() => {
-    console.log("TrainerList from user side");
+    // console.log("TrainerList from user side");
     const getTrainer = () => {
       axiosInstance
         .get("/user/getAllTrainers", {

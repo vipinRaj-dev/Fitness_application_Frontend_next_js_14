@@ -108,7 +108,7 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
 
     if (!result.success) {
       const errorMap = result.error.formErrors.fieldErrors;
-      console.log("errorMap", errorMap);
+      // console.log("errorMap", errorMap);
       setError((prevError) => {
         return {
           ...prevError,
@@ -141,11 +141,11 @@ const SetWorkout = ({ workoutId }: { workoutId?: string }) => {
         },
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
 
           if (res.status === HttpStatusCode.OK) {
             setLoading(false);
-            console.log("success  ");
+            // console.log("success  ");
             toast.success("Workout added successfully");
           }
         })

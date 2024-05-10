@@ -30,7 +30,7 @@ const OtpForm = ({ data }: { data?: UserDataType }) => {
       .post(`${baseUrl}/auth/registerUser`, { otp, data })
       .then((res) => {
         if (res.status === HttpStatusCode.CREATED) {
-          console.log("User created");
+          // console.log("User created");
           router.replace("/sign-in");
         } else {
           console.log("User not created from the otp page");

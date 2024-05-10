@@ -27,9 +27,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     const myCookie = Cookies.get("jwttoken");
-    console.log('cookie printiing     ' , myCookie)
+    // console.log('cookie printiing     ' , myCookie)
     if (myCookie) {
-      console.log('yes cookie is there ', myCookie)
+      // console.log('yes cookie is there ', myCookie)
       axios
         .get(`${baseUrl}/auth/role`, {
           headers: {
@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!loading) {
-      console.log('yes i am getting the role page' , role)
+      // console.log('yes i am getting the role page' , role)
       switch (role) {
         case "admin":
           router.push("/admin");

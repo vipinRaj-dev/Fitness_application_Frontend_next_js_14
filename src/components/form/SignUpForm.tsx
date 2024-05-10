@@ -96,7 +96,7 @@ const SignUpForm = () => {
       .post(`${baseUrl}/auth/sendOtp`, data)
       .then((response) => {
         if (response.status === 200) {
-          console.log("User created");
+          // console.log("User created");
           setError("");
           setUserData(data);
           setOtp(true);

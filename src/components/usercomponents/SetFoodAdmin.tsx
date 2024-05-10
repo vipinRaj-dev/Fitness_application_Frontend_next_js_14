@@ -197,7 +197,7 @@ const SetFoodAdmin = ({ foodId }: { foodId?: string }) => {
       })
     );
 
-    console.log("trimmedForm", trimmedForm);
+    // console.log("trimmedForm", trimmedForm);
     const result = FoodFormStateSchema.safeParse(trimmedForm);
 
     if (!result.success) {

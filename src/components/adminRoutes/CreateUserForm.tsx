@@ -9,7 +9,7 @@ const CreateUser = () => {
  
   const pageUrl = usePathname()
 
-  console.log("pathname" , pageUrl)
+  // console.log("pathname" , pageUrl)
 
   const url = pageUrl === "/admin/users/create" ? "/admin/createUser" : "/admin/createTrainer"
   const handleCreateUserSubmit = async (

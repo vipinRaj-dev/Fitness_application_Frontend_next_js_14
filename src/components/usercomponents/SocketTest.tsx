@@ -16,7 +16,7 @@ const SocketTest = () => {
       connect('user');
 
       return () => {
-        console.log("disconnecting...");
+        // console.log("disconnecting...");
         disconnect();
       };
     }
@@ -24,17 +24,17 @@ const SocketTest = () => {
 
   useEffect(() => {
     if (newSocket) {
-      console.log(newSocket);
+      // console.log(newSocket);
       newSocket.on("trainerOnline", (data) => {
-        console.log("trainer online");
-        console.log(data);
+        // console.log("trainer online");
+        // console.log(data);
       });
       newSocket.on("trainerOffline", (data) => {
-        console.log("trainer offline");
-        console.log(data);
+        // console.log("trainer offline");
+        // console.log(data);
       });
     } else {
-      console.log("newSocket is null user");
+      // console.log("newSocket is null user");
     }
   }, [newSocket]);
 

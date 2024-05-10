@@ -54,7 +54,7 @@ const ListFood = () => {
   ];
 
   const handleDelete = (foodId: string) => {
-    console.log("delete");
+    // console.log("delete");
 
     axiosInstance
       .delete(`/admin/deleteFood/${foodId}`)

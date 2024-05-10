@@ -42,7 +42,7 @@ const schema = z.object({
     if (!file) {
       return true;
     }
-    console.log(file);
+    // console.log(file);
     return file.type === "image/avif" || file.type === "image/png"|| file.type === "image/jpeg";
   }, "Invalid image file"),
   name: z
@@ -159,7 +159,7 @@ const TrainerProfile = () => {
     // console.log("form", form);
     if (!result.success) {
       const errorMap = result.error.formErrors.fieldErrors;
-      console.log("errorMap", errorMap);
+      // console.log("errorMap", errorMap);
       setErrors((prevError) => {
         return {
           ...prevError,
@@ -187,7 +187,7 @@ const TrainerProfile = () => {
         experience: "",
       });
 
-      console.log(" form send");
+      // console.log(" form send");
 
       // console.log(form);
 

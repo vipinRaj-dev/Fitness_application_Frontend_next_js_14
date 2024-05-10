@@ -59,7 +59,7 @@ const PaymentComponent = () => {
     axiosInstance
       .get("/trainer/payments")
       .then((res) => {
-        console.log("res.data.trainer payments", res.data);
+        // console.log("res.data.trainer payments", res.data);
         setPayments(res.data.payments);
         setAllDataToStates(res.data);
       })

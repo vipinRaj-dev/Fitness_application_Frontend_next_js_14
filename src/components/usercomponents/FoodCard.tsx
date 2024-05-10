@@ -35,7 +35,7 @@ const FoodCard = ({
   const handleSubmit = async ({ time, foodDocId }: HandleSubmitParams) => {
 
     const currenttime =  new Date()
-    console.log('client sideile current time , ee timeum serverile time correct aano check chay' , currenttime)
+    // console.log('client side current time' , currenttime)
     axiosInstance
       .put("/user/addFoodLog", {
         time,

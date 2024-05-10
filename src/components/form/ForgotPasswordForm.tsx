@@ -29,7 +29,7 @@ const ForgotPasswordForm = () => {
           password: password,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setLoading(false);
 
           return router.replace("/otp-verification-forgotpassword");

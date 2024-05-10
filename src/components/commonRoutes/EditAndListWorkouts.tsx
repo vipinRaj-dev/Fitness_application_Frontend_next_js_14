@@ -55,7 +55,7 @@ const EditAndListWorkouts = ({
     axiosInstance
       .get(`/workouts/getWorkoutsTrainer/${client_Id}`)
       .then((res) => {
-        console.log("workoutData", res.data.workOutData);
+        // console.log("workoutData", res.data.workOutData);
         setWorkout(res.data.workOutData);
         setDocumentId(res.data.documentId);
       })
@@ -123,7 +123,7 @@ const EditAndListWorkouts = ({
         weight: toEdit.weight,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setAddSetDialog(false);
         setSuccess(!success);
       })

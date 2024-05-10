@@ -69,7 +69,7 @@ const UserProfile = () => {
         await axiosInstance
           .get("user/profile")
           .then((res) => {
-            console.log("userDetails", res.data);
+            // console.log("userDetails", res.data);
 
             setForm((prevState) => ({
               ...prevState,
@@ -87,10 +87,10 @@ const UserProfile = () => {
             });
           })
           .catch((err) => {
-            console.log("error inside the api call");
+            // console.log("error inside the api call");
             console.log(err);
             if (err.response.status === 402) {
-              console.log("purchase");
+              // console.log("purchase");
               router.replace("/user/subscription");
             }
           });

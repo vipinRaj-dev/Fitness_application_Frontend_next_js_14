@@ -80,7 +80,7 @@ const UserProfileEdit = ({
         weight: "Weight should be less than 3 digit",
       }));
     } else {
-      console.log("form send");
+      // console.log("form send");
       // console.log('form data' , form)
       setLoading(true);
       const formData = new FormData();

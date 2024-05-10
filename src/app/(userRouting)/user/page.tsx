@@ -60,10 +60,10 @@ const Userpage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('attendance useeffect running .......................................')
+    // console.log('attendance useeffect running .......................................')
     try {
       axiosInstance.get("/user/setAttendance").then((res) => {
-        console.log('getAttendanance response======================================' , res)
+        // console.log('getAttendanance response======================================' , res)
         if (res.status === HttpStatusCode.OK) {
           setAttendanceCreated(true);
         }
@@ -135,7 +135,7 @@ const Userpage = () => {
       axiosInstance
         .get("/user/homePage")
         .then((res) => {
-          console.log("res.data from the user home page", res.data);
+          // console.log("res.data from the user home page", res.data);
           if (res.status === HttpStatusCode.OK) {
             setLatestDiet(res.data.dietFood);
             setAddedFoodDocIds(res.data.addedFoodDocIds);
@@ -150,7 +150,7 @@ const Userpage = () => {
           console.log("error inside the api call");
           console.log(err);
           if (err.response.status === 402) {
-            console.log("purchase");
+            // console.log("purchase");
             router.replace("/user/subscription");
           }
         });
@@ -175,7 +175,7 @@ const Userpage = () => {
           agree,
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -225,7 +225,7 @@ const Userpage = () => {
                   />
                   <Button
                     onClick={() => {
-                      console.log(reason);
+                      // console.log(reason);
                       sendReason(true);
                       setOpenModal(false);
                     }}

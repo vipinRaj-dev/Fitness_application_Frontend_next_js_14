@@ -74,7 +74,7 @@ const TrainerHomePage = () => {
       await axiosInstance
         .get("trainer/profile")
         .then((res) => {
-          console.log("res.data", res.data);
+          // console.log("res.data", res.data);
           setTrainerData((prevState) => ({
             ...prevState,
             ...res.data.trainer,
@@ -118,7 +118,7 @@ const TrainerHomePage = () => {
   }, [page, rating]);
   const handleCertficateSubmit = async (e: React.FormEvent, field: string) => {
     e.preventDefault();
-    console.log("FIELD", field);
+    // console.log("FIELD", field);
     const formData = new FormData();
     // console.log("formData", image, name, description, field);
     if (image) {
@@ -163,7 +163,7 @@ const TrainerHomePage = () => {
       publicId: string;
     }
   ) => {
-    console.log("delete clicked", deleteId, field);
+    // console.log("delete clicked", deleteId, field);
     e.preventDefault();
 
     axiosInstance

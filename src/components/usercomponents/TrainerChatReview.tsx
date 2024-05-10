@@ -47,17 +47,17 @@ const TrainerChatReview = ({
   const [chatPageOpen, setChatPageOpen] = useState(false);
   useEffect(() => {
     if (newSocket) {
-      console.log("newSocket is not null");
-      console.log(newSocket);
+      // console.log("newSocket is not null");
+      // console.log(newSocket);
       newSocket.on("trainerOnline", (data) => {
-        console.log("trainer online");
+        // console.log("trainer online");
         setIsTrainerOnline(true);
-        console.log(data);
+        // console.log(data);
       });
       newSocket.on("trainerOffline", (data) => {
-        console.log("trainer offline");
+        // console.log("trainer offline");
         setIsTrainerOnline(false);
-        console.log(data);
+        // console.log(data);
       });
 
       return () => {
@@ -67,7 +67,7 @@ const TrainerChatReview = ({
         }
       };
     } else {
-      console.log("newSocket is null");
+      // console.log("newSocket is null");
     }
   }, [newSocket]);
 
@@ -76,7 +76,7 @@ const TrainerChatReview = ({
       axiosInstance
         .get(`/user/getTrainerOnlineStatus/${trainer._id}/${userId}`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setIsTrainerOnline(res.data.onlineStatus);
           setPendingMsgCount(res.data.pendingMessageCount);
         })
@@ -91,7 +91,7 @@ const TrainerChatReview = ({
   useEffect(() => {
     if (newSocket && !chatPageOpen) {
       newSocket.on("messageRecieved", (data) => {
-        console.log("incrementing the pending count");
+        // console.log("incrementing the pending count");
         setPendingMsgCount((prev) => prev + 1);
       });
     }
@@ -109,7 +109,7 @@ const TrainerChatReview = ({
   });
 
   const applyReview = async () => {
-    console.log(rating);
+    // console.log(rating);
     if (rating.starRating === 0) {
       swal({
         title: "warning!",
@@ -126,7 +126,7 @@ const TrainerChatReview = ({
           trainerId: trainer._id,
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           swal({
             title: "seccess!",
             text: "Rating Submitted",

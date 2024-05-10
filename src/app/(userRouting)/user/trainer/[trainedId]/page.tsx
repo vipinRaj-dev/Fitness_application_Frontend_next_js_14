@@ -109,7 +109,7 @@ const Page= ({
           },
         })
         .then((res) => {
-          console.log("res.data", res.data);
+          // console.log("res.data", res.data);
           setReviews(res.data.reviews);
           setLimit(res.data.limit);
           setTotalPages(Math.ceil(res.data.totalReviews / res.data.limit));

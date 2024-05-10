@@ -28,7 +28,7 @@ const OtpFormForgotPassword = () => {
         // console.log(res);
         if (res.status === HttpStatusCode.OK) {
           setLoading(false);
-          console.log("User created");
+          // console.log("User created");
           swal({
             title: "Success",
             text: "password reset successfully",

@@ -14,7 +14,7 @@ const UserProfile = ({ userId }: { userId: string }) => {
   useEffect(() => {
     // console.log("this is the user id from the parmas ", userId);
     const fetchData = async () => {
-      console.log("fetchData");
+      // console.log("fetchData");
       await axiosInstance
         .get(`/admin/user/${userId}`)
         .then((response) => {

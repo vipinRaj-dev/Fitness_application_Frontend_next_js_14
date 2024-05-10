@@ -131,7 +131,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
       axiosInstance
         .get(`/food/getFoodAndWorkouts/${client_Id}/${date}`)
         .then((res) => {
-          console.log('check for thee workout data============================', res.data);
+          // console.log('check for thee workout data============================', res.data);
           setAttendanceData(res.data.attandanceData);
           setWorkoutDataPerDay(res.data.attandanceData.workOutLogs.workOuts);
         })
@@ -180,7 +180,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         axiosInstance
           .put(`/food/addTimeDetails/${client_Id}/${schedule.foodId}`, schedule)
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             if (res.status === HttpStatusCode.OK) {
               setDone(!done);
               setIsOpen(false);
@@ -222,7 +222,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           client_Id,
         })
         .then((res) => {
-          console.log("response form the update existing diet==========", res);
+          // console.log("response form the update existing diet==========", res);
         })
         .catch((err) => {
           console.log("error in updating existing diet", err);
@@ -572,7 +572,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                   <div className="flex items-center px-5">
                     <Button
                       onClick={() => {
-                        console.log(food._id);
+                        // console.log(food._id);
                         setSchedule({
                           foodId: food._id,
                           timePeriod: food.timePeriod,

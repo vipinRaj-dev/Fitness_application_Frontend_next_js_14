@@ -21,7 +21,7 @@ const Page= ({
       axiosInstance
         .get(`/user/getUser`)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setUserEmail(res.data.email);
         })
         .catch((error) => {

@@ -68,7 +68,7 @@ const Page = () => {
 
   const handleSubmit = async () => {
     const hour = parseInt(schedule.time.split(":")[0]);
-    console.log(hour);
+    // console.log(hour);
 
     if (schedule.timePeriod === "morning" && hour > 11) {
       setScheduleError((prevError) => ({
@@ -99,7 +99,7 @@ const Page = () => {
         axiosInstance
           .put(`/food/addTimeDetails/${client_Id}/${schedule.foodId}`, schedule)
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             if (res.status === HttpStatusCode.OK) {
               setDone(!done);
               setIsOpen(false);
@@ -141,7 +141,7 @@ const Page = () => {
           client_Id,
         })
         .then((res) => {
-          console.log("response form the update existing diet==========", res);
+          // console.log("response form the update existing diet==========", res);
         })
         .catch((err) => {
           console.log("error in updating existing diet", err);
@@ -229,7 +229,7 @@ const Page = () => {
                   <div className="flex items-center px-5">
                     <Button
                       onClick={() => {
-                        console.log(food._id);
+                        // console.log(food._id);
                         setSchedule({
                           foodId: food._id,
                           timePeriod: food.timePeriod,

@@ -21,6 +21,7 @@ import { baseUrl } from "@/Utils/PortDetails";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
+import Spinner from "../loadingui/Spinner";
 // import Spinner from "../loadingui/Spinner";
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -40,7 +41,7 @@ const SignInForm = () => {
   });
 
   const [error, setError] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const myCookie = Cookies.get("jwttoken");
 
   const router = useRouter();
@@ -52,17 +53,19 @@ const SignInForm = () => {
     // setLoading(false)
   }, []);
 
-  // if (loading) {
-  //   return <Spinner />;
-  // }
+  if (loading) {
+    return <Spinner />;
+  }
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    setLoading(true);
     axios
       .post(`${baseUrl}/auth/login`, data, { withCredentials: true })
       .then((res) => {
         if (res.status === HttpStatusCode.OK) {
-          Cookies.set('jwttoken' , res.data.token)
+          Cookies.set("jwttoken", res.data.token);
           router.replace("/");
+          setLoading(false);
         }
       })
       .catch(function (error) {

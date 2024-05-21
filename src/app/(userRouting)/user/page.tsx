@@ -62,17 +62,23 @@ const Userpage = () => {
   useEffect(() => {
     // console.log('attendance useeffect running .......................................')
     try {
-      axiosInstance.get("/user/setAttendance").then((res) => {
-        // console.log('getAttendanance response======================================' , res)
-        if (res.status === HttpStatusCode.OK) {
-          setAttendanceCreated(true);
-        }
-      });
-    } catch (error) {
-      console.log("errro inside the attendance create", error);
+      axiosInstance
+        .get("/user/setAttendance")
+        .then((res) => {
+          // console.log('getAttendanance response======================================' , res)
+          if (res.status === HttpStatusCode.OK) {
+            setAttendanceCreated(true);
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 402) {
+            router.replace("/user/subscription");
+          }
+        });
+    } catch (err) {
+      console.log("errro inside the attendance create", err);
     }
   }, []);
-
 
   const getAllGraphData = async () => {
     const orderOfWeek: graphOrder = {
@@ -129,7 +135,6 @@ const Userpage = () => {
       });
   };
 
-
   useEffect(() => {
     const fetchUser = async () => {
       axiosInstance
@@ -150,14 +155,14 @@ const Userpage = () => {
           console.log("error inside the api call");
           console.log(err);
           if (err.response.status === 402) {
-            // console.log("purchase");
+            console.log("purchase");
             router.replace("/user/subscription");
           }
         });
     };
-   if(attendanceCreated){
-    fetchUser();
-   }
+    if (attendanceCreated) {
+      fetchUser();
+    }
   }, [attendanceCreated]);
 
   useEffect(() => {

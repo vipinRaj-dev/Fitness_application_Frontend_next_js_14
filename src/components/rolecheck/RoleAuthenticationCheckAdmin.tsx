@@ -37,7 +37,7 @@ const RoleAuthenticationCheckAdmin = () => {
   if (loading) {
     return (
       <div>
-        Role Auth
+        
         <Spinner />
       </div>
     ); 

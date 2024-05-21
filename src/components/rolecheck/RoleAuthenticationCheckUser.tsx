@@ -58,7 +58,7 @@ const RoleAuthenticationCheckUser = () => {
   if (loading) {
     return (
       <div>
-        Role Auth
+       
         <Spinner />
       </div>
     );

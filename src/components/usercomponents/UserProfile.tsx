@@ -80,10 +80,10 @@ const UserProfile = () => {
             userCreated.setHours(0, 0, 0, 0);
             setUserCreatedDate(userCreated);
             setTrainer({
-              profilePicture: res.data.user.trainerId.profilePicture,
-              name: res.data.user.trainerId.name,
-              _id: res.data.user.trainerId._id,
-              trainerPaymentDueDate: res.data.user.trainerPaymentDueDate,
+              profilePicture: res.data?.user?.trainerId?.profilePicture,
+              name: res.data.user?.trainerId?.name,
+              _id: res.data?.user?.trainerId?._id,
+              trainerPaymentDueDate: res.data?.user?.trainerPaymentDueDate,
             });
           })
           .catch((err) => {

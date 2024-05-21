@@ -36,7 +36,7 @@ const RoleAuthenticationCheckTrainer= () => {
   if (loading) {
     return (
       <div>
-        Role Auth
+       
         <Spinner />
       </div>
     ); 

@@ -69,6 +69,7 @@ const SignInForm = () => {
         }
       })
       .catch(function (error) {
+        setLoading(true);
         if (error.response) {
           setError(error.response.data.msg);
         }

@@ -182,7 +182,7 @@ export default function RootLayout({
               <div className="mt-6 lg:max-w-sm">
                 <p className="text-sm text-gray-800">
                   Get ready to achieve your fitness goals with our cutting-edge
-                  fitness app! Whether you're looking to lose weight, build
+                  fitness app! Whether you &lsquo; re looking to lose weight, build
                   muscle, or improve your overall health, our app has everything
                   you need to succeed.
                 </p>

@@ -87,26 +87,28 @@ const WorkoutSearch = ({
   }, [page, search]);
 
   const setWorkout = () => {
-    axiosInstance
-      .put(`/workouts/set`, {
-        clientId,
-        workoutId,
-        workoutSet,
-      })
-      .then((res) => {
-        // console.log(res.data);
-        if (res.status === HttpStatusCode.OK) {
-          setIsDialogOpen(false);
-          onSuccess && onSuccess();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (workoutSet.length !== 0) {
+      axiosInstance
+        .put(`/workouts/set`, {
+          clientId,
+          workoutId,
+          workoutSet,
+        })
+        .then((res) => {
+          // console.log(res.data);
+          if (res.status === HttpStatusCode.OK) {
+            setIsDialogOpen(false);
+            onSuccess && onSuccess();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
-    <div >
+    <div>
       <div className="flex justify-end my-4">
         <input
           type="text"
@@ -169,12 +171,20 @@ const WorkoutSearch = ({
                       alt={"workoutimage"}
                     />
                   </TableCell>
-                  <TableCell><h1 className="text-xl font-semibold">{workout.workoutName}</h1></TableCell>
+                  <TableCell>
+                    <h1 className="text-xl font-semibold">
+                      {workout.workoutName}
+                    </h1>
+                  </TableCell>
                   <TableCell>
                     <ul>
                       {workout.targetMuscle.split(",").map((muscle, index) => {
                         return (
-                          <li key={index} className="font-semibold" style={{ listStyleType: "circle"  }}>
+                          <li
+                            key={index}
+                            className="font-semibold"
+                            style={{ listStyleType: "circle" }}
+                          >
                             {muscle}
                           </li>
                         );

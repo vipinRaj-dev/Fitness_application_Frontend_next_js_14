@@ -69,7 +69,9 @@ const SignInForm = () => {
         }
       })
       .catch(function (error) {
-        setLoading(true);
+        console.log('sign in error');
+        
+        setLoading(false);
         if (error.response) {
           setError(error.response.data.msg);
         }

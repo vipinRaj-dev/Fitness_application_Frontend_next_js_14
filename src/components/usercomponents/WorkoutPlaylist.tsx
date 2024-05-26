@@ -58,31 +58,34 @@ const WorkoutPlaylist = () => {
       });
   };
   return (
-    <div className="mt-14">
+    <div className="mt-14 w-full">
       <div>
         {playingWorkout && (
           <div className="flex justify-evenly">
-            <div>
-              <ReactPlayer
-                width={1000}
-                height={600}
-                controls
-                url={playingWorkout.workoutId.videoUrl}
-              />
-
-              <h1 className="text-3xl text-whitem mb-3">
-                {playingWorkout.workoutId.workoutName}
-              </h1>
-              <p className="text-white">
-                {playingWorkout.workoutId.description}
-              </p>
-              <div className="flex justify-end">
+            <div className="w-3/4">
+              <div className="flex justify-center">
+                <ReactPlayer
+                  width={1000}
+                  height={600}
+                  controls
+                  url={playingWorkout.workoutId.videoUrl}
+                />
+              </div>
+              <div className="bg-green-950 rounded-3xl p-5 mt-10">
+                <h1 className="text-3xl text-white font-semibold mb-3">
+                  {playingWorkout.workoutId.workoutName}
+                </h1>
                 <p className="text-white">
-                  Target Muscles : {playingWorkout.workoutId.targetMuscle}
+                  {playingWorkout.workoutId.description}
                 </p>
+                <div className="flex justify-end">
+                  <p className="text-white italic opacity-50">
+                    Target Muscles : {playingWorkout.workoutId.targetMuscle}
+                  </p>
+                </div>
               </div>
             </div>
-            <div>
+            <div className="w-1/4">
               <h1 className="text-3xl text-white">Workout sets</h1>
               <div className=" h-5/6 overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-950">
                 {playingWorkout.workoutSet.map((set, index) => {
@@ -92,10 +95,10 @@ const WorkoutPlaylist = () => {
                       className="bg-slate-900 rounded-lg hover:scale-105 duration-700 m-4 p-4"
                     >
                       <div>
-                        <h1 className="text-3xl text-white">Set {index + 1}</h1>
-                        <p className="text-white">Reps: {set.reps}</p>
+                        <h1 className="text-3xl font-semibold text-white">Set {index + 1}</h1>
+                        <p className="text-white ">Reps: {set.reps}</p>
                         <p className="text-white">Weight: {set.weight}</p>
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 mt-3">
                           <Input
                             disabled={
                               disabledButtons[index] || set.completedReps > 0

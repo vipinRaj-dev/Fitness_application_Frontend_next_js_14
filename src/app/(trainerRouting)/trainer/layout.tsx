@@ -45,7 +45,7 @@ export default function RootLayout({
 
         <div className="m-10 ">
           <nav className="flex justify-between items-center">
-            <Link href="/user">
+            <Link href="/trainer">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl">Vigor</h1>
             </Link>
             <ul className="hidden lg:flex justify-center items-center border-2 p-3 rounded-3xl bg-slate-500 gap-2">

@@ -32,10 +32,10 @@ const TrainerList = () => {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(4);
   const [totalPages, setTotalPages] = useState(0);
 
-  const [rating, setRating] = useState('');
+  const [rating, setRating] = useState("");
 
   useEffect(() => {
     // console.log("TrainerList from user side");
@@ -66,8 +66,9 @@ const TrainerList = () => {
   return (
     <div className="md:p-10 p-2 mt-10">
       <div className="">
-        <div className="flex w-full max-w-sm items-center space-x-2 md:max-w-full">
+        <div className="flex w-full max-w-sm items-center justify-end space-x-2 md:max-w-full">
           <Input
+            className="w-96"
             type="text"
             placeholder="Search . . . "
             onChange={(e) => setSearch(e.target.value)}
@@ -75,12 +76,12 @@ const TrainerList = () => {
         </div>
       </div>
       <div>
-        <h1 className="text-xl font-semibold tracking-wide mt-5">Trainers</h1>
+        <h1 className="text-2xl text-center font-semibold tracking-wide mt-5">Trainers</h1>
         <div className="flex gap-5 items-center mb-10 justify-end">
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={"ghost"}>Filter Rating</Button>
+                <Button variant={"secondary"}>Filter Rating</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel> Star Rating </DropdownMenuLabel>
@@ -122,7 +123,7 @@ const TrainerList = () => {
                 />
               </div>
               <div className="text-sm leading-loose md:flex">
-                <div>
+                <div className="w-96">
                   <div className="flex gap-2">
                     <h1 className="text-xl font-semibold tracking-wide">
                       {trainer.name}
@@ -146,7 +147,7 @@ const TrainerList = () => {
                   </h1>
                 </div>
                 <div className="md:w-96 md:overflow-hidden md:ml-20 md:h-20">
-                  <h1 className="opacity-55 font-light hidden md:block">
+                  <h1 className="opacity-55 font-semibold hidden md:block">
                     {trainer.description}
                   </h1>
                 </div>
@@ -164,7 +165,7 @@ const TrainerList = () => {
           </div>
         );
       })}
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-10">
         <Button
           disabled={page === 1}
           onClick={() => setPage(page - 1)}

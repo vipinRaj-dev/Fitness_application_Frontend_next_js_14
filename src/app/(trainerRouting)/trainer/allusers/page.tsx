@@ -15,7 +15,7 @@ type User = {
   _id: string;
 };
 
-const Page= () => {
+const Page = () => {
   const [allUsers, setAllUsers] = useState([]); // all users data
 
   const [page, setPage] = useState(1);
@@ -53,9 +53,7 @@ const Page= () => {
 
   return (
     <div>
-      <div>
-        <h1>All Users</h1>
-      </div>
+      <h1 className="text-center text-2xl font-semibold">All Users</h1>
 
       <form className="flex items-center justify-end p-2">
         <h1> Search</h1>
@@ -72,52 +70,53 @@ const Page= () => {
         <table className="table-fixed w-full text-left text-sm md:text-base">
           <thead className=" text-white">
             <tr>
-              <th className="px-1 py-1">Sl No</th>
-              <th className="px-1 py-1">Profile</th>
-              <th className="px-1 py-1">Name</th>
-              <th className="px-1 py-1">Due </th>
-              <th className="px-1 py-1">Blocked</th>
-              <th className="px-1 py-1">View</th>
+              <th className="px-10 py-1">Sl No</th>
+              <th className="px-10 py-1">Profile</th>
+              <th className="px-10 py-1">Name</th>
+              <th className="px-10 py-1">Due </th>
+              <th className="px-10 py-1">Blocked</th>
+              <th className="px-10 py-1">View</th>
             </tr>
           </thead>
           <tbody className="">
             {allUsers.map((user: User, index: number) => {
               return (
-                <tr
-                  key={user._id}
-                  className="odd:bg-gray-600 even:bg-gray-950 rounded-lg"
-                >
-                  <td className="px-1 py-1 text-center md:text-left">
+                <tr key={user._id} className="odd:bg-gray-600 even:bg-gray-950">
+                  <td className="px-14">
                     {index + 1}
                   </td>
-                  <td className="px-1 py-1">
+                  <td className="px-14 py-1">
                     <img
                       src={user.profileImage}
                       alt="profile"
                       className="w-8 h-8 rounded-full"
                     />
                   </td>
-                  <td className="px-4 py-3 overflow-auto">{user.name}</td>
-                  <td className="px-4 py-3 overflow-auto">
+                  <td className="px-10 py-3 overflow-auto">{user.name}</td>
+                  <td className="px-10 py-3 overflow-auto">
                     <p
                       className={
                         new Date(user.trainerPaymentDueDate) > new Date()
                           ? "text-green-100"
                           : "text-red-400"
                       }
-                    > 
+                    >
                       {" "}
                       {new Date(
                         user.trainerPaymentDueDate
                       ).toLocaleDateString()}
                     </p>
                   </td>
-                  <td className="px-4 py-3 overflow-auto">
+                  <td className="px-14 py-3 overflow-auto">
                     {user.userBlocked ? "Yes" : "No"}
                   </td>
-                  <td className="px-4 py-3 overflow-auto">
+                  <td className="px-7 py-3 overflow-auto">
                     {new Date(user.trainerPaymentDueDate) > new Date() ? (
-                      <Link href={`/trainer/client/${user._id}`}>View</Link>
+                      <Button
+                      variant={"ghost"}
+                      >
+                        <Link href={`/trainer/client/${user._id}`}>View</Link>
+                      </Button>
                     ) : (
                       "Payment Due"
                     )}
@@ -127,7 +126,7 @@ const Page= () => {
             })}
           </tbody>
         </table>
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-10">
           <Button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}

@@ -33,8 +33,7 @@ const FoodCard = ({
   }, [addedFoodDocIds]);
 
   const handleSubmit = async ({ time, foodDocId }: HandleSubmitParams) => {
-
-    const currenttime =  new Date()
+    const currenttime = new Date();
     // console.log('client side current time' , currenttime)
     axiosInstance
       .put("/user/addFoodLog", {
@@ -55,7 +54,7 @@ const FoodCard = ({
             buttons: {},
           });
         }
-      }) 
+      })
       .catch((err) => {
         // console.log(err);
         if (err?.response?.status === HttpStatusCode.UNAUTHORIZED) {
@@ -107,20 +106,22 @@ const FoodCard = ({
     return foodTime.getTime() < currentTime.getTime();
   };
 
+  // console.log("details.foodId", details.foodId);
+
   return (
-    <div className="bg-slate-900 p-3 rounded-lg md:flex ">
-      <div className="md:w-44 ">
-        <img className="rounded-2xl" src="/images/food1.png" alt="food" />
+    <div className="bg-slate-900 p-3 rounded-lg md:flex">
+      <div className="md:w-44 flex items-center ">
+        <img className="rounded-2xl" src={details.foodId.photoUrl} alt="food" />
       </div>
 
-      <div>
-        <div className="flex justify-between items-center p-2">
+      <div className=" w-full">
+        <div className="flex items-center justify-around p-2">
           <div>
             <h1 className="font-semibold text-xl">{details.foodId.foodname}</h1>
           </div>
           <div>
             <p className="text-sm font-light">
-              Before : {formatTime(details.time)}
+              BF : {formatTime(details.time)}
             </p>
           </div>
         </div>

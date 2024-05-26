@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <>
       <RoleAuthenticationCheckUser />
-      <SocketTest />  
+      <SocketTest />
       <div className="mt-6 max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 h-screen">
         <nav className="flex justify-between items-center">
           <Link href="/user">
@@ -157,7 +157,7 @@ export default function RootLayout({
               <a
                 href="/"
                 aria-label="Go home"
-                title="Company"
+                title="Vigor"
                 className="inline-flex items-center"
               >
                 <svg
@@ -181,12 +181,15 @@ export default function RootLayout({
               </a>
               <div className="mt-6 lg:max-w-sm">
                 <p className="text-sm text-gray-800">
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam.
+                  Get ready to achieve your fitness goals with our cutting-edge
+                  fitness app! Whether you're looking to lose weight, build
+                  muscle, or improve your overall health, our app has everything
+                  you need to succeed.
                 </p>
                 <p className="mt-4 text-sm text-gray-800">
-                  Eaque ipsa quae ab illo inventore veritatis et quasi
-                  architecto beatae vitae dicta sunt explicabo.
+                  With customizable workout plans, personalized nutrition
+                  tracking, and expert guidance from certified trainers,
+                  reaching your fitness aspirations has never been easier.
                 </p>
               </div>
             </div>
@@ -197,36 +200,23 @@ export default function RootLayout({
               <div className="flex">
                 <p className="mr-1 text-gray-800">Phone:</p>
                 <a
-                  href="tel:850-123-5021"
+                  href="tel:7902992374"
                   aria-label="Our phone"
                   title="Our phone"
                   className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-deep-purple-800"
                 >
-                  850-123-5021
+                  7902992374
                 </a>
               </div>
               <div className="flex">
                 <p className="mr-1 text-gray-800">Email:</p>
                 <a
-                  href="mailto:info@lorem.mail"
+                  href="mailto:vipinrj8473@gmail.com"
                   aria-label="Our email"
                   title="Our email"
                   className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-deep-purple-800"
                 >
-                  info@lorem.mail
-                </a>
-              </div>
-              <div className="flex">
-                <p className="mr-1 text-gray-800">Address:</p>
-                <a
-                  href="https://www.google.com/maps"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Our address"
-                  title="Our address"
-                  className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-deep-purple-800"
-                >
-                  312 Lovely Street, NY
+                  vipinrj8473@gmail.com
                 </a>
               </div>
             </div>
@@ -262,14 +252,15 @@ export default function RootLayout({
                 </a>
               </div>
               <p className="mt-4 text-sm text-gray-500">
-                Bacon ipsum dolor amet short ribs pig sausage prosciutto chicken
-                spare ribs salami.
+                Track your progress, stay motivated with challenges and rewards,
+                and join a community of like-minded individuals on their fitness
+                journey. 
               </p>
             </div>
           </div>
           <div className="flex flex-col-reverse justify-between pt-5 pb-10 border-t lg:flex-row">
             <p className="text-sm text-gray-600">
-              © Copyright 2020 Lorem Inc. All rights reserved.
+              © Copyright 2024 Inc. All rights reserved.
             </p>
             <ul className="flex flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
               <li>

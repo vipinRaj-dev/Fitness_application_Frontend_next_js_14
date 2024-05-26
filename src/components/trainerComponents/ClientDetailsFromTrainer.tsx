@@ -204,6 +204,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           if (res.status === HttpStatusCode.OK) {
             // console.log(res.data);
             setDone(!done);
+            setIsOpen(false);
             // setLatestDiet(latestDiet.filter(food => food._id !== foodId));
           }
         })
@@ -244,7 +245,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
         <div className=" md:w-1/2 flex md:flex md:flex-col w-full h-1/2 md:h-full">
           <div className=" md:h-1/2 w-1/2 md:w-full  ">
             {clientDetails && (
-              <div className="p-3  bg-slate-600 m-2 mt-12 text-white rounded-3xl text-xs md:text-lg md:font-medium leading-relaxed md:leading-loose flex gap-10">
+              <div className="p-5  bg-slate-900 m-2 mt-12 text-white rounded-3xl text-xs md:text-lg md:font-medium leading-relaxed md:leading-loose flex gap-10">
                 <div className="mb-2">
                   <img
                     className=" object-cover w-96 h-96 rounded-xl"
@@ -254,7 +255,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                 </div>
 
                 <div className="p-5">
-                  <div className="flex text-xl font-semibold tracking-wide">
+                  <div className="flex">
                     <p>Name : </p>
                     <p>{clientDetails.name}</p>
                   </div>
@@ -265,20 +266,20 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
 
                   <div className="flex">
                     <p>Weight : </p>
-                    {clientDetails.weight}
+                    <p>{clientDetails.weight}</p>
                   </div>
                   <div className="flex">
                     <p>Height : </p>
-                    {clientDetails.height}
+                    <p> {clientDetails.height}</p>
                   </div>
                   <div className="flex">
                     <p>Mob.No : </p>
-                    {clientDetails.mobileNumber}
+                    <p> {clientDetails.mobileNumber}</p>
                   </div>
 
                   <div className="flex">
                     <p>Email: </p>
-                    {clientDetails.email}
+                    <p> {clientDetails.email}</p>
                   </div>
 
                   <div className="flex">
@@ -291,7 +292,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                       ([key, value]) => {
                         if (key !== "_id" && value && value !== 0) {
                           return (
-                            <div key={key}>
+                            <div className="italic" key={key}>
                               {key}: {value === true ? "Yes" : value.toString()}
                             </div>
                           );
@@ -304,7 +305,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
               </div>
             )}
           </div>
-          <div className=" md:h-1/2 w-1/2 md:w-full flex justify-center items-center">
+          <div className=" md:h-1/2 w-1/2 md:w-full flex justify-center items-center mt-32">
             <Calendar
               mode="single"
               showOutsideDays={false}
@@ -501,7 +502,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
             </Link>
           </div>
         </div>
-      
+
         <div className="mt-5 mb-20 relative">
           <div className="absolute w-full h-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-transparent via-gray-400 to-transparent"></div>
         </div>
@@ -512,7 +513,7 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
           {latestDiet.map((food) => {
             return (
               <div
-                className="flex gap-2 mb-4 h-26 p-3 bg-slate-900 rounded-lg justify-between items-center"
+                className="flex gap-2 mb-4 h-26 p-3 bg-slate-900 rounded-lg justify-around items-center"
                 key={food._id}
               >
                 <div className="flex items-center gap-3 h-full w-80">
@@ -528,29 +529,28 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                   </div>
                 </div>
 
-                <div>
-                  {food && food.foodId.nutrition ? (
-                    Object.entries(food.foodId.nutrition).map(
-                      ([key, value]) => {
-                        if (typeof value === "number" && value !== 0) {
-                          return (
-                            <div key={key}>
-                              <h1>
-                                {key} : {value}
-                              </h1>
-                            </div>
-                          );
-                        } else {
-                          return null;
+                <div className="flex">
+                  <div className=" w-96">
+                    {food && food.foodId.nutrition ? (
+                      Object.entries(food.foodId.nutrition).map(
+                        ([key, value]) => {
+                          if (typeof value === "number" && value !== 0) {
+                            return (
+                              <div key={key}>
+                                <h1>
+                                  {key} : {value}
+                                </h1>
+                              </div>
+                            );
+                          } else {
+                            return null;
+                          }
                         }
-                      }
-                    )
-                  ) : (
-                    <p>No nutrition information available.</p>
-                  )}
-                </div>
-
-                <div className="flex gap-3">
+                      )
+                    ) : (
+                      <p>No nutrition information available.</p>
+                    )}
+                  </div>
                   <div>
                     {
                       <div>
@@ -569,6 +569,9 @@ const ClientDetailsFromTrainer = ({ client_Id }: { client_Id: string }) => {
                       </div>
                     }
                   </div>
+                </div>
+
+                <div className="flex gap-3">
                   <div className="flex items-center px-5">
                     <Button
                       onClick={() => {

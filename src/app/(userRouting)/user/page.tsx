@@ -48,7 +48,7 @@ const Userpage = () => {
 
   const [yesterdayAttendanceId, setYesterdayAttendanceId] = useState("");
 
-  const [reason, setReason] = useState<string>("");
+  // const [reason, setReason] = useState<string>("");
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -57,10 +57,28 @@ const Userpage = () => {
   );
 
   const [foodStatus, setFoodStatus] = useState<BarChartDataUser[] | null>(null);
+
+  const [motivationalQuotes, setMotivationalQuotes] = useState({
+    text: "",
+    author: "",
+  });
   const router = useRouter();
+
+  function getMotivationalQuotes() {
+    fetch("https://type.fit/api/quotes")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        let randomIndex = Math.floor(Math.random() * data.length);
+        setMotivationalQuotes(data[randomIndex]);
+        // console.log(data[randomIndex]);
+      });
+  }
 
   useEffect(() => {
     // console.log('attendance useeffect running .......................................')
+    getMotivationalQuotes();
     try {
       axiosInstance
         .get("/user/setAttendance")
@@ -171,24 +189,24 @@ const Userpage = () => {
     }
   }, [allTasksCompleted]);
 
-  const sendReason = async (agree: boolean) => {
-    try {
-      axiosInstance
-        .post("/user/applyReason", {
-          reason,
-          yesterdayAttendanceId,
-          agree,
-        })
-        .then((res) => {
-          // console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const sendReason = async (agree: boolean) => {
+  //   try {
+  //     axiosInstance
+  //       .post("/user/applyReason", {
+  //         reason,
+  //         yesterdayAttendanceId,
+  //         agree,
+  //       })
+  //       .then((res) => {
+  //         // console.log(res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="">
@@ -208,7 +226,7 @@ const Userpage = () => {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <Dialog
           open={openModal}
           onOpenChange={() => {
@@ -242,10 +260,10 @@ const Userpage = () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>
-      </div>
+      </div> */}
 
-      <div className=" w-full h-screen p-1 mt-10 md:mt-36">
-        <div className="h-3/6  gap-5 md:flex md:justify-evenly">
+      <div>
+        {/* <div className="h-3/6  gap-5 md:flex md:justify-evenly">
           <div className="flex justify-center">
             <div className="w-3/4">
               <img src="/images/bmi.png" alt="bmi" />
@@ -258,17 +276,20 @@ const Userpage = () => {
               champions are made
             </div>
 
-            {/* <div className="flex items-center p-2">
+            <div className="flex items-center p-2">
               <Button className="md:px-10 md:font-semibold ">CHECK BMI</Button>
-            </div> */}
+            </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="h-3/6  md:flex md:justify-evenly md:items-center">
-          <div className="mt-3 hidden md:block">
+          <div className="mt-3 hidden md:block w-4/12">
             <h1 className="text-xl font-semibold px-5 md:text-5xl md:font-bold md:tracking-wide md:leading-normal">
-              The <br /> body achieves <br /> what the mind believes
+              {motivationalQuotes && motivationalQuotes.text}
             </h1>
+            <p className="text-end italic opacity-50">
+              {motivationalQuotes && motivationalQuotes.author}
+            </p>
           </div>
 
           <div className="md:mt-24">
@@ -388,164 +409,102 @@ const Userpage = () => {
         <HomePageWorkout hasTrainer={hasTrainer} />
       </div>
 
-      <div id="purchasePlan">
-        <div className=" p-10">
-          <div className="flex items-center justify-center max-w-6xl mx-auto gap-6">
-            {/* <div className="w-full p-6 bg-black border border-gray-700 rounded-lg sm:w-1/2 bg-opacity-20 sm:rounded-r-none sm:p-8">
-              <div className="mb-6">
-                <h3 className="text-2xl font-semibold jakarta text-gray-100 sm:text-4xl">
-                  Free Plan
-                </h3>
-              </div>
-              <div className="mb-4 space-x-2">
-                <span className="text-4xl font-bold text-gray-100">$0/mo</span>
-              </div>
-              <ul className="mb-6 space-y-2 text-gray-300">
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="">One Project</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="">Limited Designs</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="">Basic Settings</span>
-                </li>
-              </ul>
-              <a
-                href="#"
-                className="block px-8 py-3 text-sm font-semibold text-center text-gray-100 transition duration-100 bg-white rounded-lg outline-none bg-opacity-10 hover:bg-opacity-20 md:text-base"
-              >
-                Get Started for Free
-              </a>
-            </div> */}
-
-            <div className="w-full p-6 rounded-lg shadow-xl sm:w-1/2 bg-gradient-to-br from-blue-600 to-purple-600 sm:p-8">
-              <div className="flex flex-col items-start justify-between gap-4 mb-6 lg:flex-row">
-                <div>
-                  <h3 className="text-2xl font-semibold text-white jakarta sm:text-4xl">
-                    Select Trainers
-                  </h3>
+      {!hasTrainer && (
+        <div id="purchasePlan">
+          <div className=" p-10">
+            <div className="flex items-center justify-center max-w-6xl mx-auto gap-6">
+              <div className="w-full p-6 rounded-lg shadow-xl sm:w-1/2 bg-gradient-to-br from-blue-600 to-purple-600 sm:p-8">
+                <div className="flex flex-col items-start justify-between gap-4 mb-6 lg:flex-row">
+                  <div>
+                    <h3 className="text-2xl font-semibold text-white jakarta sm:text-4xl">
+                      Select Trainers
+                    </h3>
+                  </div>
+                  <span className="order-first inline-block px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase bg-black rounded-full lg:order-none bg-opacity-20">
+                    Go Pro
+                  </span>
                 </div>
-                <span className="order-first inline-block px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase bg-black rounded-full lg:order-none bg-opacity-20">
-                  Go Pro
-                </span>
+                <div className="mb-4 space-x-2">
+                  <span className="text-4xl font-bold text-white">
+                    Strating from $15/mo
+                  </span>
+                  <span className="text-2xl text-indigo-100 line-through">
+                    $39/mo
+                  </span>
+                </div>
+                <ul className="mb-6 space-y-2 text-indigo-100">
+                  <li className="flex items-center gap-1.5">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="flex-shrink-0 w-5 h-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                    <span className="">Unlimited Support</span>
+                  </li>
+                  <li className="flex items-center gap-1.5">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="flex-shrink-0 w-5 h-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                    <span className="">Live Video call</span>
+                  </li>
+                  <li className="flex items-center gap-1.5">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="flex-shrink-0 w-5 h-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                        className=""
+                      ></path>
+                    </svg>
+                    <span className="">Diet and Workout Setup</span>
+                  </li>
+                  <li className="flex items-center gap-1.5">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="flex-shrink-0 w-5 h-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                    <span className="">Priority Support</span>
+                  </li>
+                </ul>
+                <Link href="/user/trainer">
+                  <Button className="block px-8 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base">
+                    Show trainers
+                  </Button>
+                </Link>
               </div>
-              <div className="mb-4 space-x-2">
-                <span className="text-4xl font-bold text-white">
-                  Strating from $15/mo
-                </span>
-                <span className="text-2xl text-indigo-100 line-through">
-                  $39/mo
-                </span>
-              </div>
-              <ul className="mb-6 space-y-2 text-indigo-100">
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="">Unlimited Support</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="">Live Video call</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                      className=""
-                    ></path>
-                  </svg>
-                  <span className="">Diet and Workout Setup</span>
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="flex-shrink-0 w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                  <span className="">Priority Support</span>
-                </li>
-              </ul>
-              <Link href="/user/trainer">
-                <Button className="block px-8 text-sm font-semibold text-center text-white transition duration-100 bg-white rounded-lg outline-none bg-opacity-20 hover:bg-opacity-30 md:text-base">
-                  Show trainers
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

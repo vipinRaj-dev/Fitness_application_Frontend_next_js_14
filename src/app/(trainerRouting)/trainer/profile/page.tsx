@@ -43,7 +43,7 @@ const schema = z.object({
       return true;
     }
     // console.log(file);
-    return file.type === "image/avif" || file.type === "image/png"|| file.type === "image/jpeg";
+    return file.type === "image/avif" || file.type === "image/png"|| file.type === "image/jpeg" ||file.type === "image/webp";
   }, "Invalid image file"),
   name: z
     .string()

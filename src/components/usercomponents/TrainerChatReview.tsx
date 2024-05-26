@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "../ui/badge";
 import StarRatings from "react-star-ratings";
 import { Button } from "../ui/button";
-import { MessageSquareMore, Radio } from "lucide-react";
+import { MessageSquareMore, Radio, Video } from "lucide-react";
 import { useSocketStore } from "@/store/socket";
 import Image from "next/image";
 import MessageList from "../commonRoutes/MessageList";
@@ -158,139 +158,144 @@ const TrainerChatReview = ({
   //   }
   // };
   return (
-    <div className="flex justify-evenly">
-      <img
-        src={trainer.profilePicture}
-        alt="trainer"
-        width={50}
-        height={50}
-        className="rounded-full"
-      />
-      <div>
-        <h1>{trainer.name}</h1>
-        <div className="flex gap-2">
-          <div>
-            {isTrainerOnline ? (
-              <Radio size="24px" color="green" />
-            ) : (
-              <Radio size="24px" color="red" />
-            )}
+    <div className=" mt-10">
+      <div className="flex justify-evenly">
+        <img
+          src={trainer.profilePicture}
+          alt="trainer"
+          width={40}
+          height={40}
+          className="rounded-full"
+        />
+        <div>
+          <h1>{trainer.name}</h1>
+          <div className="flex gap-2">
+            <div>
+              {isTrainerOnline ? (
+                <Radio size="24px" color="green" />
+              ) : (
+                <Radio size="24px" color="red" />
+              )}
+            </div>
+            <div>{isTrainerOnline ? "Online" : "Offline"}</div>
           </div>
-          <div>{isTrainerOnline ? "Online" : "Offline"}</div>
         </div>
-      </div>
 
-      <Dialog>
-        <DialogTrigger>
-          <Badge>Rate</Badge>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Do you want to Rate this Trainer</DialogTitle>
-            <DialogDescription className="text-center">
-              <StarRatings
-                rating={rating.starRating}
-                starRatedColor="yellow"
-                starDimension="35px"
-                starSpacing="2px"
-                starHoverColor="yellow"
-                starEmptyColor="white"
-                changeRating={(rating) =>
-                  setRating((prev) => {
-                    return {
-                      ...prev,
-                      starRating: rating,
-                    };
-                  })
-                }
-                numberOfStars={5}
-                name="rating"
-              />
-            </DialogDescription>
-          </DialogHeader>
-          <Textarea
-            placeholder="Type you review here..."
-            onChange={(e) => {
-              setRating((prev) => {
-                return {
-                  ...prev,
-                  content: e.target.value,
-                };
-              });
-            }}
-          />
-          <Button onClick={applyReview}>Submit</Button>
-        </DialogContent>
-      </Dialog>
-      {new Date(trainer.trainerPaymentDueDate) > new Date() ? (
-        <>
-          <Badge
-            className={`${
-              pendingMsgCount > 0 ? "animate-bounce" : ""
-            } relative`}
-            onClick={() => {
-              setChatPageOpen(true);
-              // makeMsgSeen();
-            }}
-          >
-            <MessageSquareMore />
-            <div className="bg-red-600 absolute top-0 right-1 w-4 text-center rounded-full">
-              {pendingMsgCount > 0 && <p>{pendingMsgCount}</p>}
-            </div>
-            {/* Msg : {pendingMsgCount} */}
-          </Badge>
-
-          {isTrainerOnline ? (
-            <Button>
-              <Link href={`/room/${userId}`}>Meet</Link>
-            </Button>
-          ) : (
-            <Button disabled>Meet</Button>
-          )}
-        </>
-      ) : (
-        <p className="text-sm text-red-500">Time Expired</p>
-      )}
-
-      <div>
-        <Dialog
-          open={chatPageOpen}
-          onOpenChange={(open) => {
-            if (!open) {
-              setChatPageOpen(false);
-              setPendingMsgCount(0);
-            }
-          }}
-        >
-          <DialogContent className="h-screen bg-transparent border-none">
-            <div className="h-screen flex flex-col p-5 pb-10">
-              <div className="flex items-center bg-gray-900 p-2 rounded-t-xl">
-                <Image
-                  className={`rounded-full w-10 h-10 border-2 ${
-                    isTrainerOnline ? "border-green-500" : "border-red-500"
-                  }`}
-                  src={
-                    (trainer.profilePicture && trainer.profilePicture) ||
-                    "/images/profileImage.avif"
+        <Dialog>
+          <DialogTrigger>
+            <Badge>Rate</Badge>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Do you want to Rate this Trainer</DialogTitle>
+              <DialogDescription className="text-center">
+                <StarRatings
+                  rating={rating.starRating}
+                  starRatedColor="yellow"
+                  starDimension="35px"
+                  starSpacing="2px"
+                  starHoverColor="yellow"
+                  starEmptyColor="white"
+                  changeRating={(rating) =>
+                    setRating((prev) => {
+                      return {
+                        ...prev,
+                        starRating: rating,
+                      };
+                    })
                   }
-                  width={100}
-                  height={100}
-                  alt="profilePicture"
+                  numberOfStars={5}
+                  name="rating"
                 />
-                <h1 className="ml-3">{trainer && trainer.name}</h1>
-              </div>
-              <>
-                <MessageList
-                  from="user"
-                  trainerId={trainer._id}
-                  userId={userId}
-                  // handleClicked={handleClick}
-                />
-              </>
-            </div>
+              </DialogDescription>
+            </DialogHeader>
+            <Textarea
+              placeholder="Type you review here..."
+              onChange={(e) => {
+                setRating((prev) => {
+                  return {
+                    ...prev,
+                    content: e.target.value,
+                  };
+                });
+              }}
+            />
+            <Button onClick={applyReview}>Submit</Button>
           </DialogContent>
         </Dialog>
+        {new Date(trainer.trainerPaymentDueDate) > new Date() ? (
+          <>
+            <Badge
+              className={`${
+                pendingMsgCount > 0 ? "animate-bounce" : ""
+              } relative h-12`}
+              onClick={() => {
+                setChatPageOpen(true);
+                // makeMsgSeen();
+              }}
+            >
+              <MessageSquareMore />
+              <div className="bg-red-600 absolute top-0 right-1 w-4 text-center rounded-full">
+                {pendingMsgCount > 0 && <p>{pendingMsgCount}</p>}
+              </div>
+              {/* Msg : {pendingMsgCount} */}
+            </Badge>
+
+            {isTrainerOnline ? (
+              <Button>
+                <Link href={`/room/${userId}`}><Video /></Link>
+              </Button>
+            ) : (
+              <Button disabled><Video /></Button>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-red-500">Time Expired</p>
+        )}
+
+        <div>
+          <Dialog
+            open={chatPageOpen}
+            onOpenChange={(open) => {
+              if (!open) {
+                setChatPageOpen(false);
+                setPendingMsgCount(0);
+              }
+            }}
+          >
+            <DialogContent className="h-screen bg-transparent border-none">
+              <div className="h-screen flex flex-col p-5 pb-10">
+                <div className="flex items-center bg-gray-900 p-2 rounded-t-xl">
+                  <Image
+                    className={`rounded-full w-10 h-10 border-2 ${
+                      isTrainerOnline ? "border-green-500" : "border-red-500"
+                    }`}
+                    src={
+                      (trainer.profilePicture && trainer.profilePicture) ||
+                      "/images/profileImage.avif"
+                    }
+                    width={100}
+                    height={100}
+                    alt="profilePicture"
+                  />
+                  <h1 className="ml-3">{trainer && trainer.name}</h1>
+                </div>
+                <>
+                  <MessageList
+                    from="user"
+                    trainerId={trainer._id}
+                    userId={userId}
+                    // handleClicked={handleClick}
+                  />
+                </>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+      <p className="font-extralight italic">
+       Note : The video calling feature is unavailable due to payment issues.
+      </p>
     </div>
   );
 };

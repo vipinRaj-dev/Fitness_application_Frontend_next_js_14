@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 import Spinner from "../loadingui/Spinner";
+import { useToast } from "@/components/ui/use-toast";
 // import Spinner from "../loadingui/Spinner";
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -45,6 +46,7 @@ const SignInForm = () => {
   const myCookie = Cookies.get("jwttoken");
 
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (myCookie) {
@@ -69,16 +71,61 @@ const SignInForm = () => {
         }
       })
       .catch(function (error) {
-        console.log('sign in error');
-        
+        console.log("sign in error");
+
         setLoading(false);
         if (error.response) {
           setError(error.response.data.msg);
         }
       });
   };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast({
+          description: `${text} copied to clipboard!`,
+        });
+      })
+      .catch(() => {
+        toast({
+          description: "Failed to copy",
+        });
+      });
+  };
   return (
-    <div className="w-full">
+    <div className="w-full ">
+      <div className="bg-gray-800 p-5 rounded-3xl space-y-3">
+        <div>
+          <p
+            onClick={() => copyToClipboard("testuser@gmail.com")}
+            className="italic cursor-grab"
+          >
+            Copy User Email : testuser@gmail.com
+          </p>
+          <p
+            onClick={() => copyToClipboard("test@9876")}
+            className="italic cursor-grab"
+          >
+            Copy User Password : test@9876
+          </p>
+        </div>
+        <div>
+          <p
+            onClick={() => copyToClipboard("Trainer@gmail.com")}
+            className="italic cursor-grab"
+          >
+            Copy Trainer Email : Trainer@gmail.com
+          </p>
+          <p
+            onClick={() => copyToClipboard("trainer@9876")}
+            className="italic cursor-grab"
+          >
+            Copy Trainer Password : trainer@9876
+          </p>
+        </div>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           {error && <p className="text-red-500 text-center">{error}</p>}
